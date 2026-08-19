@@ -3,8 +3,15 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "SIH 2026 Hackathon API"
+    APP_NAME: str = "SIH 2026 Hackathon API"
+    DEBUG: bool = True
     VERSION: str = "1.0.0"
     API_PREFIX: str = "/api"
+    
+    REGISTRATION_FEE: float = 300.0
+    CURRENCY: str = "INR"
+    REQUIRED_MEMBERS_COUNT: int = 6
+    FEMALE_REQUIRED: bool = True
     
     CORS_ORIGINS: list[str] = [
         "http://localhost:5173",
