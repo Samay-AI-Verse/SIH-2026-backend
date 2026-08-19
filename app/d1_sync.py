@@ -147,6 +147,20 @@ def sync_problem_to_d1(problem):
     ]
     _exec_d1_async(sql, params)
 
+def delete_team_from_d1(team_id: str):
+    _exec_d1_async("DELETE FROM members WHERE team_id = ?;", [str(team_id)])
+    _exec_d1_async("DELETE FROM payments WHERE team_id = ?;", [str(team_id)])
+    _exec_d1_async("DELETE FROM teams WHERE id = ? OR registration_id = ?;", [str(team_id), str(team_id)])
+
+def delete_member_from_d1(member_id: str):
+    _exec_d1_async("DELETE FROM members WHERE id = ?;", [str(member_id)])
+
+def delete_payment_from_d1(payment_id: str):
+    _exec_d1_async("DELETE FROM payments WHERE id = ?;", [str(payment_id)])
+
+def delete_expense_from_d1(expense_id: str):
+    _exec_d1_async("DELETE FROM expenses WHERE id = ?;", [str(expense_id)])
+
 def register_d1_hooks(SessionClass):
     @event.listens_for(SessionClass, "after_flush")
     def after_flush(session, flush_context):
@@ -162,6 +176,17 @@ def register_d1_hooks(SessionClass):
                 sync_expense_to_d1(obj)
             elif obj_type == "Problem":
                 sync_problem_to_d1(obj)
+
+        for obj in session.deleted:
+            obj_type = type(obj).__name__
+            if obj_type == "Team":
+                delete_team_from_d1(obj.id)
+            elif obj_type == "Member":
+                delete_member_from_d1(obj.id)
+            elif obj_type == "Payment":
+                delete_payment_from_d1(obj.id)
+            elif obj_type == "Expense":
+                delete_expense_from_d1(obj.id)
 
 def sync_full_database_to_d1(db: Session):
     from .models import Team, Member, Payment, Expense, Problem
@@ -184,3 +209,4 @@ def sync_full_database_to_d1(db: Session):
         sync_expense_to_d1(e)
 
     print("🎉 Cloudflare D1 Background Sync Triggered Successfully!")
+

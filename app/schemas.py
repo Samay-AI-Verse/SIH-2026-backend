@@ -195,3 +195,8 @@ class ExpenseCreateRequest(BaseModel):
     amount: float
     paid_to: Optional[str] = ""
     notes: Optional[str] = ""
+
+class TeamCancelRequest(BaseModel):
+    refund: Optional[bool] = False
+    admin_notes: Optional[str] = ""
+

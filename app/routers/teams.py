@@ -197,3 +197,76 @@ def get_team_details(team_id: str, db: Session = Depends(get_db)):
         },
         "members": members_list
     }
+
+@router.put("/teams/{team_id}/members/{member_id}")
+
+def update_team_member(team_id: str, member_id: str, payload: dict, db: Session = Depends(get_db)):
+    team = db.query(Team).filter(Team.id == team_id).first()
+    if not team:
+        team = db.query(Team).filter(Team.registration_id == team_id).first()
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    member = db.query(Member).filter(Member.id == member_id, Member.team_id == team.id).first()
+    if not member:
+        raise HTTPException(status_code=404, detail="Member not found for this team")
+
+    full_name_input = payload.get("full_name") or payload.get("name")
+    if full_name_input and full_name_input.strip():
+        member.full_name = full_name_input.strip()
+
+    if "email" in payload and payload["email"]:
+        member.email = payload["email"].strip().lower()
+    if "phone" in payload and payload["phone"]:
+        member.phone = payload["phone"].strip()
+    if "gender" in payload and payload["gender"]:
+        member.gender = payload["gender"]
+    if "course" in payload and payload["course"]:
+        member.course = payload["course"].strip()
+    if "branch" in payload and payload["branch"]:
+        member.branch = payload["branch"].strip()
+    if "year" in payload and payload["year"]:
+        member.year = payload["year"].strip()
+    if "student_id" in payload:
+        member.student_id = payload["student_id"].strip()
+
+    # Sync leader updates if member is leader
+    if member.is_leader:
+        if member.full_name: team.leader_name = member.full_name
+        if member.email: team.leader_email = member.email
+        if member.phone: team.leader_phone = member.phone
+        if member.gender: team.leader_gender = member.gender
+        if member.course: team.leader_course = member.course
+        if member.branch: team.leader_branch = member.branch
+        if member.year: team.leader_year = member.year
+
+    db.commit()
+
+    try:
+        from ..d1_sync import sync_team_to_d1
+        sync_team_to_d1(team)
+    except Exception:
+        pass
+
+    try:
+        import asyncio
+        from .live import notify_live_subscribers
+        asyncio.create_task(notify_live_subscribers("members"))
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "message": f"Member {member.full_name} details updated successfully.",
+        "member": {
+            "id": member.id,
+            "name": member.full_name,
+            "email": member.email,
+            "phone": member.phone,
+            "gender": member.gender,
+            "course": member.course,
+            "branch": member.branch,
+            "year": member.year,
+            "is_leader": member.is_leader
+        }
+    }

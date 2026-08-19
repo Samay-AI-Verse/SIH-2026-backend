@@ -30,10 +30,15 @@ def d1_query(sql: str, params: list = None):
             if data.get("success"):
                 return data.get("result", [{}])[0].get("results", [])
             else:
-                raise RuntimeError(f"D1 Query Failed: {data.get('errors')}")
+                print(f"⚠️ D1 Query Failed: {data.get('errors')}")
+                return []
     except urllib.error.HTTPError as e:
         err_msg = e.read().decode("utf-8")
-        raise RuntimeError(f"Cloudflare D1 HTTP Error {e.code}: {err_msg}")
+        print(f"⚠️ Cloudflare D1 HTTP Error {e.code}: {err_msg}")
+        return []
+    except Exception as e:
+        print(f"⚠️ Cloudflare D1 Error: {e}")
+        return []
 
 def init_d1_schema():
     print("⚡ Initializing Cloudflare D1 Database Schema...")
@@ -200,10 +205,12 @@ def init_d1_schema():
 
 def fetch_all_d1_data():
     print("🌐 Connecting to Cloudflare D1 Cloud Database...")
-    print(f"   Account ID: {ACCOUNT_ID}")
-    print(f"   Database ID: {DATABASE_ID}")
+    print(f"   Account ID: {ACCOUNT_ID or '(Not configured)'}")
+    print(f"   Database ID: {DATABASE_ID or '(Not configured)'}")
     
-    # 1. Fetch tables
+    if not ACCOUNT_ID or not DATABASE_ID or not API_TOKEN:
+        print("ℹ️ Cloudflare D1 credentials not fully configured in .env. Skipping D1 remote fetch.")
+        return {}
     tables = d1_query("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%';")
     table_names = [t["name"] for t in tables]
     print(f"📊 Cloudflare D1 Tables Found: {table_names}")

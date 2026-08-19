@@ -1,5 +1,9 @@
 import os
+import pathlib
 from pydantic_settings import BaseSettings
+
+BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
+DEFAULT_DB_FILE = (BASE_DIR / "sih_2026.db").resolve().as_posix()
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "SIH 2026 Hackathon API"
@@ -26,7 +30,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7 # 7 days
     
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./sih_2026.db")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{DEFAULT_DB_FILE}")
 
     # Cloudflare D1 Credentials (Loaded from .env)
     CLOUDFLARE_ACCOUNT_ID: str = os.getenv("CLOUDFLARE_ACCOUNT_ID", "")

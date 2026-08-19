@@ -1,0 +1,16 @@
+.env
+.env.local
+sih_2026.db
+__pycache__/
+app/__pycache__/
+app/routers/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.git/
+.gitignore
+uploads/
+scratch/
+cloudflare_d1_export.json
+Dockerfile
+.dockerignore

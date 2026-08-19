@@ -4,7 +4,7 @@ from sqlalchemy import func
 from typing import Optional, List
 from ..database import get_db
 from ..models import Team, Member, Payment, Problem, Admin, Setting
-from ..schemas import PaymentVerifyRequest, ExpenseCreateRequest
+from ..schemas import PaymentVerifyRequest, ExpenseCreateRequest, TeamCancelRequest
 from ..auth import get_current_admin
 from ..r2_storage import generate_presigned_download_url
 
@@ -20,11 +20,16 @@ def get_admin_stats(
     total_members = db.query(Member).count()
     paid_teams = sum(1 for t in teams if t.payment_status == "SUCCESS")
     pending_teams = sum(1 for t in teams if t.payment_status in ["PENDING", "PROCESSING"])
+    failed_teams = sum(1 for t in teams if t.payment_status in ["FAILED", "CANCELLED", "REFUNDED"])
     selected_problems_count = sum(1 for t in teams if t.selected_problem_id is not None)
     open_innovation_teams = sum(1 for t in teams if t.is_open_innovation)
     
-    # Total revenue
+    # Total revenue from SUCCESS payments
     total_revenue = db.query(func.sum(Payment.amount)).filter(Payment.status == "SUCCESS").scalar() or 0.0
+
+    from ..models import Expense
+    total_expenses = db.query(func.sum(Expense.amount)).scalar() or 0.0
+    net_balance = total_revenue - total_expenses
 
     # Stream / Degree Breakdown
     stream_counts = {
@@ -72,14 +77,19 @@ def get_admin_stats(
     return {
         "total_teams": total_teams,
         "total_members": total_members,
+        "total_candidates": total_members,
         "paid_teams": paid_teams,
         "pending_teams": pending_teams,
+        "failed_teams": failed_teams,
         "selected_problems_count": selected_problems_count,
         "open_innovation_teams": open_innovation_teams,
         "total_revenue": total_revenue,
+        "total_expenses": total_expenses,
+        "net_balance": net_balance,
         "stream_counts": stream_counts,
         "year_counts": year_counts
     }
+
 
 @router.get("/teams")
 def list_all_teams(
@@ -376,3 +386,130 @@ def get_problems_analytics(
             for t in open_inno_teams
         ]
     }
+
+@router.post("/teams/{team_id}/cancel")
+def cancel_team(
+    team_id: str,
+    req: Optional[TeamCancelRequest] = None,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    team = db.query(Team).filter(Team.id == team_id).first()
+    if not team:
+        team = db.query(Team).filter(Team.registration_id == team_id).first()
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    refund = req.refund if req else False
+    admin_notes = (req.admin_notes or "") if req else ""
+
+    # Free up problem statement quota if selected
+    if team.selected_problem_id:
+        prob = db.query(Problem).filter(Problem.id == team.selected_problem_id).first()
+        if prob:
+            if prob.selected_count > 0:
+                prob.selected_count -= 1
+            if prob.id != "OPEN_INNOVATION" and prob.selected_count < prob.max_selections:
+                prob.status = "AVAILABLE"
+
+    if refund:
+        team.registration_status = "CANCELLED_REFUNDED"
+        team.payment_status = "REFUNDED"
+    else:
+        team.registration_status = "CANCELLED_NO_REFUND"
+        team.payment_status = "CANCELLED"
+
+    payment = db.query(Payment).filter(Payment.team_id == team.id).first()
+    if payment:
+        if refund:
+            payment.status = "REFUNDED"
+            from ..models import Expense
+            expense = Expense(
+                title=f"Registration Fee Refund — {team.team_name} ({team.registration_id})",
+                category="Registration Refund",
+                amount=payment.amount or 300.0,
+                paid_to=team.leader_name,
+                notes=f"Admin issued refund on cancellation. {admin_notes}".strip()
+            )
+            db.add(expense)
+        else:
+            payment.status = "CANCELLED"
+        if admin_notes:
+            payment.admin_notes = admin_notes
+
+    db.commit()
+    try:
+        import asyncio
+        from .live import notify_live_subscribers
+        asyncio.create_task(notify_live_subscribers("teams"))
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "message": f"Team {team.team_name} successfully cancelled ({'Refund recorded' if refund else 'No refund'}).",
+        "registration_status": team.registration_status,
+        "payment_status": team.payment_status
+    }
+
+@router.delete("/teams/{team_id}")
+async def delete_team_permanently(
+    team_id: str,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    team = db.query(Team).filter(Team.id == team_id).first()
+    if not team:
+        team = db.query(Team).filter(Team.registration_id == team_id).first()
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    team_name = team.team_name
+
+    # Free up problem selection quota if applicable
+    if team.selected_problem_id:
+        prob = db.query(Problem).filter(Problem.id == team.selected_problem_id).first()
+        if prob:
+            if prob.selected_count > 0:
+                prob.selected_count -= 1
+            if prob.id != "OPEN_INNOVATION" and prob.selected_count < prob.max_selections:
+                prob.status = "AVAILABLE"
+            try:
+                from ..d1_sync import sync_problem_to_d1
+                sync_problem_to_d1(prob)
+            except Exception:
+                pass
+
+    # Delete members
+    db.query(Member).filter(Member.team_id == team.id).delete(synchronize_session=False)
+
+    # Delete payment records
+    db.query(Payment).filter(Payment.team_id == team.id).delete(synchronize_session=False)
+
+    # Delete team row
+    db.delete(team)
+    db.commit()
+
+    # Sync deletion to Cloudflare D1 Cloud
+    try:
+        from ..d1_sync import delete_team_from_d1
+        delete_team_from_d1(team_id)
+        if team.registration_id:
+            delete_team_from_d1(team.registration_id)
+    except Exception:
+        pass
+
+    # Trigger live SSE update so UI updates immediately everywhere without page refresh
+    try:
+        from .live import notify_live_subscribers
+        await notify_live_subscribers("all")
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "message": f"Team '{team_name}' and all associated members, payments, and problem quotas were permanently reset and deleted from database."
+    }
+
+
+
