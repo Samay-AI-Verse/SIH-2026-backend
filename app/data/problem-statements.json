@@ -1,0 +1,3335 @@
+[
+  {
+    "id": "SIH12507",
+    "code": "SIH12507",
+    "title": "Develop computer programs (in any language, preferably Python) to identify the design principles behind the Kolam designs and recreate the kolams.",
+    "organization": "Heritage & Culture",
+    "category": "Software",
+    "theme": "Heritage & Culture",
+    "difficulty": "Medium",
+    "description": "Develop computer programs (in any language, preferably Python) to identify the design principles behind the Kolam designs and recreate the kolams. Official SIH problem statement SIH12507 under Heritage & Culture (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Heritage & Culture.",
+    "expectedSolution": "A working software prototype that addresses: Develop computer programs (in any language, preferably Python) to identify the design principles behind the Kolam designs and recreate the kolams.",
+    "technicalRequirements": [
+      "Software",
+      "Heritage & Culture"
+    ],
+    "technologies": [
+      "Software",
+      "Heritage & Culture"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 1
+  },
+  {
+    "id": "SIH12508",
+    "code": "SIH12508",
+    "title": "Development of AI- powered FRA Atlas and WebGIS-based Decision Support System (DSS) for Integrated Monitoring of Forest Rights Act (FRA) Implementation. (States to be concentrated: Madhya Pradesh, Tripura , Odisha, Telangana)",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Development of AI- powered FRA Atlas and WebGIS-based Decision Support System (DSS) for Integrated Monitoring of Forest Rights Act (FRA) Implementation. (States to be concentrated: Madhya Pradesh, Tripura , Odisha, Telangana) Official SIH problem statement SIH12508 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Development of AI- powered FRA Atlas and WebGIS-based Decision Support System (DSS) for Integrated Monitoring of Forest Rights Act (FRA) Implementation. (States to be concentrated: Madhya Pradesh, Tripura , Odisha, Telangana)",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 2
+  },
+  {
+    "id": "SIH25001",
+    "code": "SIH25001",
+    "title": "Smart Community Health Monitoring and Early Warning System for Water-Borne Diseases in Rural Northeast India",
+    "organization": "MedTech / BioTech / HealthTech",
+    "category": "Software",
+    "theme": "MedTech / BioTech / HealthTech",
+    "difficulty": "Medium",
+    "description": "Smart Community Health Monitoring and Early Warning System for Water-Borne Diseases in Rural Northeast India Official SIH problem statement SIH25001 under MedTech / BioTech / HealthTech (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: MedTech / BioTech / HealthTech.",
+    "expectedSolution": "A working software prototype that addresses: Smart Community Health Monitoring and Early Warning System for Water-Borne Diseases in Rural Northeast India",
+    "technicalRequirements": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "technologies": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 3
+  },
+  {
+    "id": "SIH25002",
+    "code": "SIH25002",
+    "title": "Smart Tourist Safety Monitoring & Incident Response System using AI, Geo-Fencing, and Blockchain-based Digital ID",
+    "organization": "Travel & Tourism",
+    "category": "Software",
+    "theme": "Travel & Tourism",
+    "difficulty": "Medium",
+    "description": "Smart Tourist Safety Monitoring & Incident Response System using AI, Geo-Fencing, and Blockchain-based Digital ID Official SIH problem statement SIH25002 under Travel & Tourism (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Travel & Tourism.",
+    "expectedSolution": "A working software prototype that addresses: Smart Tourist Safety Monitoring & Incident Response System using AI, Geo-Fencing, and Blockchain-based Digital ID",
+    "technicalRequirements": [
+      "Software",
+      "Travel & Tourism"
+    ],
+    "technologies": [
+      "Software",
+      "Travel & Tourism"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 4
+  },
+  {
+    "id": "SIH25003",
+    "code": "SIH25003",
+    "title": "Low-Cost smart transportation solution for Agri produce from remote farms to nearest motorable road in NER Region",
+    "organization": "Transportation & Logistics",
+    "category": "Hardware",
+    "theme": "Transportation & Logistics",
+    "difficulty": "Hard",
+    "description": "Low-Cost smart transportation solution for Agri produce from remote farms to nearest motorable road in NER Region Official SIH problem statement SIH25003 under Transportation & Logistics (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Transportation & Logistics.",
+    "expectedSolution": "A working hardware prototype that addresses: Low-Cost smart transportation solution for Agri produce from remote farms to nearest motorable road in NER Region",
+    "technicalRequirements": [
+      "Hardware",
+      "Transportation & Logistics"
+    ],
+    "technologies": [
+      "Hardware",
+      "Transportation & Logistics"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 5
+  },
+  {
+    "id": "SIH25004",
+    "code": "SIH25004",
+    "title": "Image based breed recognition for cattle and buffaloes of India",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Software",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Medium",
+    "description": "Image based breed recognition for cattle and buffaloes of India Official SIH problem statement SIH25004 under Agriculture, FoodTech & Rural Development (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working software prototype that addresses: Image based breed recognition for cattle and buffaloes of India",
+    "technicalRequirements": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 6
+  },
+  {
+    "id": "SIH25005",
+    "code": "SIH25005",
+    "title": "Image based Animal Type Classification for cattle and buffaloes",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Software",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Medium",
+    "description": "Image based Animal Type Classification for cattle and buffaloes Official SIH problem statement SIH25005 under Agriculture, FoodTech & Rural Development (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working software prototype that addresses: Image based Animal Type Classification for cattle and buffaloes",
+    "technicalRequirements": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 7
+  },
+  {
+    "id": "SIH25006",
+    "code": "SIH25006",
+    "title": "Development of a Digital Farm Management Portal for Implementing Biosecurity Measures in Pig and Poultry Farms",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Software",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Medium",
+    "description": "Development of a Digital Farm Management Portal for Implementing Biosecurity Measures in Pig and Poultry Farms Official SIH problem statement SIH25006 under Agriculture, FoodTech & Rural Development (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working software prototype that addresses: Development of a Digital Farm Management Portal for Implementing Biosecurity Measures in Pig and Poultry Farms",
+    "technicalRequirements": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 8
+  },
+  {
+    "id": "SIH25007",
+    "code": "SIH25007",
+    "title": "Development of a Digital Farm Management Portal for Monitoring Maximum Residue Limits (MRL) and Antimicrobial Usage (AMU) in Livestock",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Software",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Medium",
+    "description": "Development of a Digital Farm Management Portal for Monitoring Maximum Residue Limits (MRL) and Antimicrobial Usage (AMU) in Livestock Official SIH problem statement SIH25007 under Agriculture, FoodTech & Rural Development (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working software prototype that addresses: Development of a Digital Farm Management Portal for Monitoring Maximum Residue Limits (MRL) and Antimicrobial Usage (AMU) in Livestock",
+    "technicalRequirements": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 9
+  },
+  {
+    "id": "SIH25008",
+    "code": "SIH25008",
+    "title": "Disaster Preparedness and Response Education System for Schools and Colleges",
+    "organization": "Disaster Management",
+    "category": "Software",
+    "theme": "Disaster Management",
+    "difficulty": "Medium",
+    "description": "Disaster Preparedness and Response Education System for Schools and Colleges Official SIH problem statement SIH25008 under Disaster Management (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Disaster Management.",
+    "expectedSolution": "A working software prototype that addresses: Disaster Preparedness and Response Education System for Schools and Colleges",
+    "technicalRequirements": [
+      "Software",
+      "Disaster Management"
+    ],
+    "technologies": [
+      "Software",
+      "Disaster Management"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 10
+  },
+  {
+    "id": "SIH25009",
+    "code": "SIH25009",
+    "title": "Gamified Environmental Education Platform for Schools and Colleges",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Gamified Environmental Education Platform for Schools and Colleges Official SIH problem statement SIH25009 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Gamified Environmental Education Platform for Schools and Colleges",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 11
+  },
+  {
+    "id": "SIH25010",
+    "code": "SIH25010",
+    "title": "Smart Crop Advisory System for Small and Marginal Farmers",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Software",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Medium",
+    "description": "Smart Crop Advisory System for Small and Marginal Farmers Official SIH problem statement SIH25010 under Agriculture, FoodTech & Rural Development (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working software prototype that addresses: Smart Crop Advisory System for Small and Marginal Farmers",
+    "technicalRequirements": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 12
+  },
+  {
+    "id": "SIH25011",
+    "code": "SIH25011",
+    "title": "Smart Curriculum Activity & Attendance App",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Smart Curriculum Activity & Attendance App Official SIH problem statement SIH25011 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Smart Curriculum Activity & Attendance App",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 13
+  },
+  {
+    "id": "SIH25012",
+    "code": "SIH25012",
+    "title": "Automated Attendance System for Rural Schools",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Automated Attendance System for Rural Schools Official SIH problem statement SIH25012 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Automated Attendance System for Rural Schools",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 14
+  },
+  {
+    "id": "SIH25013",
+    "code": "SIH25013",
+    "title": "Real-Time Public Transport Tracking for Small Cities",
+    "organization": "Transportation & Logistics",
+    "category": "Software",
+    "theme": "Transportation & Logistics",
+    "difficulty": "Medium",
+    "description": "Real-Time Public Transport Tracking for Small Cities Official SIH problem statement SIH25013 under Transportation & Logistics (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Transportation & Logistics.",
+    "expectedSolution": "A working software prototype that addresses: Real-Time Public Transport Tracking for Small Cities",
+    "technicalRequirements": [
+      "Software",
+      "Transportation & Logistics"
+    ],
+    "technologies": [
+      "Software",
+      "Transportation & Logistics"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 15
+  },
+  {
+    "id": "SIH25014",
+    "code": "SIH25014",
+    "title": "Waste Segregation Monitoring System for Urban Local Bodies",
+    "organization": "Clean & Green Technology",
+    "category": "Hardware",
+    "theme": "Clean & Green Technology",
+    "difficulty": "Hard",
+    "description": "Waste Segregation Monitoring System for Urban Local Bodies Official SIH problem statement SIH25014 under Clean & Green Technology (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Clean & Green Technology.",
+    "expectedSolution": "A working hardware prototype that addresses: Waste Segregation Monitoring System for Urban Local Bodies",
+    "technicalRequirements": [
+      "Hardware",
+      "Clean & Green Technology"
+    ],
+    "technologies": [
+      "Hardware",
+      "Clean & Green Technology"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 16
+  },
+  {
+    "id": "SIH25015",
+    "code": "SIH25015",
+    "title": "Intelligent Pesticide Sprinkling System Determined by the Infection Level of a Plant",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Hardware",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Hard",
+    "description": "Intelligent Pesticide Sprinkling System Determined by the Infection Level of a Plant Official SIH problem statement SIH25015 under Agriculture, FoodTech & Rural Development (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working hardware prototype that addresses: Intelligent Pesticide Sprinkling System Determined by the Infection Level of a Plant",
+    "technicalRequirements": [
+      "Hardware",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Hardware",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 17
+  },
+  {
+    "id": "SIH25016",
+    "code": "SIH25016",
+    "title": "Automated Student Attendance Monitoring and Analytics System for Colleges",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Automated Student Attendance Monitoring and Analytics System for Colleges Official SIH problem statement SIH25016 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Automated Student Attendance Monitoring and Analytics System for Colleges",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 18
+  },
+  {
+    "id": "SIH25017",
+    "code": "SIH25017",
+    "title": "Digital Platform for Centralized Alumni Data Management and Engagement",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Digital Platform for Centralized Alumni Data Management and Engagement Official SIH problem statement SIH25017 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Digital Platform for Centralized Alumni Data Management and Engagement",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 19
+  },
+  {
+    "id": "SIH25018",
+    "code": "SIH25018",
+    "title": "Telemedicine Access for Rural Healthcare in Nabha",
+    "organization": "MedTech / BioTech / HealthTech",
+    "category": "Software",
+    "theme": "MedTech / BioTech / HealthTech",
+    "difficulty": "Medium",
+    "description": "Telemedicine Access for Rural Healthcare in Nabha Official SIH problem statement SIH25018 under MedTech / BioTech / HealthTech (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: MedTech / BioTech / HealthTech.",
+    "expectedSolution": "A working software prototype that addresses: Telemedicine Access for Rural Healthcare in Nabha",
+    "technicalRequirements": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "technologies": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 20
+  },
+  {
+    "id": "SIH25019",
+    "code": "SIH25019",
+    "title": "Digital Learning Platform for Rural School Students in Nabha",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Digital Learning Platform for Rural School Students in Nabha Official SIH problem statement SIH25019 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Digital Learning Platform for Rural School Students in Nabha",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 21
+  },
+  {
+    "id": "SIH25020",
+    "code": "SIH25020",
+    "title": "Development of indigenous contactless Integrated Track Monitoring Systems (ITMS) for Track Recording on Indian Railways",
+    "organization": "Smart Automation",
+    "category": "Hardware",
+    "theme": "Smart Automation",
+    "difficulty": "Hard",
+    "description": "Development of indigenous contactless Integrated Track Monitoring Systems (ITMS) for Track Recording on Indian Railways Official SIH problem statement SIH25020 under Smart Automation (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Automation.",
+    "expectedSolution": "A working hardware prototype that addresses: Development of indigenous contactless Integrated Track Monitoring Systems (ITMS) for Track Recording on Indian Railways",
+    "technicalRequirements": [
+      "Hardware",
+      "Smart Automation"
+    ],
+    "technologies": [
+      "Hardware",
+      "Smart Automation"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 22
+  },
+  {
+    "id": "SIH25021",
+    "code": "SIH25021",
+    "title": "AI based development of Laser based QR Code marking on track fittings on Indian Railways",
+    "organization": "Transportation & Logistics",
+    "category": "Hardware",
+    "theme": "Transportation & Logistics",
+    "difficulty": "Hard",
+    "description": "AI based development of Laser based QR Code marking on track fittings on Indian Railways Official SIH problem statement SIH25021 under Transportation & Logistics (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Transportation & Logistics.",
+    "expectedSolution": "A working hardware prototype that addresses: AI based development of Laser based QR Code marking on track fittings on Indian Railways",
+    "technicalRequirements": [
+      "Hardware",
+      "Transportation & Logistics"
+    ],
+    "technologies": [
+      "Hardware",
+      "Transportation & Logistics"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 23
+  },
+  {
+    "id": "SIH25022",
+    "code": "SIH25022",
+    "title": "Maximizing Section Throughput Using AI- Powered Precise Train Traffic Control",
+    "organization": "Transportation & Logistics",
+    "category": "Software",
+    "theme": "Transportation & Logistics",
+    "difficulty": "Medium",
+    "description": "Maximizing Section Throughput Using AI- Powered Precise Train Traffic Control Official SIH problem statement SIH25022 under Transportation & Logistics (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Transportation & Logistics.",
+    "expectedSolution": "A working software prototype that addresses: Maximizing Section Throughput Using AI- Powered Precise Train Traffic Control",
+    "technicalRequirements": [
+      "Software",
+      "Transportation & Logistics"
+    ],
+    "technologies": [
+      "Software",
+      "Transportation & Logistics"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 24
+  },
+  {
+    "id": "SIH25023",
+    "code": "SIH25023",
+    "title": "AyurSutra- Panchakarma Patient Management and therapy scheduling Software",
+    "organization": "MedTech / BioTech / HealthTech",
+    "category": "Software",
+    "theme": "MedTech / BioTech / HealthTech",
+    "difficulty": "Medium",
+    "description": "AyurSutra- Panchakarma Patient Management and therapy scheduling Software Official SIH problem statement SIH25023 under MedTech / BioTech / HealthTech (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: MedTech / BioTech / HealthTech.",
+    "expectedSolution": "A working software prototype that addresses: AyurSutra- Panchakarma Patient Management and therapy scheduling Software",
+    "technicalRequirements": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "technologies": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 25
+  },
+  {
+    "id": "SIH25024",
+    "code": "SIH25024",
+    "title": "Comprehensive Cloud- Based Practice Management & Nutrient Analysis Software for Ayurvedic Dietitians, Tailored for Ayurveda- Focused Diet Plans",
+    "organization": "MedTech / BioTech / HealthTech",
+    "category": "Software",
+    "theme": "MedTech / BioTech / HealthTech",
+    "difficulty": "Medium",
+    "description": "Comprehensive Cloud- Based Practice Management & Nutrient Analysis Software for Ayurvedic Dietitians, Tailored for Ayurveda- Focused Diet Plans Official SIH problem statement SIH25024 under MedTech / BioTech / HealthTech (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: MedTech / BioTech / HealthTech.",
+    "expectedSolution": "A working software prototype that addresses: Comprehensive Cloud- Based Practice Management & Nutrient Analysis Software for Ayurvedic Dietitians, Tailored for Ayurveda- Focused Diet Plans",
+    "technicalRequirements": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "technologies": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 26
+  },
+  {
+    "id": "SIH25025",
+    "code": "SIH25025",
+    "title": "E tongue for Dravya identification",
+    "organization": "MedTech / BioTech / HealthTech",
+    "category": "Hardware",
+    "theme": "MedTech / BioTech / HealthTech",
+    "difficulty": "Hard",
+    "description": "E tongue for Dravya identification Official SIH problem statement SIH25025 under MedTech / BioTech / HealthTech (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: MedTech / BioTech / HealthTech.",
+    "expectedSolution": "A working hardware prototype that addresses: E tongue for Dravya identification",
+    "technicalRequirements": [
+      "Hardware",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "technologies": [
+      "Hardware",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 27
+  },
+  {
+    "id": "SIH25026",
+    "code": "SIH25026",
+    "title": "Develop API code to integrate NAMASTE and or the International Classification of Diseases (ICD-11) via the Traditional Medicine Module 2 (TM2) into existing EMR systems that comply with Electronic Health Record (EHR) Standards for India.",
+    "organization": "MedTech / BioTech / HealthTech",
+    "category": "Software",
+    "theme": "MedTech / BioTech / HealthTech",
+    "difficulty": "Medium",
+    "description": "Develop API code to integrate NAMASTE and or the International Classification of Diseases (ICD-11) via the Traditional Medicine Module 2 (TM2) into existing EMR systems that comply with Electronic Health Record (EHR) Standards for India. Official SIH problem statement SIH25026 under MedTech / BioTech / HealthTech (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: MedTech / BioTech / HealthTech.",
+    "expectedSolution": "A working software prototype that addresses: Develop API code to integrate NAMASTE and or the International Classification of Diseases (ICD-11) via the Traditional Medicine Module 2 (TM2) into existing EMR systems that comply with Electronic Health Record (EHR) Standards for India.",
+    "technicalRequirements": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "technologies": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 28
+  },
+  {
+    "id": "SIH25027",
+    "code": "SIH25027",
+    "title": "Develop a blockchain- based system for botanical traceability of Ayurvedic herbs, including geo- tagging from the point of collection (farmers/wild collectors) to the final Ayurvedic formulation label.",
+    "organization": "Blockchain & Cybersecurity",
+    "category": "Software",
+    "theme": "Blockchain & Cybersecurity",
+    "difficulty": "Medium",
+    "description": "Develop a blockchain- based system for botanical traceability of Ayurvedic herbs, including geo- tagging from the point of collection (farmers/wild collectors) to the final Ayurvedic formulation label. Official SIH problem statement SIH25027 under Blockchain & Cybersecurity (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Blockchain & Cybersecurity.",
+    "expectedSolution": "A working software prototype that addresses: Develop a blockchain- based system for botanical traceability of Ayurvedic herbs, including geo- tagging from the point of collection (farmers/wild collectors) to the final Ayurvedic formulation label.",
+    "technicalRequirements": [
+      "Software",
+      "Blockchain & Cybersecurity"
+    ],
+    "technologies": [
+      "Software",
+      "Blockchain & Cybersecurity"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 29
+  },
+  {
+    "id": "SIH25028",
+    "code": "SIH25028",
+    "title": "Smart Classroom & Timetable Scheduler",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Smart Classroom & Timetable Scheduler Official SIH problem statement SIH25028 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Smart Classroom & Timetable Scheduler",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 30
+  },
+  {
+    "id": "SIH25029",
+    "code": "SIH25029",
+    "title": "Authenticity Validator for Academia",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Authenticity Validator for Academia Official SIH problem statement SIH25029 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Authenticity Validator for Academia",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 31
+  },
+  {
+    "id": "SIH25030",
+    "code": "SIH25030",
+    "title": "AI-Based Crop Recommendation for Farmers",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Software",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Medium",
+    "description": "AI-Based Crop Recommendation for Farmers Official SIH problem statement SIH25030 under Agriculture, FoodTech & Rural Development (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working software prototype that addresses: AI-Based Crop Recommendation for Farmers",
+    "technicalRequirements": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 32
+  },
+  {
+    "id": "SIH25031",
+    "code": "SIH25031",
+    "title": "Crowdsourced Civic Issue Reporting and Resolution System",
+    "organization": "Clean & Green Technology",
+    "category": "Software",
+    "theme": "Clean & Green Technology",
+    "difficulty": "Medium",
+    "description": "Crowdsourced Civic Issue Reporting and Resolution System Official SIH problem statement SIH25031 under Clean & Green Technology (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Clean & Green Technology.",
+    "expectedSolution": "A working software prototype that addresses: Crowdsourced Civic Issue Reporting and Resolution System",
+    "technicalRequirements": [
+      "Software",
+      "Clean & Green Technology"
+    ],
+    "technologies": [
+      "Software",
+      "Clean & Green Technology"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 33
+  },
+  {
+    "id": "SIH25032",
+    "code": "SIH25032",
+    "title": "Development of a Smart Digital Platform to Promote Eco & Cultural Tourism in Jharkhand",
+    "organization": "Travel & Tourism",
+    "category": "Software",
+    "theme": "Travel & Tourism",
+    "difficulty": "Medium",
+    "description": "Development of a Smart Digital Platform to Promote Eco & Cultural Tourism in Jharkhand Official SIH problem statement SIH25032 under Travel & Tourism (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Travel & Tourism.",
+    "expectedSolution": "A working software prototype that addresses: Development of a Smart Digital Platform to Promote Eco & Cultural Tourism in Jharkhand",
+    "technicalRequirements": [
+      "Software",
+      "Travel & Tourism"
+    ],
+    "technologies": [
+      "Software",
+      "Travel & Tourism"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 34
+  },
+  {
+    "id": "SIH25033",
+    "code": "SIH25033",
+    "title": "AI-Based Smart Allocation Engine for PM Internship Scheme",
+    "organization": "Smart Automation",
+    "category": "Software",
+    "theme": "Smart Automation",
+    "difficulty": "Medium",
+    "description": "AI-Based Smart Allocation Engine for PM Internship Scheme Official SIH problem statement SIH25033 under Smart Automation (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Automation.",
+    "expectedSolution": "A working software prototype that addresses: AI-Based Smart Allocation Engine for PM Internship Scheme",
+    "technicalRequirements": [
+      "Software",
+      "Smart Automation"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Automation"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 35
+  },
+  {
+    "id": "SIH25034",
+    "code": "SIH25034",
+    "title": "AI-Based Internship Recommendation Engine for PM Internship Scheme",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "AI-Based Internship Recommendation Engine for PM Internship Scheme Official SIH problem statement SIH25034 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: AI-Based Internship Recommendation Engine for PM Internship Scheme",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 36
+  },
+  {
+    "id": "SIH25035",
+    "code": "SIH25035",
+    "title": "Sentiment analysis of comments received through E-consultation module",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Sentiment analysis of comments received through E-consultation module Official SIH problem statement SIH25035 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Sentiment analysis of comments received through E-consultation module",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 37
+  },
+  {
+    "id": "SIH25036",
+    "code": "SIH25036",
+    "title": "Development of Sensor for Detection Of Microplastics",
+    "organization": "Miscellaneous",
+    "category": "Hardware",
+    "theme": "Miscellaneous",
+    "difficulty": "Hard",
+    "description": "Development of Sensor for Detection Of Microplastics Official SIH problem statement SIH25036 under Miscellaneous (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working hardware prototype that addresses: Development of Sensor for Detection Of Microplastics",
+    "technicalRequirements": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 38
+  },
+  {
+    "id": "SIH25037",
+    "code": "SIH25037",
+    "title": "Development of a low-cost camera-based automated beach sand grain size mapping system",
+    "organization": "Miscellaneous",
+    "category": "Hardware",
+    "theme": "Miscellaneous",
+    "difficulty": "Hard",
+    "description": "Development of a low-cost camera-based automated beach sand grain size mapping system Official SIH problem statement SIH25037 under Miscellaneous (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working hardware prototype that addresses: Development of a low-cost camera-based automated beach sand grain size mapping system",
+    "technicalRequirements": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 39
+  },
+  {
+    "id": "SIH25038",
+    "code": "SIH25038",
+    "title": "Blockchain-Based Blue Carbon Registry and MRV System",
+    "organization": "Clean & Green Technology",
+    "category": "Software",
+    "theme": "Clean & Green Technology",
+    "difficulty": "Medium",
+    "description": "Blockchain-Based Blue Carbon Registry and MRV System Official SIH problem statement SIH25038 under Clean & Green Technology (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Clean & Green Technology.",
+    "expectedSolution": "A working software prototype that addresses: Blockchain-Based Blue Carbon Registry and MRV System",
+    "technicalRequirements": [
+      "Software",
+      "Clean & Green Technology"
+    ],
+    "technologies": [
+      "Software",
+      "Clean & Green Technology"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 40
+  },
+  {
+    "id": "SIH25039",
+    "code": "SIH25039",
+    "title": "Integrated Platform for Crowdsourced Ocean Hazard Reporting and Social Media Analytics",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Integrated Platform for Crowdsourced Ocean Hazard Reporting and Social Media Analytics Official SIH problem statement SIH25039 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Integrated Platform for Crowdsourced Ocean Hazard Reporting and Social Media Analytics",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 41
+  },
+  {
+    "id": "SIH25040",
+    "code": "SIH25040",
+    "title": "FloatChat - AI-Powered Conversational Interface for ARGO Ocean Data Discovery and Visualization",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "FloatChat - AI-Powered Conversational Interface for ARGO Ocean Data Discovery and Visualization Official SIH problem statement SIH25040 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: FloatChat - AI-Powered Conversational Interface for ARGO Ocean Data Discovery and Visualization",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 42
+  },
+  {
+    "id": "SIH25041",
+    "code": "SIH25041",
+    "title": "AI-Driven Unified Data Platform for Oceanographic, Fisheries, and Molecular Biodiversity Insights",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "AI-Driven Unified Data Platform for Oceanographic, Fisheries, and Molecular Biodiversity Insights Official SIH problem statement SIH25041 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: AI-Driven Unified Data Platform for Oceanographic, Fisheries, and Molecular Biodiversity Insights",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 43
+  },
+  {
+    "id": "SIH25042",
+    "code": "SIH25042",
+    "title": "Identifying Taxonomy and Assessing Biodiversity from eDNA Datasets",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Identifying Taxonomy and Assessing Biodiversity from eDNA Datasets Official SIH problem statement SIH25042 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Identifying Taxonomy and Assessing Biodiversity from eDNA Datasets",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 44
+  },
+  {
+    "id": "SIH25043",
+    "code": "SIH25043",
+    "title": "Embedded Intelligent Microscopy System for Identification and Counting of Microscopic Marine Organisms",
+    "organization": "Miscellaneous",
+    "category": "Hardware",
+    "theme": "Miscellaneous",
+    "difficulty": "Hard",
+    "description": "Embedded Intelligent Microscopy System for Identification and Counting of Microscopic Marine Organisms Official SIH problem statement SIH25043 under Miscellaneous (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working hardware prototype that addresses: Embedded Intelligent Microscopy System for Identification and Counting of Microscopic Marine Organisms",
+    "technicalRequirements": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 45
+  },
+  {
+    "id": "SIH25044",
+    "code": "SIH25044",
+    "title": "AI-Powered Crop Yield Prediction and Optimization",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "AI-Powered Crop Yield Prediction and Optimization Official SIH problem statement SIH25044 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: AI-Powered Crop Yield Prediction and Optimization",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 46
+  },
+  {
+    "id": "SIH25045",
+    "code": "SIH25045",
+    "title": "Blockchain-Based Supply Chain Transparency for Agricultural Produce",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Blockchain-Based Supply Chain Transparency for Agricultural Produce Official SIH problem statement SIH25045 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Blockchain-Based Supply Chain Transparency for Agricultural Produce",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 47
+  },
+  {
+    "id": "SIH25046",
+    "code": "SIH25046",
+    "title": "Smart Waste Segregation and Recycling System",
+    "organization": "Miscellaneous",
+    "category": "Hardware",
+    "theme": "Miscellaneous",
+    "difficulty": "Hard",
+    "description": "Smart Waste Segregation and Recycling System Official SIH problem statement SIH25046 under Miscellaneous (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working hardware prototype that addresses: Smart Waste Segregation and Recycling System",
+    "technicalRequirements": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 48
+  },
+  {
+    "id": "SIH25047",
+    "code": "SIH25047",
+    "title": "Disaster Response Drone for Remote Areas",
+    "organization": "Miscellaneous",
+    "category": "Hardware",
+    "theme": "Miscellaneous",
+    "difficulty": "Hard",
+    "description": "Disaster Response Drone for Remote Areas Official SIH problem statement SIH25047 under Miscellaneous (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working hardware prototype that addresses: Disaster Response Drone for Remote Areas",
+    "technicalRequirements": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 49
+  },
+  {
+    "id": "SIH25048",
+    "code": "SIH25048",
+    "title": "Gamified Learning Platform for Rural Education",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Gamified Learning Platform for Rural Education Official SIH problem statement SIH25048 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Gamified Learning Platform for Rural Education",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 50
+  },
+  {
+    "id": "SIH25049",
+    "code": "SIH25049",
+    "title": "AI-Driven Public Health Chatbot for Disease Awareness",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "AI-Driven Public Health Chatbot for Disease Awareness Official SIH problem statement SIH25049 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: AI-Driven Public Health Chatbot for Disease Awareness",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 51
+  },
+  {
+    "id": "SIH25050",
+    "code": "SIH25050",
+    "title": "Smart Traffic Management System for Urban Congestion",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Smart Traffic Management System for Urban Congestion Official SIH problem statement SIH25050 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Smart Traffic Management System for Urban Congestion",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 52
+  },
+  {
+    "id": "SIH25051",
+    "code": "SIH25051",
+    "title": "Renewable Energy Monitoring System for Microgrids",
+    "organization": "Renewable / Sustainable Energy",
+    "category": "Hardware",
+    "theme": "Renewable / Sustainable Energy",
+    "difficulty": "Hard",
+    "description": "Renewable Energy Monitoring System for Microgrids Official SIH problem statement SIH25051 under Renewable / Sustainable Energy (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Renewable / Sustainable Energy.",
+    "expectedSolution": "A working hardware prototype that addresses: Renewable Energy Monitoring System for Microgrids",
+    "technicalRequirements": [
+      "Hardware",
+      "Renewable / Sustainable Energy"
+    ],
+    "technologies": [
+      "Hardware",
+      "Renewable / Sustainable Energy"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 53
+  },
+  {
+    "id": "SIH25052",
+    "code": "SIH25052",
+    "title": "AR-Based Cultural Heritage Preservation Platform",
+    "organization": "Heritage & Culture",
+    "category": "Software",
+    "theme": "Heritage & Culture",
+    "difficulty": "Medium",
+    "description": "AR-Based Cultural Heritage Preservation Platform Official SIH problem statement SIH25052 under Heritage & Culture (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Heritage & Culture.",
+    "expectedSolution": "A working software prototype that addresses: AR-Based Cultural Heritage Preservation Platform",
+    "technicalRequirements": [
+      "Software",
+      "Heritage & Culture"
+    ],
+    "technologies": [
+      "Software",
+      "Heritage & Culture"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 54
+  },
+  {
+    "id": "SIH25053",
+    "code": "SIH25053",
+    "title": "Improved Onion storage technology for enhancing shelf life of onions",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Hardware",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Hard",
+    "description": "Improved Onion storage technology for enhancing shelf life of onions Official SIH problem statement SIH25053 under Agriculture, FoodTech & Rural Development (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working hardware prototype that addresses: Improved Onion storage technology for enhancing shelf life of onions",
+    "technicalRequirements": [
+      "Hardware",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Hardware",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 55
+  },
+  {
+    "id": "SIH25054",
+    "code": "SIH25054",
+    "title": "Automated High-Current Short-Circuit Test System for MCB to comply with IEC 60898-1:2015",
+    "organization": "Smart Automation",
+    "category": "Hardware",
+    "theme": "Smart Automation",
+    "difficulty": "Hard",
+    "description": "Automated High-Current Short-Circuit Test System for MCB to comply with IEC 60898-1:2015 Official SIH problem statement SIH25054 under Smart Automation (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Automation.",
+    "expectedSolution": "A working hardware prototype that addresses: Automated High-Current Short-Circuit Test System for MCB to comply with IEC 60898-1:2015",
+    "technicalRequirements": [
+      "Hardware",
+      "Smart Automation"
+    ],
+    "technologies": [
+      "Hardware",
+      "Smart Automation"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 56
+  },
+  {
+    "id": "SIH25055",
+    "code": "SIH25055",
+    "title": "Automated Specimen Preparation System for testing of Cable samples as per IS 10810 and IS 7098.",
+    "organization": "Miscellaneous",
+    "category": "Hardware",
+    "theme": "Miscellaneous",
+    "difficulty": "Hard",
+    "description": "Automated Specimen Preparation System for testing of Cable samples as per IS 10810 and IS 7098. Official SIH problem statement SIH25055 under Miscellaneous (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working hardware prototype that addresses: Automated Specimen Preparation System for testing of Cable samples as per IS 10810 and IS 7098.",
+    "technicalRequirements": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 57
+  },
+  {
+    "id": "SIH25056",
+    "code": "SIH25056",
+    "title": "To explore new/alternative assaying methods to the fire assay method for testing of gold jewellery and artefacts through non- destructive testing",
+    "organization": "Miscellaneous",
+    "category": "Hardware",
+    "theme": "Miscellaneous",
+    "difficulty": "Hard",
+    "description": "To explore new/alternative assaying methods to the fire assay method for testing of gold jewellery and artefacts through non- destructive testing Official SIH problem statement SIH25056 under Miscellaneous (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working hardware prototype that addresses: To explore new/alternative assaying methods to the fire assay method for testing of gold jewellery and artefacts through non- destructive testing",
+    "technicalRequirements": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 58
+  },
+  {
+    "id": "SIH25057",
+    "code": "SIH25057",
+    "title": "Automated Compliance Checker for Legal Metrology Declarations on E-Commerce Platforms",
+    "organization": "Miscellaneous",
+    "category": "Hardware",
+    "theme": "Miscellaneous",
+    "difficulty": "Hard",
+    "description": "Automated Compliance Checker for Legal Metrology Declarations on E-Commerce Platforms Official SIH problem statement SIH25057 under Miscellaneous (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working hardware prototype that addresses: Automated Compliance Checker for Legal Metrology Declarations on E-Commerce Platforms",
+    "technicalRequirements": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 59
+  },
+  {
+    "id": "SIH25058",
+    "code": "SIH25058",
+    "title": "Detection and Prevention of Tampering in Weighing and Measuring instruments",
+    "organization": "Miscellaneous",
+    "category": "Hardware",
+    "theme": "Miscellaneous",
+    "difficulty": "Hard",
+    "description": "Detection and Prevention of Tampering in Weighing and Measuring instruments Official SIH problem statement SIH25058 under Miscellaneous (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working hardware prototype that addresses: Detection and Prevention of Tampering in Weighing and Measuring instruments",
+    "technicalRequirements": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 60
+  },
+  {
+    "id": "SIH25059",
+    "code": "SIH25059",
+    "title": "Enhancing Student Awareness on difference between Aadhaar linked and Direct Beneficiary Transfer(DBT) enabled Aadhaar seeded bank account.",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Enhancing Student Awareness on difference between Aadhaar linked and Direct Beneficiary Transfer(DBT) enabled Aadhaar seeded bank account. Official SIH problem statement SIH25059 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Enhancing Student Awareness on difference between Aadhaar linked and Direct Beneficiary Transfer(DBT) enabled Aadhaar seeded bank account.",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 61
+  },
+  {
+    "id": "SIH25060",
+    "code": "SIH25060",
+    "title": "Real life solutions for Waste Management.",
+    "organization": "Clean & Green Technology",
+    "category": "Software",
+    "theme": "Clean & Green Technology",
+    "difficulty": "Medium",
+    "description": "Real life solutions for Waste Management. Official SIH problem statement SIH25060 under Clean & Green Technology (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Clean & Green Technology.",
+    "expectedSolution": "A working software prototype that addresses: Real life solutions for Waste Management.",
+    "technicalRequirements": [
+      "Software",
+      "Clean & Green Technology"
+    ],
+    "technologies": [
+      "Software",
+      "Clean & Green Technology"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 62
+  },
+  {
+    "id": "SIH25061",
+    "code": "SIH25061",
+    "title": "Digitize and Showcase Monasteries of Sikkim for Tourism and Cultural Preservation",
+    "organization": "Travel & Tourism",
+    "category": "Software",
+    "theme": "Travel & Tourism",
+    "difficulty": "Medium",
+    "description": "Digitize and Showcase Monasteries of Sikkim for Tourism and Cultural Preservation Official SIH problem statement SIH25061 under Travel & Tourism (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Travel & Tourism.",
+    "expectedSolution": "A working software prototype that addresses: Digitize and Showcase Monasteries of Sikkim for Tourism and Cultural Preservation",
+    "technicalRequirements": [
+      "Software",
+      "Travel & Tourism"
+    ],
+    "technologies": [
+      "Software",
+      "Travel & Tourism"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 63
+  },
+  {
+    "id": "SIH25062",
+    "code": "SIH25062",
+    "title": "Implementation of Smart Agriculture for Efficient Cultivation in Hilly Regions",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Hardware",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Hard",
+    "description": "Implementation of Smart Agriculture for Efficient Cultivation in Hilly Regions Official SIH problem statement SIH25062 under Agriculture, FoodTech & Rural Development (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working hardware prototype that addresses: Implementation of Smart Agriculture for Efficient Cultivation in Hilly Regions",
+    "technicalRequirements": [
+      "Hardware",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Hardware",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 64
+  },
+  {
+    "id": "SIH25063",
+    "code": "SIH25063",
+    "title": "Developing a cost effective solution for detecting the breakage of Low Voltage AC Distribution Over Head conductors",
+    "organization": "Disaster Management",
+    "category": "Hardware",
+    "theme": "Disaster Management",
+    "difficulty": "Hard",
+    "description": "Developing a cost effective solution for detecting the breakage of Low Voltage AC Distribution Over Head conductors Official SIH problem statement SIH25063 under Disaster Management (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Disaster Management.",
+    "expectedSolution": "A working hardware prototype that addresses: Developing a cost effective solution for detecting the breakage of Low Voltage AC Distribution Over Head conductors",
+    "technicalRequirements": [
+      "Hardware",
+      "Disaster Management"
+    ],
+    "technologies": [
+      "Hardware",
+      "Disaster Management"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 65
+  },
+  {
+    "id": "SIH25064",
+    "code": "SIH25064",
+    "title": "Improving the Renewable Energy hosting capacity in Distribution Feeders improving the Power quality of Distribution network during high RE injection",
+    "organization": "Renewable / Sustainable Energy",
+    "category": "Hardware",
+    "theme": "Renewable / Sustainable Energy",
+    "difficulty": "Hard",
+    "description": "Improving the Renewable Energy hosting capacity in Distribution Feeders improving the Power quality of Distribution network during high RE injection Official SIH problem statement SIH25064 under Renewable / Sustainable Energy (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Renewable / Sustainable Energy.",
+    "expectedSolution": "A working hardware prototype that addresses: Improving the Renewable Energy hosting capacity in Distribution Feeders improving the Power quality of Distribution network during high RE injection",
+    "technicalRequirements": [
+      "Hardware",
+      "Renewable / Sustainable Energy"
+    ],
+    "technologies": [
+      "Hardware",
+      "Renewable / Sustainable Energy"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 66
+  },
+  {
+    "id": "SIH25065",
+    "code": "SIH25065",
+    "title": "Designing and development of an application for on spot assessment of Roof Top Rain water harvesting and artificial recharge potential and size of the RTRWH and AR.",
+    "organization": "Smart Automation",
+    "category": "Software",
+    "theme": "Smart Automation",
+    "difficulty": "Medium",
+    "description": "Designing and development of an application for on spot assessment of Roof Top Rain water harvesting and artificial recharge potential and size of the RTRWH and AR. Official SIH problem statement SIH25065 under Smart Automation (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Automation.",
+    "expectedSolution": "A working software prototype that addresses: Designing and development of an application for on spot assessment of Roof Top Rain water harvesting and artificial recharge potential and size of the RTRWH and AR.",
+    "technicalRequirements": [
+      "Software",
+      "Smart Automation"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Automation"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 67
+  },
+  {
+    "id": "SIH25066",
+    "code": "SIH25066",
+    "title": "Development of an AI- driven ChatBOT for INGRES as a virtual assistant",
+    "organization": "Smart Automation",
+    "category": "Software",
+    "theme": "Smart Automation",
+    "difficulty": "Medium",
+    "description": "Development of an AI- driven ChatBOT for INGRES as a virtual assistant Official SIH problem statement SIH25066 under Smart Automation (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Automation.",
+    "expectedSolution": "A working software prototype that addresses: Development of an AI- driven ChatBOT for INGRES as a virtual assistant",
+    "technicalRequirements": [
+      "Software",
+      "Smart Automation"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Automation"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 68
+  },
+  {
+    "id": "SIH25067",
+    "code": "SIH25067",
+    "title": "Proposal for Design and development of application or Heavy Metal Pollution indices",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Proposal for Design and development of application or Heavy Metal Pollution indices Official SIH problem statement SIH25067 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Proposal for Design and development of application or Heavy Metal Pollution indices",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 69
+  },
+  {
+    "id": "SIH25068",
+    "code": "SIH25068",
+    "title": "Real time Groundwater resource evaluation using DWLR data",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Real time Groundwater resource evaluation using DWLR data Official SIH problem statement SIH25068 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Real time Groundwater resource evaluation using DWLR data",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 70
+  },
+  {
+    "id": "SIH25069",
+    "code": "SIH25069",
+    "title": "AI-Driven Life Cycle Assessment (LCA) Tool for Advancing Circularity and Sustainability in Metallurgy and Mining",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "AI-Driven Life Cycle Assessment (LCA) Tool for Advancing Circularity and Sustainability in Metallurgy and Mining Official SIH problem statement SIH25069 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: AI-Driven Life Cycle Assessment (LCA) Tool for Advancing Circularity and Sustainability in Metallurgy and Mining",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 71
+  },
+  {
+    "id": "SIH25070",
+    "code": "SIH25070",
+    "title": "Secure Data Wiping for Trustworthy IT Asset Recycling",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Secure Data Wiping for Trustworthy IT Asset Recycling Official SIH problem statement SIH25070 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Secure Data Wiping for Trustworthy IT Asset Recycling",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 72
+  },
+  {
+    "id": "SIH25071",
+    "code": "SIH25071",
+    "title": "AI-Based Rockfall Prediction and Alert System for Open-Pit Mines",
+    "organization": "Disaster Management",
+    "category": "Software",
+    "theme": "Disaster Management",
+    "difficulty": "Medium",
+    "description": "AI-Based Rockfall Prediction and Alert System for Open-Pit Mines Official SIH problem statement SIH25071 under Disaster Management (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Disaster Management.",
+    "expectedSolution": "A working software prototype that addresses: AI-Based Rockfall Prediction and Alert System for Open-Pit Mines",
+    "technicalRequirements": [
+      "Software",
+      "Disaster Management"
+    ],
+    "technologies": [
+      "Software",
+      "Disaster Management"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 73
+  },
+  {
+    "id": "SIH25072",
+    "code": "SIH25072",
+    "title": "Design and Implementation of Solar- Powered Dewatering in Mining Operations.",
+    "organization": "Renewable / Sustainable Energy",
+    "category": "Hardware",
+    "theme": "Renewable / Sustainable Energy",
+    "difficulty": "Hard",
+    "description": "Design and Implementation of Solar- Powered Dewatering in Mining Operations. Official SIH problem statement SIH25072 under Renewable / Sustainable Energy (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Renewable / Sustainable Energy.",
+    "expectedSolution": "A working hardware prototype that addresses: Design and Implementation of Solar- Powered Dewatering in Mining Operations.",
+    "technicalRequirements": [
+      "Hardware",
+      "Renewable / Sustainable Energy"
+    ],
+    "technologies": [
+      "Hardware",
+      "Renewable / Sustainable Energy"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 74
+  },
+  {
+    "id": "SIH25073",
+    "code": "SIH25073",
+    "title": "AI-Powered Mobile Platform for Democratizing Sports Talent Assessment",
+    "organization": "Fitness & Sports",
+    "category": "Software",
+    "theme": "Fitness & Sports",
+    "difficulty": "Medium",
+    "description": "AI-Powered Mobile Platform for Democratizing Sports Talent Assessment Official SIH problem statement SIH25073 under Fitness & Sports (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Fitness & Sports.",
+    "expectedSolution": "A working software prototype that addresses: AI-Powered Mobile Platform for Democratizing Sports Talent Assessment",
+    "technicalRequirements": [
+      "Software",
+      "Fitness & Sports"
+    ],
+    "technologies": [
+      "Software",
+      "Fitness & Sports"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 75
+  },
+  {
+    "id": "SIH25074",
+    "code": "SIH25074",
+    "title": "AI-Powered Personal Farming Assistant for Kerala Farmers",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Software",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Medium",
+    "description": "AI-Powered Personal Farming Assistant for Kerala Farmers Official SIH problem statement SIH25074 under Agriculture, FoodTech & Rural Development (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working software prototype that addresses: AI-Powered Personal Farming Assistant for Kerala Farmers",
+    "technicalRequirements": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 76
+  },
+  {
+    "id": "SIH25075",
+    "code": "SIH25075",
+    "title": "Gamified Platform to Promote Sustainable Farming Practices",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Software",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Medium",
+    "description": "Gamified Platform to Promote Sustainable Farming Practices Official SIH problem statement SIH25075 under Agriculture, FoodTech & Rural Development (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working software prototype that addresses: Gamified Platform to Promote Sustainable Farming Practices",
+    "technicalRequirements": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 77
+  },
+  {
+    "id": "SIH25076",
+    "code": "SIH25076",
+    "title": "AI-Based Farmer Query Support and Advisory System",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Software",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Medium",
+    "description": "AI-Based Farmer Query Support and Advisory System Official SIH problem statement SIH25076 under Agriculture, FoodTech & Rural Development (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working software prototype that addresses: AI-Based Farmer Query Support and Advisory System",
+    "technicalRequirements": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 78
+  },
+  {
+    "id": "SIH25077",
+    "code": "SIH25077",
+    "title": "A hardware that can detect and prevent unauthorized use of electric fences",
+    "organization": "Smart Automation",
+    "category": "Hardware",
+    "theme": "Smart Automation",
+    "difficulty": "Hard",
+    "description": "A hardware that can detect and prevent unauthorized use of electric fences Official SIH problem statement SIH25077 under Smart Automation (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Automation.",
+    "expectedSolution": "A working hardware prototype that addresses: A hardware that can detect and prevent unauthorized use of electric fences",
+    "technicalRequirements": [
+      "Hardware",
+      "Smart Automation"
+    ],
+    "technologies": [
+      "Hardware",
+      "Smart Automation"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 79
+  },
+  {
+    "id": "SIH25079",
+    "code": "SIH25079",
+    "title": "Software other than a circuit breaker that can be used to detect and turn off LT lines when the line breaks",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Software other than a circuit breaker that can be used to detect and turn off LT lines when the line breaks Official SIH problem statement SIH25079 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Software other than a circuit breaker that can be used to detect and turn off LT lines when the line breaks",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 80
+  },
+  {
+    "id": "SIH25080",
+    "code": "SIH25080",
+    "title": "Document Overload at Kochi Metro Rail Limited (KMRL)-An automated solution",
+    "organization": "Smart Automation",
+    "category": "Software",
+    "theme": "Smart Automation",
+    "difficulty": "Medium",
+    "description": "Document Overload at Kochi Metro Rail Limited (KMRL)-An automated solution Official SIH problem statement SIH25080 under Smart Automation (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Automation.",
+    "expectedSolution": "A working software prototype that addresses: Document Overload at Kochi Metro Rail Limited (KMRL)-An automated solution",
+    "technicalRequirements": [
+      "Software",
+      "Smart Automation"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Automation"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 81
+  },
+  {
+    "id": "SIH25081",
+    "code": "SIH25081",
+    "title": "AI-Driven Train Induction Planning & Scheduling for Kochi Metro Rail Limited (KMRL)",
+    "organization": "Smart Automation",
+    "category": "Software",
+    "theme": "Smart Automation",
+    "difficulty": "Medium",
+    "description": "AI-Driven Train Induction Planning & Scheduling for Kochi Metro Rail Limited (KMRL) Official SIH problem statement SIH25081 under Smart Automation (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Automation.",
+    "expectedSolution": "A working software prototype that addresses: AI-Driven Train Induction Planning & Scheduling for Kochi Metro Rail Limited (KMRL)",
+    "technicalRequirements": [
+      "Software",
+      "Smart Automation"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Automation"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 82
+  },
+  {
+    "id": "SIH25082",
+    "code": "SIH25082",
+    "title": "Development of a travel related software app that can be installed on mobile phones that could capture trip related information",
+    "organization": "Travel & Tourism",
+    "category": "Software",
+    "theme": "Travel & Tourism",
+    "difficulty": "Medium",
+    "description": "Development of a travel related software app that can be installed on mobile phones that could capture trip related information Official SIH problem statement SIH25082 under Travel & Tourism (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Travel & Tourism.",
+    "expectedSolution": "A working software prototype that addresses: Development of a travel related software app that can be installed on mobile phones that could capture trip related information",
+    "technicalRequirements": [
+      "Software",
+      "Travel & Tourism"
+    ],
+    "technologies": [
+      "Software",
+      "Travel & Tourism"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 83
+  },
+  {
+    "id": "SIH25083",
+    "code": "SIH25083",
+    "title": "Digital Health Record Management System for migrant workers in Kerala aligned with sustainable development goals.",
+    "organization": "MedTech / BioTech / HealthTech",
+    "category": "Software",
+    "theme": "MedTech / BioTech / HealthTech",
+    "difficulty": "Medium",
+    "description": "Digital Health Record Management System for migrant workers in Kerala aligned with sustainable development goals. Official SIH problem statement SIH25083 under MedTech / BioTech / HealthTech (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: MedTech / BioTech / HealthTech.",
+    "expectedSolution": "A working software prototype that addresses: Digital Health Record Management System for migrant workers in Kerala aligned with sustainable development goals.",
+    "technicalRequirements": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "technologies": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 84
+  },
+  {
+    "id": "SIH25084",
+    "code": "SIH25084",
+    "title": "Earthquake stabilised dialysis system for patient safety during seismic events.",
+    "organization": "Disaster Management",
+    "category": "Hardware",
+    "theme": "Disaster Management",
+    "difficulty": "Hard",
+    "description": "Earthquake stabilised dialysis system for patient safety during seismic events. Official SIH problem statement SIH25084 under Disaster Management (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Disaster Management.",
+    "expectedSolution": "A working hardware prototype that addresses: Earthquake stabilised dialysis system for patient safety during seismic events.",
+    "technicalRequirements": [
+      "Hardware",
+      "Disaster Management"
+    ],
+    "technologies": [
+      "Hardware",
+      "Disaster Management"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 85
+  },
+  {
+    "id": "SIH25085",
+    "code": "SIH25085",
+    "title": "Solution for NON- REVENUE LOSS IN WATER SUPPLY Solution to improve AWARENESS IN WATER CONSERVATION TREATMENT OF WASTE WATER AND REUSE FOR DOMESTIC PURPOSES",
+    "organization": "Miscellaneous",
+    "category": "Hardware",
+    "theme": "Miscellaneous",
+    "difficulty": "Hard",
+    "description": "Solution for NON- REVENUE LOSS IN WATER SUPPLY Solution to improve AWARENESS IN WATER CONSERVATION TREATMENT OF WASTE WATER AND REUSE FOR DOMESTIC PURPOSES Official SIH problem statement SIH25085 under Miscellaneous (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working hardware prototype that addresses: Solution for NON- REVENUE LOSS IN WATER SUPPLY Solution to improve AWARENESS IN WATER CONSERVATION TREATMENT OF WASTE WATER AND REUSE FOR DOMESTIC PURPOSES",
+    "technicalRequirements": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Hardware",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 86
+  },
+  {
+    "id": "SIH25090",
+    "code": "SIH25090",
+    "title": "GREY WATER MANAGEMENT AND REUSE WET LAND MANAGEMENT WATER CONSERVATION",
+    "organization": "Clean & Green Technology",
+    "category": "Hardware",
+    "theme": "Clean & Green Technology",
+    "difficulty": "Hard",
+    "description": "GREY WATER MANAGEMENT AND REUSE WET LAND MANAGEMENT WATER CONSERVATION Official SIH problem statement SIH25090 under Clean & Green Technology (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Clean & Green Technology.",
+    "expectedSolution": "A working hardware prototype that addresses: GREY WATER MANAGEMENT AND REUSE WET LAND MANAGEMENT WATER CONSERVATION",
+    "technicalRequirements": [
+      "Hardware",
+      "Clean & Green Technology"
+    ],
+    "technologies": [
+      "Hardware",
+      "Clean & Green Technology"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 87
+  },
+  {
+    "id": "SIH25091",
+    "code": "SIH25091",
+    "title": "AI-Based Timetable Generation System aligned with NEP 2020 for Multidisciplinary Education Structures",
+    "organization": "Smart Automation",
+    "category": "Software",
+    "theme": "Smart Automation",
+    "difficulty": "Medium",
+    "description": "AI-Based Timetable Generation System aligned with NEP 2020 for Multidisciplinary Education Structures Official SIH problem statement SIH25091 under Smart Automation (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Automation.",
+    "expectedSolution": "A working software prototype that addresses: AI-Based Timetable Generation System aligned with NEP 2020 for Multidisciplinary Education Structures",
+    "technicalRequirements": [
+      "Software",
+      "Smart Automation"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Automation"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 88
+  },
+  {
+    "id": "SIH25092",
+    "code": "SIH25092",
+    "title": "Development of a Digital Mental Health and Psychological Support System for Students in Higher Education",
+    "organization": "MedTech / BioTech / HealthTech",
+    "category": "Software",
+    "theme": "MedTech / BioTech / HealthTech",
+    "difficulty": "Medium",
+    "description": "Development of a Digital Mental Health and Psychological Support System for Students in Higher Education Official SIH problem statement SIH25092 under MedTech / BioTech / HealthTech (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: MedTech / BioTech / HealthTech.",
+    "expectedSolution": "A working software prototype that addresses: Development of a Digital Mental Health and Psychological Support System for Students in Higher Education",
+    "technicalRequirements": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "technologies": [
+      "Software",
+      "MedTech / BioTech / HealthTech"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 89
+  },
+  {
+    "id": "SIH25093",
+    "code": "SIH25093",
+    "title": "Centralised Digital Platform for Comprehensive student activity record in HEIs",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Centralised Digital Platform for Comprehensive student activity record in HEIs Official SIH problem statement SIH25093 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Centralised Digital Platform for Comprehensive student activity record in HEIs",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 90
+  },
+  {
+    "id": "SIH25094",
+    "code": "SIH25094",
+    "title": "One-Stop Personalized Career & Education Advisor",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "One-Stop Personalized Career & Education Advisor Official SIH problem statement SIH25094 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: One-Stop Personalized Career & Education Advisor",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 91
+  },
+  {
+    "id": "SIH25095",
+    "code": "SIH25095",
+    "title": "Research and redesign a sport equipment commonly found in sport industry and utilize Fusion software to reimagine its design. Students can use Fusion Features such as Generative Design, Topology Optimization, Additive Build etc. The redesigned component should showcase innovation, enhanced functionality, and improved efficiency, all while being optimized for 3D printing.",
+    "organization": "Smart Education",
+    "category": "Hardware",
+    "theme": "Smart Education",
+    "difficulty": "Hard",
+    "description": "Research and redesign a sport equipment commonly found in sport industry and utilize Fusion software to reimagine its design. Students can use Fusion Features such as Generative Design, Topology Optimization, Additive Build etc. The redesigned component should showcase innovation, enhanced functionality, and improved efficiency, all while being optimized for 3D printing. Official SIH problem statement SIH25095 under Smart Education (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working hardware prototype that addresses: Research and redesign a sport equipment commonly found in sport industry and utilize Fusion software to reimagine its design. Students can use Fusion Features such as Generative Design, Topology Optimization, Additive Build etc. The redesigned component should showcase innovation, enhanced functionality, and improved efficiency, all while being optimized for 3D printing.",
+    "technicalRequirements": [
+      "Hardware",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Hardware",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 92
+  },
+  {
+    "id": "SIH25096",
+    "code": "SIH25096",
+    "title": "Students are supposed to use Fusion software to generate NC code with machine details & tool library for any industrial component. • Students should possess technical skills in areas such as CAD/CAM software, G-code programming, toolpath optimization, and machining fundamentals. Additionally, their project ideas should demonstrate a viable solution to a real-world problem, ensuring feasibility and practicality in implementation.",
+    "organization": "Smart Education",
+    "category": "Hardware",
+    "theme": "Smart Education",
+    "difficulty": "Hard",
+    "description": "Students are supposed to use Fusion software to generate NC code with machine details & tool library for any industrial component. • Students should possess technical skills in areas such as CAD/CAM software, G-code programming, toolpath optimization, and machining fundamentals. Additionally, their project ideas should demonstrate a viable solution to a real-world problem, ensuring feasibility and practicality in implementation. Official SIH problem statement SIH25096 under Smart Education (Hardware).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working hardware prototype that addresses: Students are supposed to use Fusion software to generate NC code with machine details & tool library for any industrial component. • Students should possess technical skills in areas such as CAD/CAM software, G-code programming, toolpath optimization, and machining fundamentals. Additionally, their project ideas should demonstrate a viable solution to a real-world problem, ensuring feasibility and practicality in implementation.",
+    "technicalRequirements": [
+      "Hardware",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Hardware",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 93
+  },
+  {
+    "id": "SIH25097",
+    "code": "SIH25097",
+    "title": "Research and develop a design on autonomous small precision focused machine for planting crops or weeding.",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Research and develop a design on autonomous small precision focused machine for planting crops or weeding. Official SIH problem statement SIH25097 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Research and develop a design on autonomous small precision focused machine for planting crops or weeding.",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 94
+  },
+  {
+    "id": "SIH25098",
+    "code": "SIH25098",
+    "title": "Students are tasked with designing a 4- story commercial office building using Revit Architecture and Revit Structure , ensuring effective integration between architectural and structural models in a BIM environment.(The size of the plot can be assumed by the students, all the dimensions wherever necessary can be assumed by students in mm units.)",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Students are tasked with designing a 4- story commercial office building using Revit Architecture and Revit Structure , ensuring effective integration between architectural and structural models in a BIM environment.(The size of the plot can be assumed by the students, all the dimensions wherever necessary can be assumed by students in mm units.) Official SIH problem statement SIH25098 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Students are tasked with designing a 4- story commercial office building using Revit Architecture and Revit Structure , ensuring effective integration between architectural and structural models in a BIM environment.(The size of the plot can be assumed by the students, all the dimensions wherever necessary can be assumed by students in mm units.)",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 95
+  },
+  {
+    "id": "SIH25099",
+    "code": "SIH25099",
+    "title": "AI-powered monitoring of crop health, soil condition, and pest risks using multispectral/hyperspectral imaging and sensor data.",
+    "organization": "Agriculture, FoodTech & Rural Development",
+    "category": "Software",
+    "theme": "Agriculture, FoodTech & Rural Development",
+    "difficulty": "Medium",
+    "description": "AI-powered monitoring of crop health, soil condition, and pest risks using multispectral/hyperspectral imaging and sensor data. Official SIH problem statement SIH25099 under Agriculture, FoodTech & Rural Development (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Agriculture, FoodTech & Rural Development.",
+    "expectedSolution": "A working software prototype that addresses: AI-powered monitoring of crop health, soil condition, and pest risks using multispectral/hyperspectral imaging and sensor data.",
+    "technicalRequirements": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "technologies": [
+      "Software",
+      "Agriculture, FoodTech & Rural Development"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 96
+  },
+  {
+    "id": "SIH25100",
+    "code": "SIH25100",
+    "title": "Accelerating High-Fidelity Road Network Modeling for Indian Traffic Simulations.",
+    "organization": "Miscellaneous",
+    "category": "Software",
+    "theme": "Miscellaneous",
+    "difficulty": "Medium",
+    "description": "Accelerating High-Fidelity Road Network Modeling for Indian Traffic Simulations. Official SIH problem statement SIH25100 under Miscellaneous (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Miscellaneous.",
+    "expectedSolution": "A working software prototype that addresses: Accelerating High-Fidelity Road Network Modeling for Indian Traffic Simulations.",
+    "technicalRequirements": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "technologies": [
+      "Software",
+      "Miscellaneous"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 97
+  },
+  {
+    "id": "SIH25101",
+    "code": "SIH25101",
+    "title": "Remote classroom for rural colleges",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Remote classroom for rural colleges Official SIH problem statement SIH25101 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Remote classroom for rural colleges",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 98
+  },
+  {
+    "id": "SIH25102",
+    "code": "SIH25102",
+    "title": "AI-based drop-out prediction and counseling system",
+    "organization": "Smart Automation",
+    "category": "Software",
+    "theme": "Smart Automation",
+    "difficulty": "Medium",
+    "description": "AI-based drop-out prediction and counseling system Official SIH problem statement SIH25102 under Smart Automation (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Automation.",
+    "expectedSolution": "A working software prototype that addresses: AI-based drop-out prediction and counseling system",
+    "technicalRequirements": [
+      "Software",
+      "Smart Automation"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Automation"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 99
+  },
+  {
+    "id": "SIH25103",
+    "code": "SIH25103",
+    "title": "ERP-based Integrated Student Management system",
+    "organization": "Smart Automation",
+    "category": "Software",
+    "theme": "Smart Automation",
+    "difficulty": "Medium",
+    "description": "ERP-based Integrated Student Management system Official SIH problem statement SIH25103 under Smart Automation (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Automation.",
+    "expectedSolution": "A working software prototype that addresses: ERP-based Integrated Student Management system",
+    "technicalRequirements": [
+      "Software",
+      "Smart Automation"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Automation"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 100
+  },
+  {
+    "id": "SIH25104",
+    "code": "SIH25104",
+    "title": "Language Agnostic Chatbot",
+    "organization": "Smart Education",
+    "category": "Software",
+    "theme": "Smart Education",
+    "difficulty": "Medium",
+    "description": "Language Agnostic Chatbot Official SIH problem statement SIH25104 under Smart Education (Software).",
+    "background": "Published in the SIH Themes and Problem Statements booklet. Theme: Smart Education.",
+    "expectedSolution": "A working software prototype that addresses: Language Agnostic Chatbot",
+    "technicalRequirements": [
+      "Software",
+      "Smart Education"
+    ],
+    "technologies": [
+      "Software",
+      "Smart Education"
+    ],
+    "constraints": [
+      "Follow SIH guidelines from the official problem-statement PDF."
+    ],
+    "evaluationCriteria": [
+      "Relevance to the problem",
+      "Technical feasibility",
+      "Impact"
+    ],
+    "selectedCount": 0,
+    "maxSelections": 2,
+    "status": "AVAILABLE",
+    "pdfPage": null,
+    "sortOrder": 101
+  }
+]

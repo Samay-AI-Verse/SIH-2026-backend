@@ -78,34 +78,40 @@ def seed_database(db: Session):
 
     # 4. Seed Standard SIH Problem Statements
     count = db.query(Problem).count()
-    if count <= 1: # Only Open Innovation or empty
-        base_dir = pathlib.Path(__file__).resolve().parent.parent.parent
-        json_path = base_dir / "SIH-Frontend" / "src" / "data" / "problem-statements.json"
-        if not json_path.exists():
-            json_path = base_dir / "src" / "data" / "problem-statements.json"
-        if json_path.exists():
+    if count <= 5: # Only Open Innovation or incomplete seed
+        app_dir = pathlib.Path(__file__).resolve().parent
+        candidate_paths = [
+            app_dir / "data" / "problem-statements.json",
+            app_dir / "problem-statements.json",
+            app_dir.parent.parent / "SIH-Frontend" / "src" / "data" / "problem-statements.json",
+            app_dir.parent.parent / "src" / "data" / "problem-statements.json",
+        ]
+        json_path = next((p for p in candidate_paths if p.exists()), None)
+        if json_path and json_path.exists():
             with open(json_path, "r", encoding="utf-8") as f:
                 problems_data = json.load(f)
                 for item in problems_data:
-                    prob = Problem(
-                        id=item["id"],
-                        code=item.get("code", item["id"]),
-                        title=item["title"],
-                        organization=item.get("organization", ""),
-                        category=item.get("category", "Software"),
-                        theme=item.get("theme", ""),
-                        difficulty=item.get("difficulty", "Medium"),
-                        description=item.get("description", ""),
-                        background=item.get("background", ""),
-                        expected_solution=item.get("expectedSolution", ""),
-                        technical_requirements=json.dumps(item.get("technicalRequirements", [])),
-                        technologies=json.dumps(item.get("technologies", [])),
-                        constraint_items=json.dumps(item.get("constraints", [])),
-                        evaluation_criteria=json.dumps(item.get("evaluationCriteria", [])),
-                        selected_count=0,
-                        max_selections=2, # Max 2 teams per problem statement!
-                        status="AVAILABLE",
-                        sort_order=item.get("sortOrder", 100)
-                    )
-                    db.add(prob)
+                    existing = db.query(Problem).filter(Problem.id == item["id"]).first()
+                    if not existing:
+                        prob = Problem(
+                            id=item["id"],
+                            code=item.get("code", item["id"]),
+                            title=item["title"],
+                            organization=item.get("organization", ""),
+                            category=item.get("category", "Software"),
+                            theme=item.get("theme", ""),
+                            difficulty=item.get("difficulty", "Medium"),
+                            description=item.get("description", ""),
+                            background=item.get("background", ""),
+                            expected_solution=item.get("expectedSolution", ""),
+                            technical_requirements=json.dumps(item.get("technicalRequirements", [])),
+                            technologies=json.dumps(item.get("technologies", [])),
+                            constraint_items=json.dumps(item.get("constraints", [])),
+                            evaluation_criteria=json.dumps(item.get("evaluationCriteria", [])),
+                            selected_count=0,
+                            max_selections=2, # Max 2 teams per problem statement!
+                            status="AVAILABLE",
+                            sort_order=item.get("sortOrder", 100)
+                        )
+                        db.add(prob)
             db.commit()
