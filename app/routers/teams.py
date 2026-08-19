@@ -10,9 +10,19 @@ from ..r2_storage import generate_presigned_download_url
 
 router = APIRouter(prefix="/api", tags=["Teams"])
 
-def generate_registration_id(db: Session) -> str:
-    count = db.query(Team).count() + 1
-    return f"SIH26-{count:04d}"
+def generate_registration_id(db: Session, course: str = "", branch: str = "") -> str:
+    combined = f"{course} {branch}".lower().strip()
+    if "diploma" in combined or "poly" in combined:
+        prefix = "DIPLOMA-SIH"
+    elif "pharm" in combined:
+        prefix = "PHARMA-SIH"
+    elif "b.sc" in combined or "m.sc" in combined or "science" in combined:
+        prefix = "BSC-SIH"
+    else:
+        prefix = "ENGG-SIH"
+
+    count = db.query(Team).filter(Team.registration_id.like(f"{prefix}-%")).count() + 1
+    return f"{prefix}-{count:02d}"
 
 @router.post("/register")
 def register_team(req: TeamRegisterRequest, db: Session = Depends(get_db)):
@@ -48,8 +58,8 @@ def register_team(req: TeamRegisterRequest, db: Session = Depends(get_db)):
         if not is_open and problem.selected_count >= problem.max_selections:
             problem.status = "LOCKED"
 
-    # 4. Create Team Record
-    reg_id = generate_registration_id(db)
+    # 4. Create Team Record with Stream Prefix (ENGG-SIH-01 / DIPLOMA-SIH-01)
+    reg_id = generate_registration_id(db, course=req.leader_course or "", branch=req.leader_branch or "")
     team = Team(
         registration_id=reg_id,
         team_name=team_name_clean,

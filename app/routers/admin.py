@@ -244,6 +244,82 @@ def verify_team_payment(
         "registration_status": team.registration_status
     }
 
+@router.get("/payments")
+def list_all_payments(
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    payments = db.query(Payment).order_by(Payment.created_at.desc()).all()
+    results = []
+    teams_dict = {t.id: t for t in db.query(Team).all()}
+
+    for p in payments:
+        team = teams_dict.get(p.team_id)
+        proof_url = None
+        if p.proof_key:
+            proof_url = generate_presigned_download_url(p.proof_key)
+        elif p.proof_url:
+            proof_url = p.proof_url
+        elif team:
+            payment_last = db.query(Payment).filter(Payment.team_id == team.id).order_by(Payment.created_at.desc()).first()
+            if payment_last and payment_last.proof_url:
+                proof_url = payment_last.proof_url
+
+        results.append({
+            "id": p.id,
+            "team_id": p.team_id,
+            "registration_id": p.registration_id or (team.registration_id if team else ""),
+            "team_name": p.team_name or (team.team_name if team else ""),
+            "order_id": p.order_id,
+            "transaction_id": p.transaction_id,
+            "payment_mode": getattr(p, "payment_mode", "ONLINE") or "ONLINE",
+            "collector_name": getattr(p, "collector_name", None),
+            "receipt_no": getattr(p, "receipt_no", None),
+            "amount": p.amount or 300.0,
+            "currency": p.currency or "INR",
+            "status": p.status or (team.payment_status if team else "PENDING"),
+            "proof_url": proof_url,
+            "admin_notes": p.admin_notes or "",
+            "created_at": p.created_at
+        })
+    return results
+
+@router.post("/payments/{payment_id}")
+def update_payment_status(
+    payment_id: str,
+    req: dict,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    payment = db.query(Payment).filter(Payment.id == payment_id).first()
+    if not payment:
+        raise HTTPException(status_code=404, detail="Payment record not found")
+    
+    status_upper = (req.get("status") or "SUCCESS").upper()
+    payment.status = status_upper
+    
+    team = db.query(Team).filter(Team.id == payment.team_id).first()
+    if team:
+        if status_upper == "SUCCESS":
+            team.payment_status = "SUCCESS"
+            team.registration_status = "CONFIRMED"
+        elif status_upper == "FAILED":
+            team.payment_status = "FAILED"
+            team.registration_status = "PAYMENT_FAILED"
+        else:
+            team.payment_status = status_upper
+
+    db.commit()
+
+    try:
+        from .live import notify_live_subscribers
+        import asyncio
+        asyncio.create_task(notify_live_subscribers("all"))
+    except Exception:
+        pass
+
+    return {"success": True, "status": status_upper}
+
 @router.get("/students")
 def get_all_students(
     db: Session = Depends(get_db),
