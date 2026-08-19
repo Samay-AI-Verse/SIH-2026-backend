@@ -71,7 +71,6 @@ def seed_database(db: Session):
             evaluation_criteria=json.dumps(["Novelty & Innovation", "Technical Complexity", "Feasibility & Market Impact"]),
             selected_count=0,
             max_selections=9999, # Open Innovation has unlimited team capacity!
-            is_open_innovation=True,
             status="AVAILABLE",
             sort_order=0
         ))
@@ -105,7 +104,6 @@ def seed_database(db: Session):
                         evaluation_criteria=json.dumps(item.get("evaluationCriteria", [])),
                         selected_count=0,
                         max_selections=2, # Max 2 teams per problem statement!
-                        is_open_innovation=False,
                         status="AVAILABLE",
                         sort_order=item.get("sortOrder", 100)
                     )
