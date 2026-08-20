@@ -21,7 +21,9 @@ class Settings(BaseSettings):
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
-        "https://sih-2026.pages.dev"
+        "https://sih-2026.pages.dev",
+        "https://sih-2026-pi.vercel.app",
+        "*"
     ]
     
     ADMIN_EMAIL: str = os.getenv("ADMIN_EMAIL", "sih@gtmcnanded.in")
