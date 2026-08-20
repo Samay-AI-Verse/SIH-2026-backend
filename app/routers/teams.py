@@ -253,8 +253,9 @@ def update_team_member(team_id: str, member_id: str, payload: dict, db: Session 
     db.commit()
 
     try:
-        from ..d1_sync import sync_team_to_d1
+        from ..d1_sync import sync_team_to_d1, sync_member_to_d1
         sync_team_to_d1(team)
+        sync_member_to_d1(member)
     except Exception:
         pass
 
