@@ -187,6 +187,8 @@ def list_all_teams(
             "selectedProblemId": t.selected_problem_id,
             "selected_problem_title": t.selected_problem_title,
             "selectedProblemTitle": t.selected_problem_title,
+            "selected_problem_code": t.selected_problem_id,
+            "selectedProblemCode": t.selected_problem_id,
             "is_open_innovation": t.is_open_innovation,
             "open_innovation_title": t.open_innovation_title,
             "open_innovation_description": t.open_innovation_description,
@@ -216,11 +218,23 @@ def verify_team_payment(
 ):
     team = db.query(Team).filter(Team.id == req.team_id).first()
     if not team:
+        team = db.query(Team).filter(Team.registration_id == req.team_id).first()
+    if not team:
         raise HTTPException(status_code=404, detail="Team not found")
 
-    payment = db.query(Payment).filter(Payment.team_id == team.id).first()
+    payment = db.query(Payment).filter((Payment.team_id == team.id) | (Payment.team_id == team.registration_id)).first()
     if not payment:
-        raise HTTPException(status_code=404, detail="Payment record not found")
+        import uuid
+        payment = Payment(
+            id=str(uuid.uuid4()),
+            team_id=team.id,
+            registration_id=team.registration_id,
+            team_name=team.team_name,
+            order_id=f"ORD-{team.registration_id}",
+            amount=300.0,
+            status=req.status.upper()
+        )
+        db.add(payment)
 
     status_upper = req.status.upper()
     payment.status = status_upper
@@ -237,6 +251,14 @@ def verify_team_payment(
         team.payment_status = status_upper
 
     db.commit()
+
+    try:
+        from .live import notify_live_subscribers
+        import asyncio
+        asyncio.create_task(notify_live_subscribers("all"))
+    except Exception:
+        pass
+
     return {
         "success": True,
         "team_id": team.id,
