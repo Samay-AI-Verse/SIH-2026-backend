@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: sih-2026-backend
+    env: python
+    region: singapore
+    plan: free
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.8
+      - key: PORT
+        value: 10000
+      - key: DEBUG
+        value: "False"
+      - key: ADMIN_EMAIL
+        value: sih@gtmcnanded.in
+      - key: ADMIN_PASSWORD
+        value: SihGtmc2026!
+      - key: SECRET_KEY
+        value: sih-2026-super-secret-jwt-key-2026
+      - key: CORS_ORIGINS
+        value: "[\"*\"]"
