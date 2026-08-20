@@ -1,5 +1,8 @@
 import os
 import pathlib
+import json
+from typing import Union, List
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
@@ -17,7 +20,7 @@ class Settings(BaseSettings):
     REQUIRED_MEMBERS_COUNT: int = 6
     FEMALE_REQUIRED: bool = True
     
-    CORS_ORIGINS: list[str] = [
+    CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
@@ -25,6 +28,23 @@ class Settings(BaseSettings):
         "https://sih-2026-pi.vercel.app",
         "*"
     ]
+
+    @field_validator("CORS_ORIGINS", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+        if isinstance(v, str):
+            v = v.strip()
+            if not v:
+                return []
+            if v.startswith("[") and v.endswith("]"):
+                try:
+                    return json.loads(v)
+                except Exception:
+                    pass
+            return [i.strip() for i in v.split(",") if i.strip()]
+        elif isinstance(v, list):
+            return v
+        return []
     
     ADMIN_EMAIL: str = os.getenv("ADMIN_EMAIL", "sih@gtmcnanded.in")
     ADMIN_PASSWORD: str = os.getenv("ADMIN_PASSWORD", "SihGtmc2026!")
