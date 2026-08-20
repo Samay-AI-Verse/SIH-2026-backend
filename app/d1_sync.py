@@ -210,3 +210,154 @@ def sync_full_database_to_d1(db: Session):
 
     print("🎉 Cloudflare D1 Background Sync Triggered Successfully!")
 
+
+def pull_from_d1_to_sqlite(db: Session):
+    if not d1_client.is_configured():
+        print("[D1 Sync] Cloudflare D1 credentials not configured. Skipping D1 startup pull.")
+        return
+
+    print("[D1 Sync] Connecting to Cloudflare D1 Cloud Database to pull data...")
+    try:
+        from .models import Team, Member, Payment, Expense, Problem
+
+        def _extract_rows(d1_res):
+            if isinstance(d1_res, dict):
+                return d1_res.get("results", [])
+            elif isinstance(d1_res, list):
+                return d1_res
+            return []
+
+        from sqlalchemy import func
+
+        # 1. Fetch Teams from D1
+        teams_rows = _extract_rows(d1_client.query("SELECT * FROM teams;"))
+        for row in teams_rows:
+            team_id = str(row["id"])
+            reg_id = str(row.get("registration_id", ""))
+            team_name = str(row.get("team_name", ""))
+            existing = db.query(Team).filter(
+                (Team.id == team_id) | (Team.registration_id == reg_id) | (func.lower(Team.team_name) == team_name.lower())
+            ).first()
+            if not existing:
+                new_team = Team(
+                    id=team_id,
+                    registration_id=reg_id,
+                    team_name=team_name,
+                    college=str(row.get("college", "")),
+                    university=str(row.get("university", "")),
+                    city=str(row.get("city", "")),
+                    state=str(row.get("state", "")),
+                    leader_name=str(row.get("leader_name", "")),
+                    leader_email=str(row.get("leader_email", "")),
+                    leader_phone=str(row.get("leader_phone", "")),
+                    leader_gender=str(row.get("leader_gender", "")),
+                    leader_course=str(row.get("leader_course", "B.Tech")),
+                    leader_branch=str(row.get("leader_branch", "")),
+                    leader_year=str(row.get("leader_year", "")),
+                    leader_student_id=str(row.get("leader_student_id", "")),
+                    registration_status=str(row.get("registration_status", "CONFIRMED")),
+                    payment_status=str(row.get("payment_status", "PENDING")),
+                    selected_problem_id=row.get("selected_problem_id"),
+                    selected_problem_title=row.get("selected_problem_title"),
+                    is_open_innovation=bool(row.get("is_open_innovation", 0)),
+                    open_innovation_title=row.get("open_innovation_title"),
+                    open_innovation_description=row.get("open_innovation_description"),
+                    registered_at=str(row.get("registered_at", "")),
+                    updated_at=str(row.get("updated_at", ""))
+                )
+                db.add(new_team)
+            else:
+                existing.registration_status = str(row.get("registration_status", existing.registration_status))
+                existing.payment_status = str(row.get("payment_status", existing.payment_status))
+                existing.selected_problem_id = row.get("selected_problem_id", existing.selected_problem_id)
+                existing.selected_problem_title = row.get("selected_problem_title", existing.selected_problem_title)
+            try:
+                db.commit()
+            except Exception:
+                db.rollback()
+
+        # 2. Fetch Members from D1
+        members_rows = _extract_rows(d1_client.query("SELECT * FROM members;"))
+        for row in members_rows:
+            member_id = str(row["id"])
+            existing_m = db.query(Member).filter(Member.id == member_id).first()
+            if not existing_m:
+                new_member = Member(
+                    id=member_id,
+                    team_id=str(row.get("team_id", "")),
+                    full_name=str(row.get("full_name", "")),
+                    email=str(row.get("email", "")),
+                    phone=str(row.get("phone", "")),
+                    is_leader=bool(row.get("is_leader", 0)),
+                    gender=str(row.get("gender", "")),
+                    college=str(row.get("college", "")),
+                    course=str(row.get("course", "")),
+                    branch=str(row.get("branch", "")),
+                    year=str(row.get("year", "")),
+                    student_id=str(row.get("student_id", "")),
+                    created_at=str(row.get("created_at", ""))
+                )
+                db.add(new_member)
+            try:
+                db.commit()
+            except Exception:
+                db.rollback()
+
+        # 3. Fetch Payments from D1
+        payments_rows = _extract_rows(d1_client.query("SELECT * FROM payments;"))
+        for row in payments_rows:
+            payment_id = str(row["id"])
+            existing_p = db.query(Payment).filter(Payment.id == payment_id).first()
+            if not existing_p:
+                new_payment = Payment(
+                    id=payment_id,
+                    team_id=str(row.get("team_id", "")),
+                    registration_id=str(row.get("registration_id", "")),
+                    team_name=str(row.get("team_name", "")),
+                    order_id=str(row.get("order_id", f"ORD-{payment_id[:8]}")),
+                    transaction_id=row.get("transaction_id"),
+                    proof_key=row.get("proof_key"),
+                    proof_url=row.get("proof_url"),
+                    payment_mode=str(row.get("payment_mode", "ONLINE")),
+                    collector_name=row.get("collector_name"),
+                    receipt_no=row.get("receipt_no"),
+                    amount=float(row.get("amount", 300.0)),
+                    currency=str(row.get("currency", "INR")),
+                    status=str(row.get("status", "PENDING")),
+                    admin_notes=str(row.get("admin_notes", "")),
+                    created_at=str(row.get("created_at", "")),
+                    updated_at=str(row.get("updated_at", ""))
+                )
+                db.add(new_payment)
+            try:
+                db.commit()
+            except Exception:
+                db.rollback()
+
+        # 4. Fetch Expenses from D1
+        expenses_rows = _extract_rows(d1_client.query("SELECT * FROM expenses;"))
+        for row in expenses_rows:
+            expense_id = str(row["id"])
+            existing_e = db.query(Expense).filter(Expense.id == expense_id).first()
+            if not existing_e:
+                new_expense = Expense(
+                    id=expense_id,
+                    title=str(row.get("title", "")),
+                    category=str(row.get("category", "General")),
+                    amount=float(row.get("amount", 0.0)),
+                    paid_to=str(row.get("paid_to", "")),
+                    notes=str(row.get("notes", "")),
+                    date=str(row.get("date", "")),
+                    created_at=str(row.get("created_at", ""))
+                )
+                db.add(new_expense)
+            try:
+                db.commit()
+            except Exception:
+                db.rollback()
+
+        print(f"[D1 Sync] Startup Pull Complete! Local DB has {db.query(Team).count()} teams, {db.query(Member).count()} members, {db.query(Payment).count()} payments.")
+    except Exception as e:
+        print("[D1 Sync] Pull Notice:", e)
+
+

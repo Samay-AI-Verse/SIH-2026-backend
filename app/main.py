@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from .config import settings
 from .database import engine, Base, SessionLocal
 from .seed_data import seed_database
+from .d1_sync import pull_from_d1_to_sqlite
 from .routers import auth, teams, dashboard, problems, payments, admin, live
 
 # Initialize FastAPI App
@@ -55,6 +56,8 @@ def startup_event():
     db = SessionLocal()
     try:
         seed_database(db)
+        # 3. Auto-pull all records from Cloudflare D1 Cloud Database into local SQLite
+        pull_from_d1_to_sqlite(db)
     finally:
         db.close()
 
