@@ -17,7 +17,7 @@ def get_admin_stats(
 ):
     teams = db.query(Team).all()
     total_teams = len(teams)
-    total_members = db.query(Member).count()
+    total_members = db.query(Member).join(Team, Member.team_id == Team.id).count()
     paid_teams = sum(1 for t in teams if t.payment_status == "SUCCESS")
     pending_teams = sum(1 for t in teams if t.payment_status in ["PENDING", "PROCESSING"])
     failed_teams = sum(1 for t in teams if t.payment_status in ["FAILED", "CANCELLED", "REFUNDED"])
@@ -534,13 +534,13 @@ async def delete_team_permanently(
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
 ):
-    team = db.query(Team).filter(Team.id == team_id).first()
-    if not team:
-        team = db.query(Team).filter(Team.registration_id == team_id).first()
+    team = db.query(Team).filter((Team.id == team_id) | (Team.registration_id == team_id)).first()
     if not team:
         raise HTTPException(status_code=404, detail="Team not found")
 
     team_name = team.team_name
+    real_id = team.id
+    reg_id = team.registration_id
 
     # Free up problem selection quota if applicable
     if team.selected_problem_id:
@@ -556,11 +556,11 @@ async def delete_team_permanently(
             except Exception:
                 pass
 
-    # Delete members
-    db.query(Member).filter(Member.team_id == team.id).delete(synchronize_session=False)
+    # Delete members by team.id or team.registration_id
+    db.query(Member).filter((Member.team_id == real_id) | (Member.team_id == reg_id)).delete(synchronize_session=False)
 
-    # Delete payment records
-    db.query(Payment).filter(Payment.team_id == team.id).delete(synchronize_session=False)
+    # Delete payment records by team.id or team.registration_id
+    db.query(Payment).filter((Payment.team_id == real_id) | (Payment.registration_id == reg_id)).delete(synchronize_session=False)
 
     # Delete team row
     db.delete(team)
@@ -569,9 +569,9 @@ async def delete_team_permanently(
     # Sync deletion to Cloudflare D1 Cloud
     try:
         from ..d1_sync import delete_team_from_d1
-        delete_team_from_d1(team_id)
-        if team.registration_id:
-            delete_team_from_d1(team.registration_id)
+        delete_team_from_d1(real_id)
+        if reg_id:
+            delete_team_from_d1(reg_id)
     except Exception:
         pass
 

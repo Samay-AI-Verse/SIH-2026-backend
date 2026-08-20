@@ -148,8 +148,8 @@ def sync_problem_to_d1(problem):
     _exec_d1_async(sql, params)
 
 def delete_team_from_d1(team_id: str):
-    _exec_d1_async("DELETE FROM members WHERE team_id = ?;", [str(team_id)])
-    _exec_d1_async("DELETE FROM payments WHERE team_id = ?;", [str(team_id)])
+    _exec_d1_async("DELETE FROM members WHERE team_id = ? OR team_id IN (SELECT registration_id FROM teams WHERE id = ?);", [str(team_id), str(team_id)])
+    _exec_d1_async("DELETE FROM payments WHERE team_id = ? OR team_id IN (SELECT registration_id FROM teams WHERE id = ?);", [str(team_id), str(team_id)])
     _exec_d1_async("DELETE FROM teams WHERE id = ? OR registration_id = ?;", [str(team_id), str(team_id)])
 
 def delete_member_from_d1(member_id: str):
@@ -231,6 +231,18 @@ def pull_from_d1_to_sqlite(db: Session):
 
         # 1. Fetch Teams from D1
         teams_rows = _extract_rows(d1_client.query("SELECT * FROM teams;"))
+        d1_team_ids = {str(r["id"]) for r in teams_rows}
+        d1_reg_ids = {str(r.get("registration_id", "")) for r in teams_rows if r.get("registration_id")}
+
+        # Purge teams in local SQLite that were deleted from D1
+        local_teams = db.query(Team).all()
+        for lt in local_teams:
+            if lt.id not in d1_team_ids and lt.registration_id not in d1_reg_ids:
+                db.query(Member).filter((Member.team_id == lt.id) | (Member.team_id == lt.registration_id)).delete(synchronize_session=False)
+                db.query(Payment).filter((Payment.team_id == lt.id) | (Payment.registration_id == lt.registration_id)).delete(synchronize_session=False)
+                db.delete(lt)
+        db.commit()
+
         for row in teams_rows:
             team_id = str(row["id"])
             reg_id = str(row.get("registration_id", ""))
@@ -355,6 +367,12 @@ def pull_from_d1_to_sqlite(db: Session):
                 db.commit()
             except Exception:
                 db.rollback()
+
+        # Purge any remaining orphan members or payments in local SQLite
+        all_local_team_ids = {t.id for t in db.query(Team).all()}.union({t.registration_id for t in db.query(Team).all()})
+        db.query(Member).filter(~Member.team_id.in_(all_local_team_ids)).delete(synchronize_session=False)
+        db.query(Payment).filter(~Payment.team_id.in_(all_local_team_ids)).delete(synchronize_session=False)
+        db.commit()
 
         print(f"[D1 Sync] Startup Pull Complete! Local DB has {db.query(Team).count()} teams, {db.query(Member).count()} members, {db.query(Payment).count()} payments.")
     except Exception as e:
