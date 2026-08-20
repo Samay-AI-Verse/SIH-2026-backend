@@ -6,15 +6,13 @@ from .d1_client import CloudflareD1Client
 
 d1_client = CloudflareD1Client()
 
-def _exec_d1_async(sql, params):
+def _exec_d1_sync(sql, params):
     if not d1_client.is_configured():
         return
-    def _worker():
-        try:
-            d1_client.query(sql, params)
-        except Exception as e:
-            print("⚠️ Cloudflare D1 Sync Warning:", e)
-    threading.Thread(target=_worker, daemon=True).start()
+    try:
+        d1_client.query(sql, params)
+    except Exception as e:
+        print("⚠️ Cloudflare D1 Sync Warning:", e)
 
 def sync_team_to_d1(team):
     sql = """INSERT OR REPLACE INTO teams (
@@ -49,7 +47,7 @@ def sync_team_to_d1(team):
         str(team.registered_at or ""),
         str(team.updated_at or "")
     ]
-    _exec_d1_async(sql, params)
+    _exec_d1_sync(sql, params)
 
 def sync_member_to_d1(member):
     sql = """INSERT OR REPLACE INTO members (
@@ -70,7 +68,7 @@ def sync_member_to_d1(member):
         str(member.student_id or ""),
         str(member.created_at or "")
     ]
-    _exec_d1_async(sql, params)
+    _exec_d1_sync(sql, params)
 
 def sync_payment_to_d1(payment):
     sql = """INSERT OR REPLACE INTO payments (
@@ -96,7 +94,7 @@ def sync_payment_to_d1(payment):
         str(payment.created_at or ""),
         str(payment.updated_at or "")
     ]
-    _exec_d1_async(sql, params)
+    _exec_d1_sync(sql, params)
 
 def sync_expense_to_d1(expense):
     sql = """INSERT OR REPLACE INTO expenses (
@@ -111,7 +109,7 @@ def sync_expense_to_d1(expense):
         str(expense.notes or ""),
         str(expense.created_at or "")
     ]
-    _exec_d1_async(sql, params)
+    _exec_d1_sync(sql, params)
 
 def sync_problem_to_d1(problem):
     sql = """INSERT OR REPLACE INTO problems (
@@ -145,21 +143,21 @@ def sync_problem_to_d1(problem):
         str(problem.status or "AVAILABLE"),
         int(problem.sort_order or 0)
     ]
-    _exec_d1_async(sql, params)
+    _exec_d1_sync(sql, params)
 
 def delete_team_from_d1(team_id: str):
-    _exec_d1_async("DELETE FROM members WHERE team_id = ? OR team_id IN (SELECT registration_id FROM teams WHERE id = ?);", [str(team_id), str(team_id)])
-    _exec_d1_async("DELETE FROM payments WHERE team_id = ? OR team_id IN (SELECT registration_id FROM teams WHERE id = ?);", [str(team_id), str(team_id)])
-    _exec_d1_async("DELETE FROM teams WHERE id = ? OR registration_id = ?;", [str(team_id), str(team_id)])
+    _exec_d1_sync("DELETE FROM members WHERE team_id = ? OR team_id IN (SELECT registration_id FROM teams WHERE id = ?);", [str(team_id), str(team_id)])
+    _exec_d1_sync("DELETE FROM payments WHERE team_id = ? OR team_id IN (SELECT registration_id FROM teams WHERE id = ?);", [str(team_id), str(team_id)])
+    _exec_d1_sync("DELETE FROM teams WHERE id = ? OR registration_id = ?;", [str(team_id), str(team_id)])
 
 def delete_member_from_d1(member_id: str):
-    _exec_d1_async("DELETE FROM members WHERE id = ?;", [str(member_id)])
+    _exec_d1_sync("DELETE FROM members WHERE id = ?;", [str(member_id)])
 
 def delete_payment_from_d1(payment_id: str):
-    _exec_d1_async("DELETE FROM payments WHERE id = ?;", [str(payment_id)])
+    _exec_d1_sync("DELETE FROM payments WHERE id = ?;", [str(payment_id)])
 
 def delete_expense_from_d1(expense_id: str):
-    _exec_d1_async("DELETE FROM expenses WHERE id = ?;", [str(expense_id)])
+    _exec_d1_sync("DELETE FROM expenses WHERE id = ?;", [str(expense_id)])
 
 def register_d1_hooks(SessionClass):
     @event.listens_for(SessionClass, "after_flush")
