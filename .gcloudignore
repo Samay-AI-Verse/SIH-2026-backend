@@ -1,0 +1,11 @@
+.git
+.gitignore
+__pycache__/
+app/__pycache__/
+app/routers/__pycache__/
+*.pyc
+*.db
+.env
+scratch/
+uploads/
+cloudflare_d1_export.json
