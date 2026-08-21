@@ -3,10 +3,11 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import Optional, List
 from ..database import get_db
-from ..models import Team, Member, Payment, Problem, Admin, Setting
-from ..schemas import PaymentVerifyRequest, ExpenseCreateRequest, TeamCancelRequest, TeamNameUpdateRequest
-from ..auth import get_current_admin
+from ..models import Team, Member, Payment, Problem, Admin, Setting, AdminLoginLog
+from ..schemas import PaymentVerifyRequest, ExpenseCreateRequest, TeamCancelRequest, TeamNameUpdateRequest, AdminCreateRequest
+from ..auth import get_current_admin, get_password_hash
 from ..r2_storage import generate_presigned_download_url
+
 
 router = APIRouter(prefix="/api/admin", tags=["Admin Operations"])
 
@@ -667,6 +668,167 @@ async def delete_team_permanently(
         "success": True,
         "message": f"Team '{team_name}' and all associated members, payments, and problem quotas were permanently reset and deleted from database."
     }
+
+@router.get("/analytics/daily")
+def get_daily_registration_analytics(
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    teams = db.query(Team).all()
+    
+    # Group teams and student members by registration date (YYYY-MM-DD)
+    date_map = {}
+    
+    for t in teams:
+        raw_date = t.registered_at or t.created_at if hasattr(t, "created_at") else None
+        if raw_date:
+            try:
+                date_str = raw_date[:10]
+            except Exception:
+                date_str = "Unknown"
+        else:
+            date_str = "Unknown"
+            
+        if date_str not in date_map:
+            date_map[date_str] = {
+                "date": date_str,
+                "teams_count": 0,
+                "students_count": 0,
+                "confirmed_teams": 0,
+                "pending_teams": 0
+            }
+            
+        date_map[date_str]["teams_count"] += 1
+        m_count = len(t.members) if t.members else 6
+        date_map[date_str]["students_count"] += m_count
+        
+        is_confirmed = t.registration_status == "CONFIRMED" or t.payment_status == "SUCCESS"
+        if is_confirmed:
+            date_map[date_str]["confirmed_teams"] += 1
+        else:
+            date_map[date_str]["pending_teams"] += 1
+
+    sorted_dates = sorted(date_map.values(), key=lambda x: x["date"], reverse=True)
+    
+    total_teams = len(teams)
+    total_students = sum(d["students_count"] for d in sorted_dates)
+    
+    return {
+        "total_teams": total_teams,
+        "total_students": total_students,
+        "daily_breakdown": sorted_dates
+    }
+
+@router.get("/users")
+def list_admin_users(
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    admins = db.query(Admin).order_by(Admin.created_at.desc()).all()
+    return [
+        {
+            "id": a.id,
+            "email": a.email,
+            "name": a.name,
+            "role": a.role,
+            "created_at": a.created_at
+        }
+        for a in admins
+    ]
+
+@router.post("/users")
+def create_admin_user(
+    req: AdminCreateRequest,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    # Only SUPER_ADMIN can grant Admin privileges
+    if current_admin.role != "SUPER_ADMIN":
+        raise HTTPException(
+            status_code=403,
+            detail="Only Chief Super Admin can grant Admin privileges to students/organizers."
+        )
+
+    clean_email = req.email.lower().strip()
+    existing = db.query(Admin).filter(Admin.email == clean_email).first()
+    if existing:
+        raise HTTPException(status_code=400, detail=f"Admin account with email '{clean_email}' already exists.")
+
+    new_role = (req.role or "ADMIN").upper().strip()
+    if new_role not in ["SUPER_ADMIN", "ADMIN"]:
+        new_role = "ADMIN"
+
+    new_admin = Admin(
+        email=clean_email,
+        name=req.name.strip(),
+        role=new_role,
+        password_hash=get_password_hash(req.password)
+    )
+    db.add(new_admin)
+    db.commit()
+    db.refresh(new_admin)
+
+    return {
+        "success": True,
+        "message": f"Successfully granted Admin role to {new_admin.name} ({new_admin.email}).",
+        "admin": {
+            "id": new_admin.id,
+            "email": new_admin.email,
+            "name": new_admin.name,
+            "role": new_admin.role
+        }
+    }
+
+@router.delete("/users/{admin_id}")
+def revoke_admin_user(
+    admin_id: str,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    if current_admin.role != "SUPER_ADMIN":
+        raise HTTPException(
+            status_code=403,
+            detail="Only Chief Super Admin can revoke Admin access."
+        )
+
+    target_admin = db.query(Admin).filter(Admin.id == admin_id).first()
+    if not target_admin:
+        raise HTTPException(status_code=404, detail="Admin account not found.")
+
+    if target_admin.id == current_admin.id:
+        raise HTTPException(status_code=400, detail="You cannot delete your own Super Admin account.")
+
+    admin_name = target_admin.name
+    admin_email = target_admin.email
+    db.delete(target_admin)
+    db.commit()
+
+    return {
+        "success": True,
+        "message": f"Successfully revoked Admin access for {admin_name} ({admin_email})."
+    }
+
+@router.get("/logs/login")
+def get_admin_login_logs(
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    logs = db.query(AdminLoginLog).order_by(AdminLoginLog.timestamp.desc()).limit(200).all()
+    return [
+        {
+            "id": l.id,
+            "admin_id": l.admin_id,
+            "email": l.email,
+            "name": l.name,
+            "role": l.role,
+            "ip_address": l.ip_address,
+            "user_agent": l.user_agent,
+            "status": l.status,
+            "timestamp": l.timestamp
+        }
+        for l in logs
+    ]
+
 
 
 

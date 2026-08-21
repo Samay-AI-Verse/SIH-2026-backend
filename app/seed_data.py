@@ -45,11 +45,15 @@ def seed_database(db: Session):
     if not existing_admin:
         db.add(Admin(
             email=admin_email,
-            name="SIH Organizer",
-            role="ADMIN",
+            name="SIH Chief Organizer",
+            role="SUPER_ADMIN",
             password_hash=get_password_hash(settings.ADMIN_PASSWORD)
         ))
         db.commit()
+    elif existing_admin.role != "SUPER_ADMIN":
+        existing_admin.role = "SUPER_ADMIN"
+        db.commit()
+
 
     # 3. Seed Open Innovation Problem Statement
     open_inno = db.query(Problem).filter(Problem.id == "OPEN_INNOVATION").first()

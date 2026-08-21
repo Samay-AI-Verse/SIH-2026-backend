@@ -203,4 +203,28 @@ class TeamCancelRequest(BaseModel):
 class TeamNameUpdateRequest(BaseModel):
     team_name: str = Field(..., min_length=3, max_length=100)
 
+class AdminCreateRequest(BaseModel):
+    email: EmailStr
+    name: str = Field(..., min_length=2)
+    password: str = Field(..., min_length=6)
+    role: Optional[str] = "ADMIN" # SUPER_ADMIN or ADMIN
+
+class AdminRoleUpdateRequest(BaseModel):
+    role: str # SUPER_ADMIN or ADMIN
+
+class AdminLoginLogResponse(BaseModel):
+    id: str
+    admin_id: Optional[str] = None
+    email: str
+    name: Optional[str] = None
+    role: Optional[str] = None
+    ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
+    status: str
+    timestamp: str
+
+    class Config:
+        from_attributes = True
+
+
 

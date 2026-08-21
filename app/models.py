@@ -150,3 +150,17 @@ class Expense(Base):
     paid_to = Column(String, default="")
     notes = Column(Text, default="")
     created_at = Column(String, default=utc_now)
+
+class AdminLoginLog(Base):
+    __tablename__ = "admin_login_logs"
+    
+    id = Column(String, primary_key=True, default=generate_uuid)
+    admin_id = Column(String, nullable=True)
+    email = Column(String, nullable=False)
+    name = Column(String, nullable=True)
+    role = Column(String, nullable=True)
+    ip_address = Column(String, nullable=True)
+    user_agent = Column(String, nullable=True)
+    status = Column(String, default="SUCCESS") # SUCCESS / FAILED
+    timestamp = Column(String, default=utc_now)
+
