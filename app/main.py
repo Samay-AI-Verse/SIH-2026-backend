@@ -27,11 +27,12 @@ if isinstance(cors_origins, str):
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
-    allow_origin_regex=r"https://.*\.vercel\.app|https://.*\.onrender\.com|http://localhost:\d+|http://127\.0\.0\.1:\d+",
+    allow_origin_regex=r"https?://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Ensure uploads directory exists
 UPLOAD_DIR = pathlib.Path(__file__).resolve().parent.parent / "uploads"
