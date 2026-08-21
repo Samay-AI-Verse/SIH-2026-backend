@@ -21,8 +21,13 @@ def generate_registration_id(db: Session, course: str = "", branch: str = "") ->
     else:
         prefix = "ENGG-SIH"
 
-    count = db.query(Team).filter(Team.registration_id.like(f"{prefix}-%")).count() + 1
-    return f"{prefix}-{count:02d}"
+    existing_ids = set(
+        r[0] for r in db.query(Team.registration_id).filter(Team.registration_id.like(f"{prefix}-%")).all() if r[0]
+    )
+    counter = 1
+    while f"{prefix}-{counter:02d}" in existing_ids:
+        counter += 1
+    return f"{prefix}-{counter:02d}"
 
 @router.post("/register")
 def register_team(req: TeamRegisterRequest, db: Session = Depends(get_db)):
@@ -38,6 +43,17 @@ def register_team(req: TeamRegisterRequest, db: Session = Depends(get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Team name '{team_name_clean}' is already registered. Please choose a different unique team name."
         )
+
+    # 1b. Duplicate Leader Email Check
+    existing_leader = db.query(Team).filter(
+        func.lower(Team.leader_email) == leader_email_clean
+    ).first()
+    if existing_leader:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Leader email '{leader_email_clean}' is already registered with team '{existing_leader.team_name}'."
+        )
+
 
     # 2. Handle Problem Selection if selected at registration
     problem_title = None
