@@ -200,3 +200,7 @@ class TeamCancelRequest(BaseModel):
     refund: Optional[bool] = False
     admin_notes: Optional[str] = ""
 
+class TeamNameUpdateRequest(BaseModel):
+    team_name: str = Field(..., min_length=3, max_length=100)
+
+

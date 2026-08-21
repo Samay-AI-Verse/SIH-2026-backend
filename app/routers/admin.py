@@ -4,7 +4,7 @@ from sqlalchemy import func
 from typing import Optional, List
 from ..database import get_db
 from ..models import Team, Member, Payment, Problem, Admin, Setting
-from ..schemas import PaymentVerifyRequest, ExpenseCreateRequest, TeamCancelRequest
+from ..schemas import PaymentVerifyRequest, ExpenseCreateRequest, TeamCancelRequest, TeamNameUpdateRequest
 from ..auth import get_current_admin
 from ..r2_storage import generate_presigned_download_url
 
@@ -549,6 +549,65 @@ def cancel_team(
         "registration_status": team.registration_status,
         "payment_status": team.payment_status
     }
+
+@router.put("/teams/{team_id}/name")
+def update_team_name(
+    team_id: str,
+    req: TeamNameUpdateRequest,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    new_name = req.team_name.strip()
+    if len(new_name) < 3:
+        raise HTTPException(status_code=400, detail="Team name must be at least 3 characters long")
+        
+    team = db.query(Team).filter((Team.id == team_id) | (Team.registration_id == team_id)).first()
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    # Check duplicate team name (excluding current team)
+    duplicate = db.query(Team).filter(
+        func.lower(Team.team_name) == new_name.lower(),
+        Team.id != team.id
+    ).first()
+    if duplicate:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Team name '{new_name}' is already taken by team {duplicate.registration_id}."
+        )
+
+    old_name = team.team_name
+    team.team_name = new_name
+
+    # Update associated Payment records
+    payments = db.query(Payment).filter((Payment.team_id == team.id) | (Payment.registration_id == team.registration_id)).all()
+    for p in payments:
+        p.team_name = new_name
+
+    db.commit()
+    db.refresh(team)
+
+    # Sync to Cloudflare D1
+    try:
+        from ..d1_sync import sync_team_to_d1
+        sync_team_to_d1(team)
+    except Exception:
+        pass
+
+    # Notify live subscribers
+    try:
+        from .live import notify_live_subscribers
+        import asyncio
+        asyncio.create_task(notify_live_subscribers("all"))
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "message": f"Team name updated from '{old_name}' to '{new_name}'",
+        "team_name": new_name
+    }
+
 
 @router.delete("/teams/{team_id}")
 async def delete_team_permanently(
