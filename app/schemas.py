@@ -138,6 +138,7 @@ class ProblemOut(BaseModel):
 class ProblemSelectRequest(BaseModel):
     team_id: str
     problem_id: str
+    problem_title: Optional[str] = None
     # If selecting Open Innovation
     is_open_innovation: Optional[bool] = False
     open_innovation_title: Optional[str] = None

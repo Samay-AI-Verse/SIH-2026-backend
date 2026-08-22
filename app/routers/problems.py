@@ -122,30 +122,54 @@ def select_problem(req: ProblemSelectRequest, db: Session = Depends(get_db)):
             "title": team.selected_problem_title
         }
 
-    # 2. Standard Problem Statement with 2-Team Limit
-    prob = db.query(Problem).filter(Problem.id == req.problem_id).with_for_update().first()
+    # 2. Official SIH Problem Statement (with max 5 teams quota)
+    target_ps_id = req.problem_id.strip() if req.problem_id else ""
+    target_ps_title = (req.problem_title or target_ps_id).strip()
+
+    prob = db.query(Problem).filter(Problem.id == target_ps_id).with_for_update().first()
     if not prob:
-        raise HTTPException(status_code=404, detail="Problem statement not found")
-
-    if prob.selected_count >= prob.max_selections:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="This problem statement has already reached its maximum quota of 2 teams. Please choose another problem statement or Open Innovation."
+        # Dynamically insert problem statement entry if selected directly from sih.gov.in portal
+        prob = Problem(
+            id=target_ps_id,
+            code=target_ps_id,
+            title=target_ps_title,
+            organization="Official SIH 2026",
+            category="Software / Hardware",
+            theme="SIH 2026 Official",
+            difficulty="Official",
+            description=f"Official SIH 2026 Problem Statement ({target_ps_id}): {target_ps_title}",
+            background="Published on official SIH website https://sih.gov.in/sih2026PS",
+            expected_solution="Working prototype solving the official problem statement.",
+            technical_requirements=json.dumps(["Modern Stack"]),
+            technologies=json.dumps(["Open Tech Stack"]),
+            constraint_items=json.dumps(["Original implementation"]),
+            evaluation_criteria=json.dumps(["Innovation", "Execution", "Feasibility"]),
+            selected_count=1,
+            max_selections=5,
+            status="AVAILABLE",
+            sort_order=100
         )
-
-    prob.selected_count += 1
-    if prob.selected_count >= prob.max_selections:
-        prob.status = "LOCKED"
+        db.add(prob)
+    else:
+        if prob.selected_count >= prob.max_selections:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Problem statement '{target_ps_id}' has already reached its maximum quota of 5 teams. Please choose another problem statement or Open Innovation."
+            )
+        prob.selected_count += 1
+        if prob.selected_count >= prob.max_selections:
+            prob.status = "LOCKED"
 
     team.selected_problem_id = prob.id
-    team.selected_problem_title = prob.title
+    team.selected_problem_title = target_ps_title
     team.is_open_innovation = False
     db.commit()
 
     return {
         "success": True,
-        "message": f"Successfully locked problem: '{prob.title}'",
+        "message": f"Successfully locked problem statement '{prob.id}': {target_ps_title}",
         "team_id": team.id,
         "problem_id": prob.id,
+        "title": target_ps_title,
         "remaining_slots": max(0, prob.max_selections - prob.selected_count)
     }
