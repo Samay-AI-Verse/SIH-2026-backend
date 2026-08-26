@@ -1,9 +1,10 @@
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import Admin, AdminLoginLog
 from ..schemas import AdminLoginRequest, AdminTokenResponse
-from ..auth import verify_password, create_access_token, get_current_admin
+from ..auth import verify_password, create_access_token, get_current_admin, get_password_hash
 
 router = APIRouter(tags=["Admin Auth"])
 
@@ -95,7 +96,6 @@ def login(req: AdminLoginRequest, request: Request, db: Session = Depends(get_db
         )
     
     # Record Successful Login Audit Log and update admin last login
-    from datetime import datetime, timezone
     now_str = datetime.now(timezone.utc).isoformat()
     if google_mail:
         admin.google_email = google_mail
