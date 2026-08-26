@@ -625,6 +625,11 @@ async def delete_team_permanently(
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
 ):
+    if current_admin.role != "SUPER_ADMIN":
+        raise HTTPException(
+            status_code=403,
+            detail="Only Chief Super Admin can permanently delete teams from the database. Sub-admins can cancel registrations."
+        )
     import json
     team = db.query(Team).filter((Team.id == team_id) | (Team.registration_id == team_id)).first()
     if not team:
@@ -913,6 +918,9 @@ def revoke_admin_user(
     if target_admin.id == current_admin.id:
         raise HTTPException(status_code=400, detail="You cannot delete your own Super Admin account.")
 
+    if target_admin.email.lower() in ["sih@gtmcnanded.in", "samaypowade1@gmail.com"]:
+        raise HTTPException(status_code=400, detail="Cannot delete protected root Master Admin account.")
+
     admin_name = target_admin.name
     admin_email = target_admin.email
     db.delete(target_admin)
@@ -1026,6 +1034,12 @@ async def force_logout_all_devices(
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
 ):
+    if current_admin.role != "SUPER_ADMIN":
+        raise HTTPException(
+            status_code=403,
+            detail="Only Chief Super Admin has the authority to trigger global emergency force logout."
+        )
+
     # Invalidate tokens for all admins by bumping token_version
     admins = db.query(Admin).all()
     for adm in admins:
