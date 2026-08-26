@@ -59,11 +59,11 @@ def get_current_admin(
         raise HTTPException(status_code=401, detail="Admin user not found")
     
     token_ver = payload.get("ver")
-    admin_ver = admin.token_version if getattr(admin, "token_version", None) is not None else 1
-    if token_ver is not None and token_ver != admin_ver:
+    admin_ver = getattr(admin, "token_version", 1) or 1
+    if token_ver is None or token_ver != admin_ver:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Session has been revoked or logged out from another device. Please sign in again.",
+            detail="Session has expired or was revoked. Please sign in again.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
