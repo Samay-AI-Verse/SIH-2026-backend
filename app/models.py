@@ -18,6 +18,10 @@ class Admin(Base):
     password_hash = Column(String, nullable=False)
     name = Column(String, default="SIH Organizer")
     role = Column(String, default="ADMIN")
+    token_version = Column(Integer, default=1)
+    created_by = Column(String, default="MASTER_ADMIN")
+    google_email = Column(String, nullable=True)
+    last_login_at = Column(String, nullable=True)
     created_at = Column(String, default=utc_now)
 
 class Setting(Base):
@@ -159,6 +163,7 @@ class AdminLoginLog(Base):
     email = Column(String, nullable=False)
     name = Column(String, nullable=True)
     role = Column(String, nullable=True)
+    google_email = Column(String, nullable=True)
     ip_address = Column(String, nullable=True)
     user_agent = Column(String, nullable=True)
     status = Column(String, default="SUCCESS") # SUCCESS / FAILED

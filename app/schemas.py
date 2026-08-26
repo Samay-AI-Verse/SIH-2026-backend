@@ -170,6 +170,8 @@ class PaymentVerifyRequest(BaseModel):
 class AdminLoginRequest(BaseModel):
     email: EmailStr
     password: str
+    google_email: Optional[str] = None
+    google_name: Optional[str] = None
 
 class AdminTokenResponse(BaseModel):
     access_token: str
@@ -209,6 +211,7 @@ class AdminCreateRequest(BaseModel):
     name: str = Field(..., min_length=2)
     password: str = Field(..., min_length=6)
     role: Optional[str] = "ADMIN" # SUPER_ADMIN or ADMIN
+    google_email: Optional[str] = None
 
 class AdminRoleUpdateRequest(BaseModel):
     role: str # SUPER_ADMIN or ADMIN
@@ -219,6 +222,7 @@ class AdminLoginLogResponse(BaseModel):
     email: str
     name: Optional[str] = None
     role: Optional[str] = None
+    google_email: Optional[str] = None
     ip_address: Optional[str] = None
     user_agent: Optional[str] = None
     status: str
@@ -226,6 +230,21 @@ class AdminLoginLogResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class AdminProfileUpdateRequest(BaseModel):
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    current_password: Optional[str] = None
+    new_password: Optional[str] = None
+
+class AdminPasswordChangeRequest(BaseModel):
+    current_password: str
+    new_password: str = Field(..., min_length=6)
+
+class ForceLogoutResponse(BaseModel):
+    success: bool
+    message: str
+    logged_out_at: str
 
 
 

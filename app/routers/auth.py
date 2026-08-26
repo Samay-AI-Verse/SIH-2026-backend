@@ -22,6 +22,8 @@ def login(req: AdminLoginRequest, request: Request, db: Session = Depends(get_db
     ip_addr = extract_client_ip(request)
     user_agent = request.headers.get("User-Agent", "Unknown Browser")
     
+    google_mail = req.google_email.lower().strip() if req.google_email else None
+    
     if not admin or not verify_password(req.password, admin.password_hash):
         # Record Failed Login Audit Log
         try:
@@ -30,6 +32,7 @@ def login(req: AdminLoginRequest, request: Request, db: Session = Depends(get_db
                 email=email_clean,
                 name=admin.name if admin else "Unknown User",
                 role=admin.role if admin else "UNAUTHORIZED",
+                google_email=google_mail,
                 ip_address=ip_addr,
                 user_agent=user_agent,
                 status="FAILED"
@@ -41,16 +44,23 @@ def login(req: AdminLoginRequest, request: Request, db: Session = Depends(get_db
         
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
+            detail="Incorrect admin ID or password",
         )
     
-    # Record Successful Login Audit Log
+    # Record Successful Login Audit Log and update admin last login
+    from datetime import datetime, timezone
+    now_str = datetime.now(timezone.utc).isoformat()
+    if google_mail:
+        admin.google_email = google_mail
+    admin.last_login_at = now_str
+
     try:
         log_entry = AdminLoginLog(
             admin_id=admin.id,
             email=admin.email,
             name=admin.name,
             role=admin.role,
+            google_email=google_mail or admin.google_email,
             ip_address=ip_addr,
             user_agent=user_agent,
             status="SUCCESS"
@@ -60,7 +70,8 @@ def login(req: AdminLoginRequest, request: Request, db: Session = Depends(get_db
     except Exception as e:
         db.rollback()
 
-    access_token = create_access_token(data={"sub": admin.email, "role": admin.role})
+    token_version = getattr(admin, "token_version", 1) or 1
+    access_token = create_access_token(data={"sub": admin.email, "role": admin.role, "ver": token_version})
     return {
         "access_token": access_token,
         "token_type": "bearer",
@@ -68,7 +79,10 @@ def login(req: AdminLoginRequest, request: Request, db: Session = Depends(get_db
             "id": admin.id,
             "email": admin.email,
             "name": admin.name,
-            "role": admin.role
+            "role": admin.role,
+            "google_email": admin.google_email,
+            "created_by": getattr(admin, "created_by", "MASTER_ADMIN"),
+            "last_login_at": admin.last_login_at
         }
     }
 
@@ -80,7 +94,10 @@ def get_current_admin_info(current_admin: Admin = Depends(get_current_admin)):
             "id": current_admin.id,
             "email": current_admin.email,
             "name": current_admin.name,
-            "role": current_admin.role
+            "role": current_admin.role,
+            "google_email": getattr(current_admin, "google_email", None),
+            "created_by": getattr(current_admin, "created_by", "MASTER_ADMIN"),
+            "last_login_at": getattr(current_admin, "last_login_at", None)
         }
     }
 

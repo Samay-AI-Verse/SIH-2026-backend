@@ -23,6 +23,31 @@ def seed_database(db: Session):
         db.execute(text("ALTER TABLE payments ADD COLUMN receipt_no VARCHAR"))
     except Exception:
         pass
+    try:
+        from sqlalchemy import text
+        db.execute(text("ALTER TABLE admins ADD COLUMN token_version INTEGER DEFAULT 1"))
+    except Exception:
+        pass
+    try:
+        from sqlalchemy import text
+        db.execute(text("ALTER TABLE admins ADD COLUMN created_by VARCHAR DEFAULT 'MASTER_ADMIN'"))
+    except Exception:
+        pass
+    try:
+        from sqlalchemy import text
+        db.execute(text("ALTER TABLE admins ADD COLUMN google_email VARCHAR"))
+    except Exception:
+        pass
+    try:
+        from sqlalchemy import text
+        db.execute(text("ALTER TABLE admins ADD COLUMN last_login_at VARCHAR"))
+    except Exception:
+        pass
+    try:
+        from sqlalchemy import text
+        db.execute(text("ALTER TABLE admin_login_logs ADD COLUMN google_email VARCHAR"))
+    except Exception:
+        pass
     db.commit()
 
     # 1. Seed Registration Settings

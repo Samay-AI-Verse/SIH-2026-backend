@@ -4,8 +4,17 @@ from sqlalchemy import func
 from typing import Optional, List
 from ..database import get_db
 from ..models import Team, Member, Payment, Problem, Admin, Setting, AdminLoginLog
-from ..schemas import PaymentVerifyRequest, ExpenseCreateRequest, TeamCancelRequest, TeamNameUpdateRequest, AdminCreateRequest
-from ..auth import get_current_admin, get_password_hash
+from ..schemas import (
+    PaymentVerifyRequest,
+    ExpenseCreateRequest,
+    TeamCancelRequest,
+    TeamNameUpdateRequest,
+    AdminCreateRequest,
+    AdminProfileUpdateRequest,
+    AdminPasswordChangeRequest,
+    ForceLogoutResponse,
+)
+from ..auth import get_current_admin, get_password_hash, verify_password, create_access_token
 from ..r2_storage import generate_presigned_download_url
 
 
@@ -731,6 +740,9 @@ def list_admin_users(
             "email": a.email,
             "name": a.name,
             "role": a.role,
+            "created_by": getattr(a, "created_by", "MASTER_ADMIN") or "MASTER_ADMIN",
+            "google_email": getattr(a, "google_email", None),
+            "last_login_at": getattr(a, "last_login_at", None),
             "created_at": a.created_at
         }
         for a in admins
@@ -758,10 +770,13 @@ def create_admin_user(
     if new_role not in ["SUPER_ADMIN", "ADMIN"]:
         new_role = "ADMIN"
 
+    creator_tag = f"{current_admin.name} ({current_admin.email})"
     new_admin = Admin(
         email=clean_email,
         name=req.name.strip(),
         role=new_role,
+        created_by=creator_tag,
+        google_email=req.google_email.lower().strip() if req.google_email else None,
         password_hash=get_password_hash(req.password)
     )
     db.add(new_admin)
@@ -775,7 +790,10 @@ def create_admin_user(
             "id": new_admin.id,
             "email": new_admin.email,
             "name": new_admin.name,
-            "role": new_admin.role
+            "role": new_admin.role,
+            "created_by": new_admin.created_by,
+            "google_email": new_admin.google_email,
+            "created_at": new_admin.created_at
         }
     }
 
@@ -821,6 +839,7 @@ def get_admin_login_logs(
             "email": l.email,
             "name": l.name,
             "role": l.role,
+            "google_email": getattr(l, "google_email", None),
             "ip_address": l.ip_address,
             "user_agent": l.user_agent,
             "status": l.status,
@@ -828,6 +847,107 @@ def get_admin_login_logs(
         }
         for l in logs
     ]
+
+@router.post("/profile/update")
+def update_admin_profile(
+    req: AdminProfileUpdateRequest,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    # Verify current password if password is to be changed or email updated
+    if req.current_password or req.new_password:
+        if not req.current_password:
+            raise HTTPException(status_code=400, detail="Current password is required to change password.")
+        if not verify_password(req.current_password, current_admin.password_hash):
+            raise HTTPException(status_code=400, detail="Current password is incorrect.")
+        if req.new_password:
+            if len(req.new_password) < 6:
+                raise HTTPException(status_code=400, detail="New password must be at least 6 characters.")
+            current_admin.password_hash = get_password_hash(req.new_password)
+            # Invalidate all prior sessions when password changes
+            current_admin.token_version = (getattr(current_admin, "token_version", 1) or 1) + 1
+
+    if req.name and req.name.strip():
+        current_admin.name = req.name.strip()
+
+    if req.email and req.email.strip().lower() != current_admin.email.lower():
+        new_email = req.email.strip().lower()
+        conflict = db.query(Admin).filter(Admin.email == new_email).first()
+        if conflict:
+            raise HTTPException(status_code=400, detail=f"Email '{new_email}' is already taken by another admin.")
+        current_admin.email = new_email
+        # Increment token version to revoke previous tokens
+        current_admin.token_version = (getattr(current_admin, "token_version", 1) or 1) + 1
+
+    db.commit()
+    db.refresh(current_admin)
+
+    # Generate a fresh access token for current admin with updated info
+    new_token = create_access_token(
+        data={"sub": current_admin.email, "role": current_admin.role, "ver": current_admin.token_version}
+    )
+
+    return {
+        "success": True,
+        "message": "Admin profile updated successfully.",
+        "access_token": new_token,
+        "token_type": "bearer",
+        "admin": {
+            "id": current_admin.id,
+            "email": current_admin.email,
+            "name": current_admin.name,
+            "role": current_admin.role
+        }
+    }
+
+@router.post("/change-password")
+def change_admin_password(
+    req: AdminPasswordChangeRequest,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    if not verify_password(req.current_password, current_admin.password_hash):
+        raise HTTPException(status_code=400, detail="Current password is incorrect.")
+    
+    current_admin.password_hash = get_password_hash(req.new_password)
+    current_admin.token_version = (getattr(current_admin, "token_version", 1) or 1) + 1
+    db.commit()
+
+    new_token = create_access_token(
+        data={"sub": current_admin.email, "role": current_admin.role, "ver": current_admin.token_version}
+    )
+
+    return {
+        "success": True,
+        "message": "Password changed successfully. All other active devices have been logged out.",
+        "access_token": new_token,
+        "token_type": "bearer"
+    }
+
+@router.post("/force-logout-all", response_model=ForceLogoutResponse)
+async def force_logout_all_devices(
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    # Invalidate tokens for all admins by bumping token_version
+    admins = db.query(Admin).all()
+    for adm in admins:
+        adm.token_version = (getattr(adm, "token_version", 1) or 1) + 1
+    db.commit()
+
+    # Broadcast FORCE_LOGOUT to all connected SSE clients
+    try:
+        from .live import notify_live_subscribers
+        await notify_live_subscribers("FORCE_LOGOUT")
+    except Exception:
+        pass
+
+    from datetime import datetime, timezone
+    return {
+        "success": True,
+        "message": "All sessions across all devices have been revoked and logged out.",
+        "logged_out_at": datetime.now(timezone.utc).isoformat()
+    }
 
 
 
