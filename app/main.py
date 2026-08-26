@@ -50,7 +50,8 @@ app.include_router(live.router)
 
 @app.on_event("startup")
 def startup_event():
-    # 1. Create DB Tables
+    # 1. Ensure all models are registered and create tables
+    from . import models
     Base.metadata.create_all(bind=engine)
     
     # 2. Seed Admin & Problem Statements

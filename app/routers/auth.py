@@ -18,6 +18,8 @@ def extract_client_ip(request: Request) -> str:
 def login(req: AdminLoginRequest, request: Request, db: Session = Depends(get_db)):
     email_clean = req.email.lower().strip()
     google_mail = req.google_email.lower().strip() if req.google_email else None
+    ip_addr = extract_client_ip(request)
+    user_agent = request.headers.get("user-agent", "Unknown")
     
     # Query admin by registered email or linked google_email
     admin = db.query(Admin).filter(

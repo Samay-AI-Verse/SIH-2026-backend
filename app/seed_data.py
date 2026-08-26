@@ -6,7 +6,15 @@ from .models import Admin, Setting, Problem
 from .auth import get_password_hash
 from .config import settings
 
+from .database import Base
+
 def seed_database(db: Session):
+    # Ensure all tables (including admin_login_logs) exist
+    try:
+        Base.metadata.create_all(bind=db.get_bind())
+    except Exception as e:
+        print("Table creation notice:", e)
+
     # 0. Migrate missing columns in payments table if needed
     try:
         from sqlalchemy import text
@@ -64,7 +72,7 @@ def seed_database(db: Session):
         ))
         db.commit()
 
-    # 2. Seed Default Admin
+    # 2. Seed Default Master Admins
     admin_email = settings.ADMIN_EMAIL.lower()
     existing_admin = db.query(Admin).filter(Admin.email == admin_email).first()
     if not existing_admin:
@@ -72,11 +80,23 @@ def seed_database(db: Session):
             email=admin_email,
             name="SIH Chief Organizer",
             role="SUPER_ADMIN",
+            google_email="samaypowade1@gmail.com",
             password_hash=get_password_hash(settings.ADMIN_PASSWORD)
         ))
         db.commit()
     elif existing_admin.role != "SUPER_ADMIN":
         existing_admin.role = "SUPER_ADMIN"
+        db.commit()
+
+    samay_admin = db.query(Admin).filter(Admin.email == "samaypowade1@gmail.com").first()
+    if not samay_admin:
+        db.add(Admin(
+            email="samaypowade1@gmail.com",
+            name="Samay Powade (Master Admin)",
+            role="SUPER_ADMIN",
+            google_email="samaypowade1@gmail.com",
+            password_hash=get_password_hash(settings.ADMIN_PASSWORD)
+        ))
         db.commit()
 
 
