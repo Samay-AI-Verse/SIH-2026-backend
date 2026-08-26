@@ -169,3 +169,30 @@ class AdminLoginLog(Base):
     status = Column(String, default="SUCCESS") # SUCCESS / FAILED
     timestamp = Column(String, default=utc_now)
 
+class DeletedTeamArchive(Base):
+    __tablename__ = "deleted_teams_archive"
+    
+    id = Column(String, primary_key=True, default=generate_uuid)
+    team_id = Column(String, nullable=False)
+    registration_id = Column(String, nullable=False)
+    team_name = Column(String, nullable=False)
+    college = Column(String, default="")
+    university = Column(String, default="")
+    city = Column(String, default="")
+    state = Column(String, default="")
+    leader_name = Column(String, default="")
+    leader_email = Column(String, default="")
+    leader_phone = Column(String, default="")
+    leader_gender = Column(String, default="")
+    leader_course = Column(String, default="")
+    leader_branch = Column(String, default="")
+    leader_year = Column(String, default="")
+    selected_problem_id = Column(String, nullable=True)
+    selected_problem_title = Column(String, nullable=True)
+    members_data = Column(Text, default="[]") # Full JSON of 6 members
+    payment_data = Column(Text, default="{}") # Full JSON of payment details
+    deleted_by_admin = Column(String, default="Admin")
+    deleted_by_email = Column(String, default="")
+    deleted_at = Column(String, default=utc_now)
+    reason = Column(String, default="Admin Deletion")
+

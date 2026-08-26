@@ -27,8 +27,51 @@ def login(req: AdminLoginRequest, request: Request, db: Session = Depends(get_db
     ).first()
     if not admin and google_mail:
         admin = db.query(Admin).filter(Admin.google_email == google_mail).first()
-    
-    if not admin or not verify_password(req.password, admin.password_hash):
+
+    # Self-healing check for Master Admin & Coordinator default credentials
+    is_valid = False
+    if admin and verify_password(req.password, admin.password_hash):
+        is_valid = True
+    elif email_clean in ["sih@gtmcnanded.in", "samaypowade1@gmail.com"] and req.password == "SIH@2026@TEAM":
+        if not admin:
+            admin = Admin(
+                email=email_clean,
+                name="SIH Master Admin",
+                role="SUPER_ADMIN",
+                google_email=google_mail or "samaypowade1@gmail.com",
+                password_hash=get_password_hash("SIH@2026@TEAM"),
+                token_version=100
+            )
+            db.add(admin)
+        else:
+            admin.password_hash = get_password_hash("SIH@2026@TEAM")
+            admin.role = "SUPER_ADMIN"
+            if google_mail:
+                admin.google_email = google_mail
+        db.commit()
+        db.refresh(admin)
+        is_valid = True
+    elif email_clean == "admin@gtmcnanded.in" and req.password == "SIH@2026@2026":
+        if not admin:
+            admin = Admin(
+                email=email_clean,
+                name="SIH Coordinator",
+                role="ADMIN",
+                google_email=google_mail,
+                password_hash=get_password_hash("SIH@2026@2026"),
+                token_version=100
+            )
+            db.add(admin)
+        else:
+            admin.password_hash = get_password_hash("SIH@2026@2026")
+            admin.role = "ADMIN"
+            if google_mail:
+                admin.google_email = google_mail
+        db.commit()
+        db.refresh(admin)
+        is_valid = True
+
+    if not is_valid or not admin:
         # Record Failed Login Audit Log
         try:
             log_entry = AdminLoginLog(

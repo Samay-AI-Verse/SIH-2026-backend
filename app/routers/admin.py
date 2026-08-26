@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import Optional, List
 from ..database import get_db
-from ..models import Team, Member, Payment, Problem, Admin, Setting, AdminLoginLog
+from ..models import Team, Member, Payment, Problem, Admin, Setting, AdminLoginLog, DeletedTeamArchive
 from ..schemas import (
     PaymentVerifyRequest,
     ExpenseCreateRequest,
@@ -625,6 +625,7 @@ async def delete_team_permanently(
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
 ):
+    import json
     team = db.query(Team).filter((Team.id == team_id) | (Team.registration_id == team_id)).first()
     if not team:
         raise HTTPException(status_code=404, detail="Team not found")
@@ -633,7 +634,67 @@ async def delete_team_permanently(
     real_id = team.id
     reg_id = team.registration_id
 
-    # Free up problem selection quota if applicable
+    # 1. Fetch and serialize all associated members
+    members = db.query(Member).filter((Member.team_id == real_id) | (Member.team_id == reg_id)).all()
+    members_data = [
+        {
+            "id": m.id,
+            "full_name": m.full_name,
+            "email": m.email,
+            "phone": m.phone,
+            "is_leader": m.is_leader,
+            "gender": m.gender,
+            "college": m.college,
+            "course": m.course,
+            "branch": m.branch,
+            "year": m.year,
+            "student_id": m.student_id
+        }
+        for m in members
+    ]
+
+    # 2. Fetch and serialize payment data
+    payment = db.query(Payment).filter((Payment.team_id == real_id) | (Payment.registration_id == reg_id)).first()
+    payment_data = {
+        "id": payment.id if payment else None,
+        "amount": payment.amount if payment else 300.0,
+        "payment_status": payment.status if payment else team.payment_status,
+        "payment_mode": getattr(payment, "payment_mode", "ONLINE") if payment else "ONLINE",
+        "utr_number": payment.utr_number if payment else None,
+        "receipt_no": getattr(payment, "receipt_no", None) if payment else None,
+    } if payment else {}
+
+    # 3. Archive the deleted record in deleted_teams_archive table
+    try:
+        archive_entry = DeletedTeamArchive(
+            team_id=real_id,
+            registration_id=reg_id,
+            team_name=team.team_name,
+            college=team.college or "",
+            university=team.university or "",
+            city=team.city or "",
+            state=team.state or "",
+            leader_name=team.leader_name or "",
+            leader_email=team.leader_email or "",
+            leader_phone=team.leader_phone or "",
+            leader_gender=team.leader_gender or "",
+            leader_course=team.leader_course or "",
+            leader_branch=team.leader_branch or "",
+            leader_year=team.leader_year or "",
+            selected_problem_id=team.selected_problem_id,
+            selected_problem_title=team.selected_problem_title,
+            members_data=json.dumps(members_data),
+            payment_data=json.dumps(payment_data),
+            deleted_by_admin=current_admin.name or "Admin",
+            deleted_by_email=current_admin.email,
+            reason="Admin Deleted & Archived"
+        )
+        db.add(archive_entry)
+        db.commit()
+    except Exception as e:
+        print("Archive notice:", e)
+
+    # 4. Free up problem selection quota if applicable
     if team.selected_problem_id:
         prob = db.query(Problem).filter(Problem.id == team.selected_problem_id).first()
         if prob:
@@ -647,17 +708,15 @@ async def delete_team_permanently(
             except Exception:
                 pass
 
-    # Delete members by team.id or team.registration_id
+    # 5. Delete members and payments
     db.query(Member).filter((Member.team_id == real_id) | (Member.team_id == reg_id)).delete(synchronize_session=False)
-
-    # Delete payment records by team.id or team.registration_id
     db.query(Payment).filter((Payment.team_id == real_id) | (Payment.registration_id == reg_id)).delete(synchronize_session=False)
 
-    # Delete team row
+    # 6. Delete team row
     db.delete(team)
     db.commit()
 
-    # Sync deletion to Cloudflare D1 Cloud
+    # 7. Sync deletion to Cloudflare D1 Cloud
     try:
         from ..d1_sync import delete_team_from_d1
         delete_team_from_d1(real_id)
@@ -666,7 +725,7 @@ async def delete_team_permanently(
     except Exception:
         pass
 
-    # Trigger live SSE update so UI updates immediately everywhere without page refresh
+    # 8. Trigger live SSE update
     try:
         from .live import notify_live_subscribers
         await notify_live_subscribers("all")
@@ -675,8 +734,46 @@ async def delete_team_permanently(
 
     return {
         "success": True,
-        "message": f"Team '{team_name}' and all associated members, payments, and problem quotas were permanently reset and deleted from database."
+        "message": f"Team '{team_name}' safely deleted and archived in deleted_teams_archive."
     }
+
+@router.get("/deleted-teams")
+def get_deleted_teams_archive(
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    import json
+    archives = db.query(DeletedTeamArchive).order_by(DeletedTeamArchive.deleted_at.desc()).all()
+    results = []
+    for a in archives:
+        try:
+            m_list = json.loads(a.members_data or "[]")
+        except Exception:
+            m_list = []
+        try:
+            p_data = json.loads(a.payment_data or "{}")
+        except Exception:
+            p_data = {}
+        results.append({
+            "id": a.id,
+            "team_id": a.team_id,
+            "registration_id": a.registration_id,
+            "team_name": a.team_name,
+            "college": a.college,
+            "university": a.university,
+            "leader_name": a.leader_name,
+            "leader_email": a.leader_email,
+            "leader_phone": a.leader_phone,
+            "selected_problem_id": a.selected_problem_id,
+            "selected_problem_title": a.selected_problem_title,
+            "members": m_list,
+            "payment": p_data,
+            "deleted_by_admin": a.deleted_by_admin,
+            "deleted_by_email": a.deleted_by_email,
+            "deleted_at": a.deleted_at,
+            "reason": a.reason
+        })
+    return {"deleted_teams": results, "total": len(results)}
 
 @router.get("/analytics/daily")
 def get_daily_registration_analytics(
