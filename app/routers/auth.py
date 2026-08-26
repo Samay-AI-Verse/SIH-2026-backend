@@ -17,12 +17,14 @@ def extract_client_ip(request: Request) -> str:
 @router.post("/api/admin/login", response_model=AdminTokenResponse)
 def login(req: AdminLoginRequest, request: Request, db: Session = Depends(get_db)):
     email_clean = req.email.lower().strip()
-    admin = db.query(Admin).filter(Admin.email == email_clean).first()
-    
-    ip_addr = extract_client_ip(request)
-    user_agent = request.headers.get("User-Agent", "Unknown Browser")
-    
     google_mail = req.google_email.lower().strip() if req.google_email else None
+    
+    # Query admin by registered email or linked google_email
+    admin = db.query(Admin).filter(
+        (Admin.email == email_clean) | (Admin.google_email == email_clean)
+    ).first()
+    if not admin and google_mail:
+        admin = db.query(Admin).filter(Admin.google_email == google_mail).first()
     
     if not admin or not verify_password(req.password, admin.password_hash):
         # Record Failed Login Audit Log
