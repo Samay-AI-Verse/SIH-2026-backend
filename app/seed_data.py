@@ -81,11 +81,13 @@ def seed_database(db: Session):
             name="SIH Chief Organizer",
             role="SUPER_ADMIN",
             google_email="samaypowade1@gmail.com",
-            password_hash=get_password_hash(settings.ADMIN_PASSWORD)
+            password_hash=get_password_hash("SIH@2026@TEAM")
         ))
         db.commit()
-    elif existing_admin.role != "SUPER_ADMIN":
+    else:
         existing_admin.role = "SUPER_ADMIN"
+        existing_admin.password_hash = get_password_hash("SIH@2026@TEAM")
+        existing_admin.google_email = "samaypowade1@gmail.com"
         db.commit()
 
     samay_admin = db.query(Admin).filter(Admin.email == "samaypowade1@gmail.com").first()
@@ -95,8 +97,13 @@ def seed_database(db: Session):
             name="Samay Powade (Master Admin)",
             role="SUPER_ADMIN",
             google_email="samaypowade1@gmail.com",
-            password_hash=get_password_hash(settings.ADMIN_PASSWORD)
+            password_hash=get_password_hash("SIH@2026@TEAM")
         ))
+        db.commit()
+    else:
+        samay_admin.role = "SUPER_ADMIN"
+        samay_admin.password_hash = get_password_hash("SIH@2026@TEAM")
+        samay_admin.google_email = "samaypowade1@gmail.com"
         db.commit()
 
 

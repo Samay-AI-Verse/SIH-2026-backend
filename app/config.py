@@ -47,7 +47,8 @@ class Settings(BaseSettings):
         return []
     
     ADMIN_EMAIL: str = os.getenv("ADMIN_EMAIL", "sih@gtmcnanded.in")
-    ADMIN_PASSWORD: str = os.getenv("ADMIN_PASSWORD", "SihGtmc2026!")
+    ADMIN_PASSWORD: str = os.getenv("ADMIN_PASSWORD", "SIH@2026@TEAM")
+    SUB_ADMIN_DEFAULT_PASSWORD: str = os.getenv("SUB_ADMIN_DEFAULT_PASSWORD", "SIH@2026@2026")
     SECRET_KEY: str = os.getenv("SECRET_KEY", "sih-2026-super-secret-jwt-key-2026")
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7 # 7 days
