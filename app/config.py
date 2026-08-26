@@ -66,6 +66,11 @@ class Settings(BaseSettings):
     R2_BUCKET: str = os.getenv("R2_BUCKET", "sih-2026")
     R2_PUBLIC_DOMAIN: str = os.getenv("R2_PUBLIC_DOMAIN", "https://pub-013ef3ae7ba54fd696dc2bfd89477d38.r2.dev")
 
+    # Google OAuth 2.0 Credentials (Loaded from .env)
+    GOOGLE_CLIENT_ID: str = os.getenv("GOOGLE_CLIENT_ID", "")
+    GOOGLE_CLIENT_SECRET: str = os.getenv("GOOGLE_CLIENT_SECRET", "")
+    GOOGLE_REDIRECT_URI: str = os.getenv("GOOGLE_REDIRECT_URI", "")
+
     class Config:
         env_file = ".env"
         extra = "ignore"
