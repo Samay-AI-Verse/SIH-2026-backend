@@ -13,6 +13,7 @@ from ..schemas import (
     AdminProfileUpdateRequest,
     AdminPasswordChangeRequest,
     ForceLogoutResponse,
+    TeamRegisterRequest,
 )
 from ..auth import get_current_admin, get_password_hash, verify_password, create_access_token
 from ..r2_storage import generate_presigned_download_url
@@ -283,23 +284,40 @@ def list_all_payments(
 ):
     payments = db.query(Payment).order_by(Payment.created_at.desc()).all()
     results = []
-    teams_dict = {t.id: t for t in db.query(Team).all()}
+    teams = db.query(Team).all()
+    teams_dict = {t.id: t for t in teams}
+    teams_by_reg = {t.registration_id: t for t in teams if t.registration_id}
 
     for p in payments:
-        team = teams_dict.get(p.team_id)
+        team = teams_dict.get(p.team_id) or teams_by_reg.get(p.team_id) or teams_by_reg.get(p.registration_id)
+        
+        # Auto-heal status synchronization:
+        # If team is already SUCCESS or CONFIRMED, the payment must be SUCCESS
+        effective_status = p.status or "PENDING"
+        if team and (team.payment_status == "SUCCESS" or team.registration_status == "CONFIRMED"):
+            effective_status = "SUCCESS"
+            if p.status != "SUCCESS":
+                p.status = "SUCCESS"
+                db.add(p)
+        elif team and team.payment_status in ["FAILED", "CANCELLED", "REFUNDED"]:
+            effective_status = team.payment_status
+            if p.status != team.payment_status:
+                p.status = team.payment_status
+                db.add(p)
+
         proof_url = None
         if p.proof_key:
             proof_url = generate_presigned_download_url(p.proof_key)
         elif p.proof_url:
             proof_url = p.proof_url
         elif team:
-            payment_last = db.query(Payment).filter(Payment.team_id == team.id).order_by(Payment.created_at.desc()).first()
+            payment_last = db.query(Payment).filter((Payment.team_id == team.id) | (Payment.registration_id == team.registration_id)).order_by(Payment.created_at.desc()).first()
             if payment_last and payment_last.proof_url:
                 proof_url = payment_last.proof_url
 
         results.append({
             "id": p.id,
-            "team_id": p.team_id,
+            "team_id": team.id if team else p.team_id,
             "registration_id": p.registration_id or (team.registration_id if team else ""),
             "team_name": p.team_name or (team.team_name if team else ""),
             "order_id": p.order_id,
@@ -309,11 +327,12 @@ def list_all_payments(
             "receipt_no": getattr(p, "receipt_no", None),
             "amount": p.amount or 300.0,
             "currency": p.currency or "INR",
-            "status": p.status or (team.payment_status if team else "PENDING"),
+            "status": effective_status,
             "proof_url": proof_url,
             "admin_notes": p.admin_notes or "",
             "created_at": p.created_at
         })
+    db.commit()
     return results
 
 @router.post("/payments/{payment_id}")
@@ -1059,6 +1078,322 @@ async def force_logout_all_devices(
         "message": "All sessions across all devices have been revoked and logged out.",
         "logged_out_at": datetime.now(timezone.utc).isoformat()
     }
+
+
+@router.post("/teams/{team_id}/problem-statement")
+async def admin_update_team_problem_statement(
+    team_id: str,
+    req: dict,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    import json
+    team = db.query(Team).filter((Team.id == team_id) | (Team.registration_id == team_id)).first()
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    clear_selection = req.get("clear_selection", False)
+    problem_id = (req.get("problem_id") or "").strip()
+    problem_title = (req.get("problem_title") or "").strip()
+    is_open_innovation = req.get("is_open_innovation", False) or (problem_id == "OPEN_INNOVATION")
+    open_inno_title = (req.get("open_innovation_title") or "").strip()
+    open_inno_desc = (req.get("open_innovation_description") or "").strip()
+
+    # Decrement quota from old problem statement if applicable
+    old_ps_id = team.selected_problem_id
+    if old_ps_id and old_ps_id != "OPEN_INNOVATION":
+        old_prob = db.query(Problem).filter(Problem.id == old_ps_id).first()
+        if old_prob and old_prob.selected_count > 0:
+            old_prob.selected_count -= 1
+            if old_prob.selected_count < old_prob.max_selections:
+                old_prob.status = "AVAILABLE"
+            try:
+                from ..d1_sync import sync_problem_to_d1
+                sync_problem_to_d1(old_prob)
+            except Exception:
+                pass
+
+    if clear_selection:
+        team.selected_problem_id = None
+        team.selected_problem_title = None
+        team.is_open_innovation = False
+        team.open_innovation_title = None
+        team.open_innovation_description = None
+        msg = "Problem statement selection cleared. Team can now re-select."
+    elif is_open_innovation:
+        open_prob = db.query(Problem).filter(Problem.id == "OPEN_INNOVATION").first()
+        if open_prob:
+            open_prob.selected_count += 1
+        team.selected_problem_id = "OPEN_INNOVATION"
+        team.selected_problem_title = open_inno_title or "Open Innovation Project"
+        team.is_open_innovation = True
+        team.open_innovation_title = open_inno_title or "Open Innovation Project"
+        team.open_innovation_description = open_inno_desc
+        msg = f"Assigned Open Innovation idea: '{team.selected_problem_title}'"
+    else:
+        if not problem_id:
+            raise HTTPException(status_code=400, detail="Problem Statement ID is required")
+        prob = db.query(Problem).filter(Problem.id == problem_id).first()
+        if not prob:
+            prob = Problem(
+                id=problem_id,
+                code=problem_id,
+                title=problem_title or problem_id,
+                organization="Official SIH 2026",
+                category="Software / Hardware",
+                theme="SIH 2026 Official",
+                difficulty="Official",
+                description=f"Official SIH 2026 Problem Statement ({problem_id}): {problem_title or problem_id}",
+                background="Published on official SIH website https://sih.gov.in/sih2026PS",
+                expected_solution="Working prototype solving the official problem statement.",
+                technical_requirements=json.dumps(["Modern Stack"]),
+                technologies=json.dumps(["Open Tech Stack"]),
+                constraint_items=json.dumps(["Original implementation"]),
+                evaluation_criteria=json.dumps(["Innovation", "Execution", "Feasibility"]),
+                selected_count=1,
+                max_selections=5,
+                status="AVAILABLE",
+                sort_order=100
+            )
+            db.add(prob)
+        else:
+            prob.selected_count += 1
+            if prob.selected_count >= prob.max_selections:
+                prob.status = "LOCKED"
+        
+        team.selected_problem_id = prob.id
+        team.selected_problem_title = problem_title or prob.title
+        team.is_open_innovation = False
+        team.open_innovation_title = None
+        team.open_innovation_description = None
+        msg = f"Assigned Problem Statement '{prob.id}': {team.selected_problem_title}"
+        try:
+            from ..d1_sync import sync_problem_to_d1
+            sync_problem_to_d1(prob)
+        except Exception:
+            pass
+
+    db.commit()
+    db.refresh(team)
+
+    try:
+        from ..d1_sync import sync_team_to_d1
+        sync_team_to_d1(team)
+    except Exception:
+        pass
+
+    try:
+        from .live import notify_live_subscribers
+        await notify_live_subscribers("all")
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "message": msg,
+        "selected_problem_id": team.selected_problem_id,
+        "selected_problem_title": team.selected_problem_title,
+        "is_open_innovation": team.is_open_innovation
+    }
+
+
+@router.get("/settings")
+def get_admin_settings(
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    s = db.query(Setting).filter(Setting.id == "registration").first()
+    if not s:
+        s = Setting(
+            id="registration",
+            fee=300.0,
+            currency="INR",
+            is_active=True,
+            min_members=6,
+            max_members=6,
+            female_required=True
+        )
+        db.add(s)
+        db.commit()
+        db.refresh(s)
+    return {
+        "fee": s.fee,
+        "currency": s.currency,
+        "isActive": s.is_active,
+        "is_active": s.is_active,
+        "minMembers": s.min_members,
+        "maxMembers": s.max_members,
+        "femaleRequired": s.female_required
+    }
+
+
+@router.post("/settings")
+def update_admin_settings(
+    req: dict,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    s = db.query(Setting).filter(Setting.id == "registration").first()
+    if not s:
+        s = Setting(id="registration")
+        db.add(s)
+    
+    if "fee" in req:
+        s.fee = float(req["fee"])
+    if "currency" in req:
+        s.currency = str(req["currency"])
+    if "is_active" in req:
+        s.is_active = bool(req["is_active"])
+    elif "isActive" in req:
+        s.is_active = bool(req["isActive"])
+    if "min_members" in req:
+        s.min_members = int(req["min_members"])
+    if "max_members" in req:
+        s.max_members = int(req["max_members"])
+    if "female_required" in req:
+        s.female_required = bool(req["female_required"])
+
+    db.commit()
+    db.refresh(s)
+
+    try:
+        from .live import notify_live_subscribers
+        import asyncio
+        asyncio.create_task(notify_live_subscribers("settings"))
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "message": "Settings updated successfully.",
+        "settings": {
+            "fee": s.fee,
+            "currency": s.currency,
+            "isActive": s.is_active,
+            "is_active": s.is_active,
+            "minMembers": s.min_members,
+            "maxMembers": s.max_members,
+            "femaleRequired": s.female_required
+        }
+    }
+
+
+@router.post("/teams/register")
+def admin_register_team(
+    req: TeamRegisterRequest,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    from .teams import generate_registration_id
+    import uuid
+
+    team_name_clean = req.team_name.strip()
+    leader_email_clean = req.leader_email.strip().lower()
+    
+    existing_team = db.query(Team).filter(
+        func.lower(Team.team_name) == func.lower(team_name_clean)
+    ).first()
+    if existing_team:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Team name '{team_name_clean}' is already registered."
+        )
+
+    existing_leader = db.query(Team).filter(
+        func.lower(Team.leader_email) == leader_email_clean
+    ).first()
+    if existing_leader:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Leader email '{leader_email_clean}' is already registered with team '{existing_leader.team_name}'."
+        )
+
+    problem_title = None
+    if req.selected_problem_id:
+        problem = db.query(Problem).filter(Problem.id == req.selected_problem_id).first()
+        if problem:
+            problem_title = problem.title
+            problem.selected_count += 1
+
+    reg_id = generate_registration_id(db, course=req.leader_course or "", branch=req.leader_branch or "")
+    team = Team(
+        registration_id=reg_id,
+        team_name=team_name_clean,
+        college=req.college.strip(),
+        university=req.university.strip() if req.university else req.college.strip(),
+        city=req.city.strip(),
+        state=req.state.strip(),
+        leader_name=req.leader_name.strip(),
+        leader_email=leader_email_clean,
+        leader_phone=req.leader_phone.strip(),
+        leader_gender=req.leader_gender,
+        leader_course=req.leader_course or "",
+        leader_branch=req.leader_branch or "",
+        leader_year=req.leader_year or "",
+        leader_student_id=req.leader_student_id or "",
+        registration_status="CONFIRMED",
+        payment_status="SUCCESS",
+        selected_problem_id=req.selected_problem_id,
+        selected_problem_title=problem_title,
+        is_open_innovation=req.is_open_innovation or (req.selected_problem_id == "OPEN_INNOVATION"),
+        open_innovation_title=req.open_innovation_title,
+        open_innovation_description=req.open_innovation_description
+    )
+    db.add(team)
+    db.flush()
+
+    for idx, m in enumerate(req.members):
+        is_ldr = (idx == 0) or (m.email.strip().lower() == leader_email_clean)
+        member = Member(
+            team_id=team.id,
+            is_leader=is_ldr,
+            full_name=m.full_name.strip(),
+            email=m.email.strip().lower() if m.email else (leader_email_clean if is_ldr else ""),
+            phone=m.phone.strip() if m.phone else (req.leader_phone.strip() if is_ldr else ""),
+            gender=m.gender,
+            college=m.college.strip() if m.college else req.college.strip(),
+            course=m.course.strip() if m.course else (req.leader_course or ""),
+            branch=m.branch.strip() if m.branch else (req.leader_branch or ""),
+            year=m.year.strip() if m.year else (req.leader_year or ""),
+            student_id=m.student_id.strip() if m.student_id else (req.leader_student_id if is_ldr else "")
+        )
+        db.add(member)
+
+    setting = db.query(Setting).filter(Setting.id == "registration").first()
+    fee = setting.fee if setting else 300.0
+    currency = setting.currency if setting else "INR"
+    order_id = f"ORDER-{reg_id}-{uuid.uuid4().hex[:6].upper()}"
+    
+    payment = Payment(
+        team_id=team.id,
+        registration_id=reg_id,
+        team_name=team_name_clean,
+        order_id=order_id,
+        amount=fee,
+        currency=currency,
+        status="SUCCESS",
+        payment_mode="ADMIN_DIRECT",
+        admin_notes=f"Created directly by Admin {current_admin.name or current_admin.email}"
+    )
+    db.add(payment)
+    db.commit()
+
+    try:
+        from ..d1_sync import sync_team_to_d1, sync_member_to_d1
+        sync_team_to_d1(team)
+        for m in team.members:
+            sync_member_to_d1(m)
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "team_id": team.id,
+        "registration_id": team.registration_id,
+        "team_name": team.team_name,
+        "message": "Team created and approved directly by Admin."
+    }
+
 
 
 

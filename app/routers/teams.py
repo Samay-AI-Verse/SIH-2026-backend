@@ -31,6 +31,14 @@ def generate_registration_id(db: Session, course: str = "", branch: str = "") ->
 
 @router.post("/register")
 def register_team(req: TeamRegisterRequest, db: Session = Depends(get_db)):
+    # 0. Check if registrations are currently open
+    setting = db.query(Setting).filter(Setting.id == "registration").first()
+    if setting and setting.is_active is False:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Team registrations are currently closed by the organizing committee. Please contact the administrator."
+        )
+
     team_name_clean = req.team_name.strip()
     leader_email_clean = req.leader_email.strip().lower()
     
