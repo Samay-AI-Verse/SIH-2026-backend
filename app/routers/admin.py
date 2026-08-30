@@ -537,6 +537,70 @@ def batch_update_checkin(
         "updated_count": updated_count
     }
 
+@router.post("/teams/{team_id}/seating")
+def update_team_seating(
+    team_id: str,
+    payload: dict,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    team = db.query(Team).filter((Team.id == team_id) | (Team.registration_id == team_id)).first()
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    desk_no = payload.get("desk_number") or payload.get("table_number")
+    team.desk_number = desk_no.strip() if desk_no else None
+    team.updated_at = utc_now()
+    db.commit()
+
+    try:
+        from .live import notify_live_subscribers
+        import asyncio
+        asyncio.create_task(notify_live_subscribers("teams"))
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "team_id": team.id,
+        "registration_id": team.registration_id,
+        "desk_number": team.desk_number
+    }
+
+@router.post("/teams/batch-seating")
+def batch_update_seating(
+    payload: dict,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    assignments = payload.get("assignments", []) # list of {"team_id": "...", "desk_number": "..."}
+    updated_count = 0
+
+    for item in assignments:
+        tid = item.get("team_id")
+        dno = item.get("desk_number")
+        if not tid:
+            continue
+        team = db.query(Team).filter((Team.id == tid) | (Team.registration_id == tid)).first()
+        if team:
+            team.desk_number = dno.strip() if dno else None
+            team.updated_at = utc_now()
+            updated_count += 1
+
+    db.commit()
+
+    try:
+        from .live import notify_live_subscribers
+        import asyncio
+        asyncio.create_task(notify_live_subscribers("teams"))
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "updated_count": updated_count
+    }
+
 @router.get("/payments")
 def list_all_payments(
     db: Session = Depends(get_db),
