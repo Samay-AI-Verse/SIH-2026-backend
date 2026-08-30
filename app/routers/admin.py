@@ -724,37 +724,70 @@ def get_budget_ledger(
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
 ):
-    payments = db.query(Payment).all()
-    successful_payments = [p for p in payments if p.status == "SUCCESS"]
-    
-    # Deduplicate by team_id to prevent duplicate payment attempts from double-counting
-    seen_team_ids = set()
-    deduped_successful_payments = []
-    for p in successful_payments:
-        tid = p.team_id or p.id
-        if tid not in seen_team_ids:
-            seen_team_ids.add(tid)
-            deduped_successful_payments.append(p)
+    setting = db.query(Setting).first()
+    default_fee = float(setting.fee) if (setting and setting.fee) else 300.0
 
-    total_revenue = sum(p.amount for p in deduped_successful_payments)
-    online_revenue = sum(p.amount for p in deduped_successful_payments if (p.payment_mode or "ONLINE") == "ONLINE")
-    offline_revenue = sum(p.amount for p in deduped_successful_payments if (p.payment_mode or "ONLINE") == "OFFLINE_CASH")
+    teams = db.query(Team).all()
+    confirmed_teams = [t for t in teams if t.payment_status == "SUCCESS" or t.registration_status == "CONFIRMED"]
     
-    # Collector breakdown for offline cash
+    payments = db.query(Payment).filter(Payment.status == "SUCCESS").all()
+    team_payment_map = {}
+    for p in payments:
+        tid = p.team_id or p.id
+        if tid not in team_payment_map:
+            team_payment_map[tid] = p
+
+    def normalize_collector(name: Optional[str]) -> str:
+        if not name:
+            return "Desk / Other"
+        n = name.strip()
+        nl = n.lower()
+        if "mrunal" in nl or nl == "mru":
+            return "Mrunal"
+        if "sadik" in nl:
+            return "Sadik Gonarkar"
+        if "prathmesh" in nl or "prathamesh" in nl:
+            return "Prathmesh"
+        if "abhay" in nl:
+            return "Abhay Tak"
+        if "samay" in nl:
+            return "Samay"
+        if "jadu" in nl:
+            return "Jadu"
+        return n.title()
+
+    online_count = 0
+    offline_count = 0
     collector_totals = {}
-    for p in deduped_successful_payments:
-        if (p.payment_mode or "ONLINE") == "OFFLINE_CASH" and p.collector_name:
-            collector_totals[p.collector_name] = collector_totals.get(p.collector_name, 0.0) + p.amount
-            
+
+    for t in confirmed_teams:
+        p = team_payment_map.get(t.id) or team_payment_map.get(t.registration_id)
+        mode = (p.payment_mode if p else getattr(t, "payment_mode", "ONLINE")) or "ONLINE"
+        fee = float(p.amount) if (p and p.amount) else default_fee
+
+        if mode == "OFFLINE_CASH":
+            offline_count += 1
+            col = normalize_collector(p.collector_name if p else getattr(t, "collector_name", None))
+            collector_totals[col] = collector_totals.get(col, 0.0) + fee
+        else:
+            online_count += 1
+
+    total_revenue = float(len(confirmed_teams) * default_fee)
+    online_revenue = float(online_count * default_fee)
+    offline_revenue = float(offline_count * default_fee)
+
     from ..models import Expense
     expenses = db.query(Expense).order_by(Expense.created_at.desc()).all()
-    total_expenses = sum(e.amount for e in expenses)
+    total_expenses = float(sum(e.amount for e in expenses))
     net_balance = total_revenue - total_expenses
 
     return {
         "total_revenue": total_revenue,
         "online_revenue": online_revenue,
         "offline_revenue": offline_revenue,
+        "online_teams_count": online_count,
+        "offline_teams_count": offline_count,
+        "total_confirmed_teams": len(confirmed_teams),
         "collector_breakdown": collector_totals,
         "total_expenses": total_expenses,
         "net_balance": net_balance,
