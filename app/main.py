@@ -48,11 +48,50 @@ app.include_router(payments.router)
 app.include_router(admin.router)
 app.include_router(live.router)
 
+def run_migrations():
+    """Ensure newly added columns exist in existing SQLite database tables."""
+    from sqlalchemy import text
+    with engine.connect() as conn:
+        # Team table columns
+        team_columns = [
+            ("entry_status", "TEXT DEFAULT 'PENDING'"),
+            ("checked_in_at", "TEXT"),
+            ("checked_in_by", "TEXT"),
+            ("desk_number", "TEXT"),
+            ("goodies_status", "TEXT DEFAULT 'PENDING'"),
+            ("goodies_count", "INTEGER DEFAULT 0"),
+            ("goodies_collected_at", "TEXT"),
+            ("goodies_distributed_by", "TEXT"),
+            ("checkin_notes", "TEXT DEFAULT ''"),
+            ("present_members_count", "INTEGER DEFAULT 0"),
+            ("present_member_ids", "TEXT DEFAULT '[]'"),
+        ]
+        for col_name, col_type in team_columns:
+            try:
+                conn.execute(text(f"ALTER TABLE teams ADD COLUMN {col_name} {col_type};"))
+                conn.commit()
+            except Exception:
+                pass # Column already exists
+
+        # Member table columns
+        member_columns = [
+            ("entry_status", "TEXT DEFAULT 'PENDING'"),
+            ("checked_in_at", "TEXT"),
+            ("goodies_received", "INTEGER DEFAULT 0"),
+        ]
+        for col_name, col_type in member_columns:
+            try:
+                conn.execute(text(f"ALTER TABLE members ADD COLUMN {col_name} {col_type};"))
+                conn.commit()
+            except Exception:
+                pass # Column already exists
+
 @app.on_event("startup")
 def startup_event():
     # 1. Ensure all models are registered and create tables
     from . import models
     Base.metadata.create_all(bind=engine)
+    run_migrations()
     
     # 2. Seed Admin & Problem Statements
     db = SessionLocal()

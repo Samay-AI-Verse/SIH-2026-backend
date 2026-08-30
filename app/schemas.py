@@ -246,5 +246,22 @@ class ForceLogoutResponse(BaseModel):
     message: str
     logged_out_at: str
 
+class TeamCheckinRequest(BaseModel):
+    entry_status: Optional[str] = "CHECKED_IN" # CHECKED_IN / PENDING
+    checked_in_by: Optional[str] = None
+    desk_number: Optional[str] = None
+    goodies_status: Optional[str] = None # COLLECTED / PENDING / None
+    goodies_count: Optional[int] = None
+    goodies_distributed_by: Optional[str] = None
+    checkin_notes: Optional[str] = None
+    present_member_ids: Optional[List[str]] = None
+
+class TeamBatchCheckinRequest(BaseModel):
+    team_ids: List[str]
+    action: str # "CHECKIN" / "GOODIES" / "CHECKIN_AND_GOODIES" / "RESET"
+    coordinator_name: Optional[str] = "Admin Desk"
+    desk_prefix: Optional[str] = None
+    goodies_count: Optional[int] = 6
+
 
 

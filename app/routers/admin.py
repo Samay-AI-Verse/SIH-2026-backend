@@ -2,8 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import Optional, List
+import json
 from ..database import get_db
-from ..models import Team, Member, Payment, Problem, Admin, Setting, AdminLoginLog, DeletedTeamArchive
+from ..models import Team, Member, Payment, Problem, Admin, Setting, AdminLoginLog, DeletedTeamArchive, utc_now
 from ..schemas import (
     PaymentVerifyRequest,
     ExpenseCreateRequest,
@@ -14,6 +15,8 @@ from ..schemas import (
     AdminPasswordChangeRequest,
     ForceLogoutResponse,
     TeamRegisterRequest,
+    TeamCheckinRequest,
+    TeamBatchCheckinRequest,
 )
 from ..auth import get_current_admin, get_password_hash, verify_password, create_access_token
 from ..r2_storage import generate_presigned_download_url
@@ -35,6 +38,14 @@ def get_admin_stats(
     selected_problems_count = sum(1 for t in teams if t.selected_problem_id is not None)
     open_innovation_teams = sum(1 for t in teams if t.is_open_innovation)
     
+    # Check-in & Goodies stats for Hackathon Day Desk
+    checked_in_teams_count = sum(1 for t in teams if getattr(t, "entry_status", "PENDING") == "CHECKED_IN")
+    pending_checkin_teams_count = total_teams - checked_in_teams_count
+    goodies_distributed_count = sum(1 for t in teams if getattr(t, "goodies_status", "PENDING") == "COLLECTED")
+    goodies_pending_count = total_teams - goodies_distributed_count
+    total_goodies_kits_given = sum(getattr(t, "goodies_count", 0) or 0 for t in teams)
+    present_students_count = db.query(Member).filter(Member.entry_status == "CHECKED_IN").count()
+
     # Total revenue from SUCCESS payments
     total_revenue = db.query(func.sum(Payment.amount)).filter(Payment.status == "SUCCESS").scalar() or 0.0
 
@@ -94,6 +105,12 @@ def get_admin_stats(
         "failed_teams": failed_teams,
         "selected_problems_count": selected_problems_count,
         "open_innovation_teams": open_innovation_teams,
+        "checked_in_teams_count": checked_in_teams_count,
+        "pending_checkin_teams_count": pending_checkin_teams_count,
+        "goodies_distributed_count": goodies_distributed_count,
+        "goodies_pending_count": goodies_pending_count,
+        "total_goodies_kits_given": total_goodies_kits_given,
+        "present_students_count": present_students_count,
         "total_revenue": total_revenue,
         "total_expenses": total_expenses,
         "net_balance": net_balance,
@@ -152,7 +169,13 @@ def list_all_teams(
                 "stream": m.course or t.leader_course,
                 "branch": m.branch or t.leader_branch,
                 "year": m.year or t.leader_year,
-                "student_id": m.student_id
+                "student_id": m.student_id,
+                "entry_status": getattr(m, "entry_status", "PENDING") or "PENDING",
+                "entryStatus": getattr(m, "entry_status", "PENDING") or "PENDING",
+                "checked_in_at": getattr(m, "checked_in_at", None),
+                "checkedInAt": getattr(m, "checked_in_at", None),
+                "goodies_received": bool(getattr(m, "goodies_received", False)),
+                "goodiesReceived": bool(getattr(m, "goodies_received", False)),
             }
             for m in t.members
         ]
@@ -160,6 +183,14 @@ def list_all_teams(
         # Determine year composition
         unique_years = {m["year"] for m in members_list if m["year"]}
         year_composition = "Same Year" if len(unique_years) <= 1 else "Mixed Years"
+
+        present_ids = []
+        try:
+            raw_ids = getattr(t, "present_member_ids", "[]")
+            if raw_ids:
+                present_ids = json.loads(raw_ids) if isinstance(raw_ids, str) else raw_ids
+        except Exception:
+            present_ids = []
 
         results.append({
             "id": t.id,
@@ -203,6 +234,28 @@ def list_all_teams(
             "is_open_innovation": t.is_open_innovation,
             "open_innovation_title": t.open_innovation_title,
             "open_innovation_description": t.open_innovation_description,
+            "entry_status": getattr(t, "entry_status", "PENDING") or "PENDING",
+            "entryStatus": getattr(t, "entry_status", "PENDING") or "PENDING",
+            "checked_in_at": getattr(t, "checked_in_at", None),
+            "checkedInAt": getattr(t, "checked_in_at", None),
+            "checked_in_by": getattr(t, "checked_in_by", None),
+            "checkedInBy": getattr(t, "checked_in_by", None),
+            "desk_number": getattr(t, "desk_number", None),
+            "deskNumber": getattr(t, "desk_number", None),
+            "goodies_status": getattr(t, "goodies_status", "PENDING") or "PENDING",
+            "goodiesStatus": getattr(t, "goodies_status", "PENDING") or "PENDING",
+            "goodies_count": getattr(t, "goodies_count", 0) or 0,
+            "goodiesCount": getattr(t, "goodies_count", 0) or 0,
+            "goodies_collected_at": getattr(t, "goodies_collected_at", None),
+            "goodiesCollectedAt": getattr(t, "goodies_collected_at", None),
+            "goodies_distributed_by": getattr(t, "goodies_distributed_by", None),
+            "goodiesDistributedBy": getattr(t, "goodies_distributed_by", None),
+            "checkin_notes": getattr(t, "checkin_notes", "") or "",
+            "checkinNotes": getattr(t, "checkin_notes", "") or "",
+            "present_members_count": getattr(t, "present_members_count", 0) or 0,
+            "presentMembersCount": getattr(t, "present_members_count", 0) or 0,
+            "present_member_ids": present_ids,
+            "presentMemberIds": present_ids,
             "registered_at": t.registered_at,
             "members": members_list,
             "payment": {
@@ -275,6 +328,193 @@ def verify_team_payment(
         "team_id": team.id,
         "payment_status": team.payment_status,
         "registration_status": team.registration_status
+    }
+
+@router.post("/teams/{team_id}/checkin")
+def update_team_checkin(
+    team_id: str,
+    req: TeamCheckinRequest,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    team = db.query(Team).filter(Team.id == team_id).first()
+    if not team:
+        team = db.query(Team).filter(Team.registration_id == team_id).first()
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    admin_name = current_admin.name or "Desk Coordinator"
+    now_ts = utc_now()
+
+    # 1. Update Entry / Check-in Status
+    if req.entry_status is not None:
+        team.entry_status = req.entry_status.upper()
+        if team.entry_status == "CHECKED_IN":
+            if not team.checked_in_at:
+                team.checked_in_at = now_ts
+            team.checked_in_by = req.checked_in_by or admin_name
+        else:
+            team.checked_in_at = None
+            team.checked_in_by = None
+
+    if req.desk_number is not None:
+        team.desk_number = req.desk_number.strip() if req.desk_number else None
+
+    # 2. Update Goodies / Swag Kit Distribution Status
+    if req.goodies_status is not None:
+        team.goodies_status = req.goodies_status.upper()
+        if team.goodies_status == "COLLECTED":
+            if not team.goodies_collected_at:
+                team.goodies_collected_at = now_ts
+            team.goodies_distributed_by = req.goodies_distributed_by or admin_name
+            team.goodies_count = req.goodies_count if req.goodies_count is not None else (len(team.members) or 6)
+        else:
+            team.goodies_collected_at = None
+            team.goodies_distributed_by = None
+            team.goodies_count = 0
+    elif req.goodies_count is not None:
+        team.goodies_count = req.goodies_count
+
+    if req.checkin_notes is not None:
+        team.checkin_notes = req.checkin_notes.strip()
+
+    # 3. Update Member Attendance
+    if req.present_member_ids is not None:
+        present_set = set(req.present_member_ids)
+        team.present_member_ids = json.dumps(list(present_set))
+        team.present_members_count = len(present_set)
+        
+        for m in team.members:
+            if m.id in present_set:
+                m.entry_status = "CHECKED_IN"
+                if not m.checked_in_at:
+                    m.checked_in_at = now_ts
+                if team.goodies_status == "COLLECTED":
+                    m.goodies_received = True
+            else:
+                m.entry_status = "PENDING"
+                m.checked_in_at = None
+    elif team.entry_status == "CHECKED_IN":
+        # If no specific member ids sent but team checked in, mark all members checked in
+        present_ids = [m.id for m in team.members]
+        team.present_member_ids = json.dumps(present_ids)
+        team.present_members_count = len(present_ids)
+        for m in team.members:
+            m.entry_status = "CHECKED_IN"
+            if not m.checked_in_at:
+                m.checked_in_at = now_ts
+            if team.goodies_status == "COLLECTED":
+                m.goodies_received = True
+    elif team.entry_status == "PENDING":
+        team.present_member_ids = "[]"
+        team.present_members_count = 0
+        for m in team.members:
+            m.entry_status = "PENDING"
+            m.checked_in_at = None
+            m.goodies_received = False
+
+    team.updated_at = now_ts
+    db.commit()
+
+    try:
+        from .live import notify_live_subscribers
+        import asyncio
+        asyncio.create_task(notify_live_subscribers("teams"))
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "team_id": team.id,
+        "registration_id": team.registration_id,
+        "entry_status": team.entry_status,
+        "checked_in_at": team.checked_in_at,
+        "checked_in_by": team.checked_in_by,
+        "desk_number": team.desk_number,
+        "goodies_status": team.goodies_status,
+        "goodies_count": team.goodies_count,
+        "goodies_collected_at": team.goodies_collected_at,
+        "goodies_distributed_by": team.goodies_distributed_by,
+        "present_members_count": team.present_members_count,
+        "checkin_notes": team.checkin_notes
+    }
+
+@router.post("/teams/batch-checkin")
+def batch_update_checkin(
+    req: TeamBatchCheckinRequest,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    if not req.team_ids:
+        raise HTTPException(status_code=400, detail="No team IDs provided")
+
+    teams = db.query(Team).filter(Team.id.in_(req.team_ids)).all()
+    if not teams:
+        teams = db.query(Team).filter(Team.registration_id.in_(req.team_ids)).all()
+
+    admin_name = req.coordinator_name or current_admin.name or "Desk Coordinator"
+    now_ts = utc_now()
+    action = req.action.upper()
+    updated_count = 0
+
+    for idx, team in enumerate(teams):
+        if action in ["CHECKIN", "CHECKIN_AND_GOODIES"]:
+            team.entry_status = "CHECKED_IN"
+            if not team.checked_in_at:
+                team.checked_in_at = now_ts
+            team.checked_in_by = admin_name
+            if req.desk_prefix:
+                team.desk_number = f"{req.desk_prefix}-{idx + 1}"
+            
+            # Check-in all members
+            member_ids = [m.id for m in team.members]
+            team.present_member_ids = json.dumps(member_ids)
+            team.present_members_count = len(member_ids)
+            for m in team.members:
+                m.entry_status = "CHECKED_IN"
+                if not m.checked_in_at:
+                    m.checked_in_at = now_ts
+
+        if action in ["GOODIES", "CHECKIN_AND_GOODIES"]:
+            team.goodies_status = "COLLECTED"
+            if not team.goodies_collected_at:
+                team.goodies_collected_at = now_ts
+            team.goodies_distributed_by = admin_name
+            team.goodies_count = req.goodies_count or len(team.members) or 6
+            for m in team.members:
+                m.goodies_received = True
+
+        if action == "RESET":
+            team.entry_status = "PENDING"
+            team.checked_in_at = None
+            team.checked_in_by = None
+            team.goodies_status = "PENDING"
+            team.goodies_collected_at = None
+            team.goodies_distributed_by = None
+            team.goodies_count = 0
+            team.present_member_ids = "[]"
+            team.present_members_count = 0
+            for m in team.members:
+                m.entry_status = "PENDING"
+                m.checked_in_at = None
+                m.goodies_received = False
+
+        team.updated_at = now_ts
+        updated_count += 1
+
+    db.commit()
+
+    try:
+        from .live import notify_live_subscribers
+        import asyncio
+        asyncio.create_task(notify_live_subscribers("teams"))
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "action": action,
+        "updated_count": updated_count
     }
 
 @router.get("/payments")

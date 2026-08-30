@@ -86,6 +86,19 @@ class Team(Base):
     open_innovation_title = Column(String, nullable=True)
     open_innovation_description = Column(Text, nullable=True)
     
+    # Hackathon Day Entry & Goodies Distribution Tracking
+    entry_status = Column(String, default="PENDING") # PENDING / CHECKED_IN
+    checked_in_at = Column(String, nullable=True)
+    checked_in_by = Column(String, nullable=True) # Coordinator / Admin name
+    desk_number = Column(String, nullable=True) # Assigned desk / table / lab slot
+    goodies_status = Column(String, default="PENDING") # PENDING / COLLECTED
+    goodies_count = Column(Integer, default=0) # e.g. 6 kits
+    goodies_collected_at = Column(String, nullable=True)
+    goodies_distributed_by = Column(String, nullable=True) # Organizer name
+    checkin_notes = Column(Text, default="")
+    present_members_count = Column(Integer, default=0)
+    present_member_ids = Column(Text, default="[]") # JSON list of member IDs who checked in
+
     registered_at = Column(String, default=utc_now)
     updated_at = Column(String, default=utc_now, onupdate=utc_now)
 
@@ -107,6 +120,9 @@ class Member(Base):
     branch = Column(String, default="")
     year = Column(String, default="")
     student_id = Column(String, default="")
+    entry_status = Column(String, default="PENDING") # PENDING / CHECKED_IN
+    checked_in_at = Column(String, nullable=True)
+    goodies_received = Column(Boolean, default=False)
     created_at = Column(String, default=utc_now)
 
     team = relationship("Team", back_populates="members")
