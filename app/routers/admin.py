@@ -17,6 +17,7 @@ from ..schemas import (
     TeamRegisterRequest,
     TeamCheckinRequest,
     TeamBatchCheckinRequest,
+    TeamProfileUpdateRequest,
 )
 from ..auth import get_current_admin, get_password_hash, verify_password, create_access_token
 from ..r2_storage import generate_presigned_download_url
@@ -903,6 +904,124 @@ def update_team_name(
         "success": True,
         "message": f"Team name updated from '{old_name}' to '{new_name}'",
         "team_name": new_name
+    }
+
+
+@router.put("/teams/{team_id}/profile")
+@router.post("/teams/{team_id}/profile")
+def update_team_profile(
+    team_id: str,
+    req: TeamProfileUpdateRequest,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    team = db.query(Team).filter((Team.id == team_id) | (Team.registration_id == team_id)).first()
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    # 1. Update Team Registration ID (if provided and changed)
+    if req.registration_id and req.registration_id.strip():
+        new_reg_id = req.registration_id.strip().upper()
+        if new_reg_id != team.registration_id:
+            duplicate_reg = db.query(Team).filter(Team.registration_id == new_reg_id, Team.id != team.id).first()
+            if duplicate_reg:
+                raise HTTPException(status_code=400, detail=f"Registration ID '{new_reg_id}' is already assigned to team '{duplicate_reg.team_name}'.")
+            
+            old_reg_id = team.registration_id
+            team.registration_id = new_reg_id
+            
+            # Update payments referencing old registration ID
+            payments = db.query(Payment).filter(Payment.registration_id == old_reg_id).all()
+            for p in payments:
+                p.registration_id = new_reg_id
+
+    # 2. Update Team Name
+    if req.team_name and req.team_name.strip():
+        new_name = req.team_name.strip()
+        if new_name != team.team_name:
+            dup = db.query(Team).filter(func.lower(Team.team_name) == new_name.lower(), Team.id != team.id).first()
+            if dup:
+                raise HTTPException(status_code=400, detail=f"Team name '{new_name}' is already taken.")
+            team.team_name = new_name
+            payments = db.query(Payment).filter((Payment.team_id == team.id) | (Payment.registration_id == team.registration_id)).all()
+            for p in payments:
+                p.team_name = new_name
+
+    # 3. Update Stream / Course, Department / Branch, Year & College
+    if req.college is not None:
+        team.college = req.college.strip()
+    if req.leader_course is not None:
+        team.leader_course = req.leader_course.strip()
+    if req.leader_branch is not None:
+        team.leader_branch = req.leader_branch.strip()
+    if req.leader_year is not None:
+        team.leader_year = req.leader_year.strip()
+    if req.leader_name is not None:
+        team.leader_name = req.leader_name.strip()
+    if req.leader_email is not None:
+        team.leader_email = req.leader_email.strip()
+    if req.leader_phone is not None:
+        team.leader_phone = req.leader_phone.strip()
+    if req.leader_gender is not None:
+        team.leader_gender = req.leader_gender.strip()
+    if req.leader_student_id is not None:
+        team.leader_student_id = req.leader_student_id.strip()
+
+    # Sync leader member in team.members
+    for m in team.members:
+        if m.is_leader or m.email == team.leader_email or m.name == team.leader_name:
+            if req.leader_name:
+                m.name = req.leader_name.strip()
+            if req.leader_email:
+                m.email = req.leader_email.strip()
+            if req.leader_phone:
+                m.phone = req.leader_phone.strip()
+            if req.leader_gender:
+                m.gender = req.leader_gender.strip()
+            if req.leader_course:
+                m.course = req.leader_course.strip()
+            if req.leader_branch:
+                m.branch = req.leader_branch.strip()
+            if req.leader_year:
+                m.year = req.leader_year.strip()
+            if req.leader_student_id:
+                m.student_id = req.leader_student_id.strip()
+            break
+
+    team.updated_at = utc_now()
+    db.commit()
+    db.refresh(team)
+
+    try:
+        from ..d1_sync import sync_team_to_d1
+        sync_team_to_d1(team)
+    except Exception:
+        pass
+
+    try:
+        from .live import notify_live_subscribers
+        import asyncio
+        asyncio.create_task(notify_live_subscribers("all"))
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "message": f"Team profile for '{team.team_name}' ({team.registration_id}) successfully updated.",
+        "team": {
+            "id": team.id,
+            "registration_id": team.registration_id,
+            "team_name": team.team_name,
+            "college": team.college,
+            "leader_course": team.leader_course,
+            "leader_branch": team.leader_branch,
+            "leader_year": team.leader_year,
+            "leader_name": team.leader_name,
+            "leader_email": team.leader_email,
+            "leader_phone": team.leader_phone,
+            "leader_gender": team.leader_gender,
+            "leader_student_id": team.leader_student_id
+        }
     }
 
 

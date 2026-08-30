@@ -263,5 +263,19 @@ class TeamBatchCheckinRequest(BaseModel):
     desk_prefix: Optional[str] = None
     goodies_count: Optional[int] = 6
 
+class TeamProfileUpdateRequest(BaseModel):
+    team_name: Optional[str] = None
+    registration_id: Optional[str] = None
+    college: Optional[str] = None
+    leader_name: Optional[str] = None
+    leader_email: Optional[str] = None
+    leader_phone: Optional[str] = None
+    leader_gender: Optional[str] = None
+    leader_course: Optional[str] = None # Stream: B.Tech, Diploma, B.Voc, BCA, MCA, B.Sc
+    leader_branch: Optional[str] = None
+    leader_year: Optional[str] = None
+    leader_student_id: Optional[str] = None
+
+
 
 
