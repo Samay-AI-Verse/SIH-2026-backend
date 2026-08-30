@@ -46,8 +46,27 @@ def get_admin_stats(
     total_goodies_kits_given = sum(getattr(t, "goodies_count", 0) or 0 for t in teams)
     present_students_count = db.query(Member).filter(Member.entry_status == "CHECKED_IN").count()
 
-    # Total revenue from SUCCESS payments
-    total_revenue = db.query(func.sum(Payment.amount)).filter(Payment.status == "SUCCESS").scalar() or 0.0
+    # Accurate total revenue calculation (1 payment per confirmed team, avoiding duplicate payment attempts)
+    setting = db.query(Setting).first()
+    default_fee = float(setting.fee) if (setting and setting.fee) else 300.0
+
+    team_payment_map = {}
+    successful_payments = db.query(Payment).filter(Payment.status == "SUCCESS").all()
+    for p in successful_payments:
+        tid = p.team_id or p.id
+        if tid not in team_payment_map:
+            team_payment_map[tid] = p
+
+    confirmed_teams = [t for t in teams if t.payment_status == "SUCCESS" or t.registration_status == "CONFIRMED"]
+    total_revenue = 0.0
+    for t in confirmed_teams:
+        p = team_payment_map.get(t.id) or team_payment_map.get(t.registration_id)
+        if p and p.amount:
+            total_revenue += float(p.amount)
+        elif t.payment and t.payment.amount:
+            total_revenue += float(t.payment.amount)
+        else:
+            total_revenue += default_fee
 
     from ..models import Expense
     total_expenses = db.query(func.sum(Expense.amount)).scalar() or 0.0
@@ -655,13 +674,22 @@ def get_budget_ledger(
     payments = db.query(Payment).all()
     successful_payments = [p for p in payments if p.status == "SUCCESS"]
     
-    total_revenue = sum(p.amount for p in successful_payments)
-    online_revenue = sum(p.amount for p in successful_payments if (p.payment_mode or "ONLINE") == "ONLINE")
-    offline_revenue = sum(p.amount for p in successful_payments if (p.payment_mode or "ONLINE") == "OFFLINE_CASH")
+    # Deduplicate by team_id to prevent duplicate payment attempts from double-counting
+    seen_team_ids = set()
+    deduped_successful_payments = []
+    for p in successful_payments:
+        tid = p.team_id or p.id
+        if tid not in seen_team_ids:
+            seen_team_ids.add(tid)
+            deduped_successful_payments.append(p)
+
+    total_revenue = sum(p.amount for p in deduped_successful_payments)
+    online_revenue = sum(p.amount for p in deduped_successful_payments if (p.payment_mode or "ONLINE") == "ONLINE")
+    offline_revenue = sum(p.amount for p in deduped_successful_payments if (p.payment_mode or "ONLINE") == "OFFLINE_CASH")
     
     # Collector breakdown for offline cash
     collector_totals = {}
-    for p in successful_payments:
+    for p in deduped_successful_payments:
         if (p.payment_mode or "ONLINE") == "OFFLINE_CASH" and p.collector_name:
             collector_totals[p.collector_name] = collector_totals.get(p.collector_name, 0.0) + p.amount
             
