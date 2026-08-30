@@ -47,30 +47,18 @@ def get_admin_stats(
     total_goodies_kits_given = sum(getattr(t, "goodies_count", 0) or 0 for t in teams)
     present_students_count = db.query(Member).filter(Member.entry_status == "CHECKED_IN").count()
 
-    # Accurate total revenue calculation (1 payment per confirmed team, avoiding duplicate payment attempts)
+    # Accurate total revenue calculation (strictly 1 fee per confirmed team)
     setting = db.query(Setting).first()
     default_fee = float(setting.fee) if (setting and setting.fee) else 300.0
 
-    team_payment_map = {}
-    successful_payments = db.query(Payment).filter(Payment.status == "SUCCESS").all()
-    for p in successful_payments:
-        tid = p.team_id or p.id
-        if tid not in team_payment_map:
-            team_payment_map[tid] = p
-
-    confirmed_teams = [t for t in teams if t.payment_status == "SUCCESS" or t.registration_status == "CONFIRMED"]
-    total_revenue = 0.0
-    for t in confirmed_teams:
-        p = team_payment_map.get(t.id) or team_payment_map.get(t.registration_id)
-        if p and p.amount:
-            total_revenue += float(p.amount)
-        elif t.payment and t.payment.amount:
-            total_revenue += float(t.payment.amount)
-        else:
-            total_revenue += default_fee
+    confirmed_teams_count = db.query(Team).filter(
+        (Team.payment_status == "SUCCESS") | (Team.registration_status == "CONFIRMED")
+    ).count()
+    
+    total_revenue = float(confirmed_teams_count * default_fee)
 
     from ..models import Expense
-    total_expenses = db.query(func.sum(Expense.amount)).scalar() or 0.0
+    total_expenses = float(db.query(func.sum(Expense.amount)).scalar() or 0.0)
     net_balance = total_revenue - total_expenses
 
     # Stream / Degree Breakdown
