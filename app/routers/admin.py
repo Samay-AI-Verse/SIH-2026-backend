@@ -1695,7 +1695,10 @@ def get_admin_settings(
         "is_active": s.is_active,
         "minMembers": s.min_members,
         "maxMembers": s.max_members,
-        "femaleRequired": s.female_required
+        "femaleRequired": s.female_required,
+        "timelinePublished": bool(s.timeline_published),
+        "timelineTitle": s.timeline_title or "Important Dates & Timeline",
+        "timelineSubtitle": s.timeline_subtitle or "Key dates and 2-day schedule for Smart India Hackathon 2026.",
     }
 
 
@@ -1724,6 +1727,18 @@ def update_admin_settings(
         s.max_members = int(req["max_members"])
     if "female_required" in req:
         s.female_required = bool(req["female_required"])
+    if "timeline_published" in req:
+        s.timeline_published = bool(req["timeline_published"])
+    elif "timelinePublished" in req:
+        s.timeline_published = bool(req["timelinePublished"])
+    if "timeline_title" in req:
+        s.timeline_title = str(req["timeline_title"])
+    elif "timelineTitle" in req:
+        s.timeline_title = str(req["timelineTitle"])
+    if "timeline_subtitle" in req:
+        s.timeline_subtitle = str(req["timeline_subtitle"])
+    elif "timelineSubtitle" in req:
+        s.timeline_subtitle = str(req["timelineSubtitle"])
 
     db.commit()
     db.refresh(s)
@@ -1745,8 +1760,104 @@ def update_admin_settings(
             "is_active": s.is_active,
             "minMembers": s.min_members,
             "maxMembers": s.max_members,
-            "femaleRequired": s.female_required
+            "femaleRequired": s.female_required,
+            "timelinePublished": bool(s.timeline_published),
+            "timelineTitle": s.timeline_title,
+            "timelineSubtitle": s.timeline_subtitle,
         }
+    }
+
+
+@router.get("/timeline")
+def get_admin_timeline(
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    import json
+    s = db.query(Setting).filter(Setting.id == "registration").first()
+    events = []
+    if s and s.timeline_events:
+        if isinstance(s.timeline_events, list):
+            events = s.timeline_events
+        elif isinstance(s.timeline_events, str):
+            try:
+                events = json.loads(s.timeline_events)
+            except Exception:
+                events = []
+    return {
+        "published": bool(s.timeline_published) if s else False,
+        "title": s.timeline_title if s and s.timeline_title else "Important Dates & Timeline",
+        "subtitle": s.timeline_subtitle if s and s.timeline_subtitle else "Key dates and 2-day schedule for Smart India Hackathon 2026.",
+        "events": events
+    }
+
+
+@router.post("/timeline")
+def update_admin_timeline(
+    req: dict,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    s = db.query(Setting).filter(Setting.id == "registration").first()
+    if not s:
+        s = Setting(id="registration")
+        db.add(s)
+
+    if "published" in req:
+        s.timeline_published = bool(req["published"])
+    if "title" in req:
+        s.timeline_title = str(req["title"])
+    if "subtitle" in req:
+        s.timeline_subtitle = str(req["subtitle"])
+    if "events" in req:
+        s.timeline_events = req["events"]
+
+    db.commit()
+    db.refresh(s)
+
+    try:
+        from .live import notify_live_subscribers
+        import asyncio
+        asyncio.create_task(notify_live_subscribers("timeline"))
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "message": "Timeline updated successfully.",
+        "published": bool(s.timeline_published),
+        "title": s.timeline_title,
+        "subtitle": s.timeline_subtitle,
+        "events": s.timeline_events or []
+    }
+
+
+@router.post("/timeline/publish")
+def toggle_timeline_publish(
+    req: dict,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    s = db.query(Setting).filter(Setting.id == "registration").first()
+    if not s:
+        s = Setting(id="registration")
+        db.add(s)
+
+    s.timeline_published = bool(req.get("published", True))
+    db.commit()
+    db.refresh(s)
+
+    try:
+        from .live import notify_live_subscribers
+        import asyncio
+        asyncio.create_task(notify_live_subscribers("timeline"))
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "message": f"Timeline is now {'PUBLIC and LIVE on website' if s.timeline_published else 'HIDDEN (Draft mode)'}.",
+        "published": bool(s.timeline_published)
     }
 
 

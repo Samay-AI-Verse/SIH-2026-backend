@@ -86,6 +86,20 @@ def run_migrations():
             except Exception:
                 pass # Column already exists
 
+        # Setting table columns
+        setting_columns = [
+            ("timeline_published", "INTEGER DEFAULT 0"),
+            ("timeline_title", "TEXT DEFAULT 'Important Dates & Timeline'"),
+            ("timeline_subtitle", "TEXT DEFAULT 'Key dates and 2-day schedule for Smart India Hackathon 2026.'"),
+            ("timeline_events", "TEXT DEFAULT '[]'"),
+        ]
+        for col_name, col_type in setting_columns:
+            try:
+                conn.execute(text(f"ALTER TABLE settings ADD COLUMN {col_name} {col_type};"))
+                conn.commit()
+            except Exception:
+                pass # Column already exists
+
 @app.on_event("startup")
 def startup_event():
     # 1. Ensure all models are registered and create tables
@@ -123,7 +137,35 @@ def get_settings():
             "isActive": s.is_active if s else True,
             "minMembers": s.min_members if s else 6,
             "maxMembers": s.max_members if s else 6,
-            "femaleRequired": s.female_required if s else True
+            "femaleRequired": s.female_required if s else True,
+            "timelinePublished": bool(s.timeline_published) if s else False,
+            "timelineTitle": (s.timeline_title if s and s.timeline_title else "Important Dates & Timeline"),
+            "timelineSubtitle": (s.timeline_subtitle if s and s.timeline_subtitle else "Key dates and 2-day schedule for Smart India Hackathon 2026."),
+        }
+    finally:
+        db.close()
+
+@app.get("/api/timeline")
+def get_timeline():
+    db = SessionLocal()
+    try:
+        from .models import Setting
+        s = db.query(Setting).filter(Setting.id == "registration").first()
+        import json
+        events = []
+        if s and s.timeline_events:
+            if isinstance(s.timeline_events, list):
+                events = s.timeline_events
+            elif isinstance(s.timeline_events, str):
+                try:
+                    events = json.loads(s.timeline_events)
+                except Exception:
+                    events = []
+        return {
+            "published": bool(s.timeline_published) if s else False,
+            "title": s.timeline_title if s and s.timeline_title else "Important Dates & Timeline",
+            "subtitle": s.timeline_subtitle if s and s.timeline_subtitle else "Key dates and 2-day schedule for Smart India Hackathon 2026.",
+            "events": events
         }
     finally:
         db.close()

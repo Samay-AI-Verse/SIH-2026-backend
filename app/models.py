@@ -34,6 +34,10 @@ class Setting(Base):
     min_members = Column(Integer, default=6)
     max_members = Column(Integer, default=6)
     female_required = Column(Boolean, default=True)
+    timeline_published = Column(Boolean, default=False)
+    timeline_title = Column(String, default="Important Dates & Timeline")
+    timeline_subtitle = Column(String, default="Key dates and 2-day schedule for Smart India Hackathon 2026.")
+    timeline_events = Column(JSON, default=list)
     updated_at = Column(String, default=utc_now, onupdate=utc_now)
 
 class Problem(Base):
