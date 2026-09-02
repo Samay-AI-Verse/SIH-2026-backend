@@ -379,6 +379,10 @@ def send_team_certificates_email(
         """
         extra_note = "<p style='color: #475569; font-size: 14px;'>Please forward the respective individual PDF certificates to each of your team members.</p>"
 
+    # Attach embedded logo if available
+    logo_path = os.path.join(BASE_DIR, "sih_spiderman_badge_thumb.png")
+    has_logo = os.path.exists(logo_path)
+
     html_content = f"""
     <!DOCTYPE html>
     <html>
@@ -387,7 +391,9 @@ def send_team_certificates_email(
         <style>
             body {{ font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; background-color: #f1f5f9; margin: 0; padding: 24px; }}
             .card {{ max-width: 620px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }}
-            .header {{ background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #ea580c 100%); color: #ffffff; padding: 32px 24px; text-align: center; }}
+            .header {{ background: linear-gradient(135deg, #090d16 0%, #1e3a8a 55%, #ea580c 100%); color: #ffffff; padding: 36px 24px 28px 24px; text-align: center; }}
+            .logo-box {{ margin-bottom: 12px; }}
+            .logo-img {{ width: 84px; height: 84px; border-radius: 50%; box-shadow: 0 8px 16px rgba(0,0,0,0.35); border: 3px solid #fbbf24; }}
             .badge {{ display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); padding: 4px 14px; border-radius: 9999px; font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #fbbf24; margin-bottom: 10px; }}
             .header h1 {{ margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 0.5px; color: #ffffff; }}
             .header p {{ margin: 6px 0 0 0; color: #e2e8f0; font-size: 13px; font-weight: 500; }}
@@ -399,6 +405,7 @@ def send_team_certificates_email(
     <body>
         <div class="card">
             <div class="header">
+                {"<div class='logo-box'><img src='cid:sih_spiderman_badge' class='logo-img' alt='SIH 2026 Badge' /></div>" if has_logo else ""}
                 <span class="badge">Official Recognition</span>
                 <h1>Smart India Hackathon 2026</h1>
                 <p>Internal Hackathon Round • Ministry of Education & AICTE Initiative</p>
@@ -426,6 +433,18 @@ def send_team_certificates_email(
     </html>
     """
     msg.attach(MIMEText(html_content, "html"))
+
+    if has_logo:
+        try:
+            from email.mime.image import MIMEImage
+            with open(logo_path, "rb") as f:
+                img_part = MIMEImage(f.read())
+                img_part.add_header("Content-ID", "<sih_spiderman_badge>")
+                img_part.add_header("Content-Disposition", "inline", filename="sih_spiderman_badge.png")
+                msg.attach(img_part)
+        except Exception:
+            pass
+
     
     # Attach all PDFs
     for filename, pdf_bytes in certificate_attachments:
