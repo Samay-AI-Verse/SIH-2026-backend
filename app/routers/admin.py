@@ -1,8 +1,8 @@
 from fastapi import Body, Query, APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from typing import Optional, List
 import json
+import os
 from ..database import get_db
 from ..models import Team, Member, Payment, Problem, Admin, Setting, AdminLoginLog, DeletedTeamArchive, utc_now
 from ..schemas import (
@@ -2001,11 +2001,14 @@ def get_certificate_config(
         "cert_sign_1_title": getattr(setting, "cert_sign_1_title", "Convener, Innovation Cell"),
         "cert_sign_2_name": getattr(setting, "cert_sign_2_name", "Principal / Director"),
         "cert_sign_2_title": getattr(setting, "cert_sign_2_title", "Head of Institution"),
-        "smtp_host": getattr(setting, "smtp_host", "smtp.gmail.com") or "smtp.gmail.com",
-        "smtp_port": getattr(setting, "smtp_port", 587) or 587,
-        "smtp_user": getattr(setting, "smtp_user", "") or "",
-        "smtp_from_name": getattr(setting, "smtp_from_name", "SIH Organizing Committee") or "SIH Organizing Committee",
-        "is_smtp_configured": bool(getattr(setting, "smtp_user", "") and getattr(setting, "smtp_pass", ""))
+        "smtp_host": getattr(setting, "smtp_host", None) or os.getenv("SMTP_HOST", "smtp.gmail.com") or "smtp.gmail.com",
+        "smtp_port": getattr(setting, "smtp_port", None) or int(os.getenv("SMTP_PORT", 587)),
+        "smtp_user": (getattr(setting, "smtp_user", "") or "").strip() or os.getenv("SMTP_USER", "").strip(),
+        "smtp_from_name": getattr(setting, "smtp_from_name", "") or os.getenv("SMTP_FROM_NAME", "SIH Organizing Committee") or "SIH Organizing Committee",
+        "is_smtp_configured": bool(
+            (getattr(setting, "smtp_user", "") and getattr(setting, "smtp_pass", "")) or
+            (os.getenv("SMTP_USER") and os.getenv("SMTP_PASS"))
+        )
     }
 
 @router.post("/certificates/config")
@@ -2224,14 +2227,17 @@ def dispatch_team_certificates_email(
                 cc_list.append(mem_email)
 
     setting = db.query(Setting).filter(Setting.id == "registration").first()
-    smtp_host = getattr(setting, "smtp_host", "smtp.gmail.com") or "smtp.gmail.com"
-    smtp_port = getattr(setting, "smtp_port", 587) or 587
-    smtp_user = getattr(setting, "smtp_user", "") or ""
-    smtp_pass = getattr(setting, "smtp_pass", "") or ""
-    smtp_from_name = getattr(setting, "smtp_from_name", "SIH Organizing Committee") or "SIH Organizing Committee"
+    smtp_host = getattr(setting, "smtp_host", None) or os.getenv("SMTP_HOST", "smtp.gmail.com") or "smtp.gmail.com"
+    smtp_port = getattr(setting, "smtp_port", None) or int(os.getenv("SMTP_PORT", 587))
+    smtp_user = (getattr(setting, "smtp_user", "") or "").strip() or os.getenv("SMTP_USER", "").strip()
+    smtp_pass = (getattr(setting, "smtp_pass", "") or "").strip() or os.getenv("SMTP_PASS", "").strip()
+    smtp_from_name = getattr(setting, "smtp_from_name", "") or os.getenv("SMTP_FROM_NAME", "SIH Organizing Committee") or "SIH Organizing Committee"
 
     if not smtp_user or not smtp_pass:
-        raise HTTPException(status_code=400, detail="SMTP credentials are not configured. Please save your Gmail/SMTP details first.")
+        raise HTTPException(
+            status_code=400,
+            detail="SMTP credentials are not configured. Please click 'SMTP & Signatures' at the top to save your Gmail address and 16-character App Password."
+        )
 
     # Generate certificates for all members
     attachments = []
@@ -2300,14 +2306,17 @@ def dispatch_custom_certificate_email(
         raise HTTPException(status_code=400, detail="Student name and student email are required.")
 
     setting = db.query(Setting).filter(Setting.id == "registration").first()
-    smtp_host = getattr(setting, "smtp_host", "smtp.gmail.com") or "smtp.gmail.com"
-    smtp_port = getattr(setting, "smtp_port", 587) or 587
-    smtp_user = getattr(setting, "smtp_user", "") or ""
-    smtp_pass = getattr(setting, "smtp_pass", "") or ""
-    smtp_from_name = getattr(setting, "smtp_from_name", "SIH Organizing Committee") or "SIH Organizing Committee"
+    smtp_host = getattr(setting, "smtp_host", None) or os.getenv("SMTP_HOST", "smtp.gmail.com") or "smtp.gmail.com"
+    smtp_port = getattr(setting, "smtp_port", None) or int(os.getenv("SMTP_PORT", 587))
+    smtp_user = (getattr(setting, "smtp_user", "") or "").strip() or os.getenv("SMTP_USER", "").strip()
+    smtp_pass = (getattr(setting, "smtp_pass", "") or "").strip() or os.getenv("SMTP_PASS", "").strip()
+    smtp_from_name = getattr(setting, "smtp_from_name", "") or os.getenv("SMTP_FROM_NAME", "SIH Organizing Committee") or "SIH Organizing Committee"
 
     if not smtp_user or not smtp_pass:
-        raise HTTPException(status_code=400, detail="SMTP credentials are not configured. Please save your Gmail/SMTP details in Settings first.")
+        raise HTTPException(
+            status_code=400,
+            detail="SMTP credentials are not configured. Please click 'SMTP & Signatures' at the top to save your Gmail address and 16-character App Password."
+        )
 
     pdf_bytes = generate_single_certificate_bytes(
         student_name=student_name,
