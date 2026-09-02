@@ -87,14 +87,19 @@ def draw_luxury_border(c, width, height):
     c.restoreState()
 
 
-TEMPLATE_PATH = os.path.join(BASE_DIR, "sih_official_certificate_template.png")
+TEMPLATE_PATH = os.path.join(BASE_DIR, "sih_spiderman_certificate_2026.png")
 if not os.path.exists(TEMPLATE_PATH):
-    PARENT_DIR = os.path.dirname(BASE_DIR)
-    CANDIDATE = os.path.join(PARENT_DIR, "2nd - 3rd.png")
-    if os.path.exists(CANDIDATE):
-        TEMPLATE_PATH = CANDIDATE
+    FALLBACK = os.path.join(BASE_DIR, "sih_official_certificate_template.png")
+    if os.path.exists(FALLBACK):
+        TEMPLATE_PATH = FALLBACK
     else:
-        TEMPLATE_PATH = None
+        PARENT_DIR = os.path.dirname(BASE_DIR)
+        CANDIDATE = os.path.join(PARENT_DIR, "2nd - 3rd (2).png")
+        if os.path.exists(CANDIDATE):
+            TEMPLATE_PATH = CANDIDATE
+        else:
+            TEMPLATE_PATH = None
+
 
 def generate_single_certificate_bytes(
     student_name: str,
