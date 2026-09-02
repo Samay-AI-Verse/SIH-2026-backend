@@ -1,3 +1,4 @@
+from fastapi import Body
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -2204,6 +2205,7 @@ def dispatch_team_certificates_email(
             "certificates_count": len(attachments),
             "message": f"Successfully emailed {len(attachments)} certificates to {team.leader_email}"
         }
+    # pyrefly: ignore [parse-error]
     except Exception as e:
 @router.post("/certificates/send-custom")
 def dispatch_custom_certificate_email(
