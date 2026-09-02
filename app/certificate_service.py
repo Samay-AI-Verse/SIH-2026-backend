@@ -136,17 +136,42 @@ def generate_single_certificate_bytes(
         c.setLineWidth(1.5)
         c.line((width - name_w) / 2.0, 252, (width + name_w) / 2.0, 252)
         
-        # Team Name Only (No role, no college)
+        # Elegant Team Representation
         team_clean = (team_name or "Participant Team").strip()
-        c.setFont("Helvetica-Bold", 13)
+        
+        # 'of' in italic serif muted, Team Name in bold deep slate
+        c.setFont("Times-Italic", 13)
+        c.setFillColor(colors.HexColor("#475569"))
+        of_w = c.stringWidth("of Team  ", "Times-Italic", 13)
+        
+        c.setFont("Helvetica-Bold", 14)
         c.setFillColor(colors.HexColor("#0f172a"))
-        c.drawCentredString(center_x, 230, f"Team:  \"{team_clean}\"")
+        name_part_w = c.stringWidth(team_clean, "Helvetica-Bold", 14)
+        
+        total_team_w = of_w + name_part_w
+        start_team_x = center_x - (total_team_w / 2.0)
+        
+        # Draw "of Team"
+        c.setFont("Times-Italic", 13)
+        c.setFillColor(colors.HexColor("#475569"))
+        c.drawString(start_team_x, 226, "of Team  ")
+        
+        # Draw "TeamName"
+        c.setFont("Helvetica-Bold", 14)
+        c.setFillColor(colors.HexColor("#0f172a"))
+        c.drawString(start_team_x + of_w, 226, team_clean)
+        
+        # Decorative micro dots around team
+        c.setFillColor(colors.HexColor("#ea580c"))
+        c.circle(start_team_x - 14, 230, 2, fill=1, stroke=0)
+        c.circle(start_team_x + total_team_w + 14, 230, 2, fill=1, stroke=0)
         
         # Description
-        c.setFont("Helvetica", 10.5)
-        c.setFillColor(colors.HexColor("#475569"))
-        c.drawCentredString(center_x, 204, "for active innovation, technical excellence, and committed participation")
-        c.drawCentredString(center_x, 188, "in the Smart India Hackathon 2026 Internal College Round.")
+        c.setFont("Helvetica", 10)
+        c.setFillColor(colors.HexColor("#64748b"))
+        c.drawCentredString(center_x, 198, "for active innovation, technical excellence, and committed participation")
+        c.drawCentredString(center_x, 183, "in the Smart India Hackathon 2026 Internal College Round.")
+
 
         
         c.showPage()
