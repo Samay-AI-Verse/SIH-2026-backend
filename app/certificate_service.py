@@ -124,44 +124,30 @@ def generate_single_certificate_bytes(
         # Center Coordinates for Dynamic Text Overlay
         center_x = width / 2.0
         
-        # "This is proudly presented to"
-        c.setFont("Helvetica-Oblique", 13)
-        c.setFillColor(colors.HexColor("#475569"))
-        c.drawCentredString(center_x, 335, "This is proudly presented to")
-        
-        # Participant Full Name (Large, crisp and bold)
-        c.setFont("Helvetica-Bold", 26)
+        # Participant Full Name (Safely placed clearly below the pre-printed green 'Certificate' script)
+        c.setFont("Helvetica-Bold", 24)
         c.setFillColor(colors.HexColor("#1e3a8a"))
         clean_name = (student_name or "Participant Name").upper()
-        c.drawCentredString(center_x, 295, clean_name)
+        c.drawCentredString(center_x, 260, clean_name)
         
         # Underline for name
-        name_w = min(420, max(240, c.stringWidth(clean_name, "Helvetica-Bold", 26) + 30))
-        c.setStrokeColor(colors.HexColor("#d97706"))
+        name_w = min(380, max(220, c.stringWidth(clean_name, "Helvetica-Bold", 24) + 30))
+        c.setStrokeColor(colors.HexColor("#ea580c"))
         c.setLineWidth(1.5)
-        c.line((width - name_w) / 2.0, 287, (width + name_w) / 2.0, 287)
+        c.line((width - name_w) / 2.0, 252, (width + name_w) / 2.0, 252)
         
-        # Team & Role line
-        role_label = "as Team Leader" if role.lower() == "leader" else "as Active Team Member"
+        # Team Name Only (No role, no college)
         team_clean = (team_name or "Participant Team").strip()
         c.setFont("Helvetica-Bold", 13)
         c.setFillColor(colors.HexColor("#0f172a"))
-        c.drawCentredString(center_x, 260, f"of Team  \"{team_clean}\"  {role_label}")
+        c.drawCentredString(center_x, 230, f"Team:  \"{team_clean}\"")
         
-        # College / Institution
-        if college_name and college_name.strip():
-            c.setFont("Helvetica", 11)
-            c.setFillColor(colors.HexColor("#334155"))
-            c.drawCentredString(center_x, 240, f"representing {college_name.strip()}")
-            desc_y = 212
-        else:
-            desc_y = 230
-            
         # Description
         c.setFont("Helvetica", 10.5)
         c.setFillColor(colors.HexColor("#475569"))
-        c.drawCentredString(center_x, desc_y, "for active innovation, technical excellence, and committed participation")
-        c.drawCentredString(center_x, desc_y - 16, "in the Smart India Hackathon 2026 Internal College Round.")
+        c.drawCentredString(center_x, 204, "for active innovation, technical excellence, and committed participation")
+        c.drawCentredString(center_x, 188, "in the Smart India Hackathon 2026 Internal College Round.")
+
         
         c.showPage()
         c.save()
