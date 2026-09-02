@@ -124,17 +124,34 @@ def generate_single_certificate_bytes(
         # Center Coordinates for Dynamic Text Overlay
         center_x = width / 2.0
         
-        # Participant Full Name (Safely placed clearly below the pre-printed green 'Certificate' script)
-        c.setFont("Helvetica-Bold", 24)
-        c.setFillColor(colors.HexColor("#1e3a8a"))
+        # Dynamic Font Scaling for Long Names
         clean_name = (student_name or "Participant Name").upper()
-        c.drawCentredString(center_x, 260, clean_name)
+        name_len = len(clean_name)
         
-        # Underline for name
-        name_w = min(380, max(220, c.stringWidth(clean_name, "Helvetica-Bold", 24) + 30))
+        if name_len > 28:
+            name_font_size = 17
+            underline_offset = 5
+        elif name_len > 22:
+            name_font_size = 19
+            underline_offset = 6
+        elif name_len > 16:
+            name_font_size = 22
+            underline_offset = 7
+        else:
+            name_font_size = 25
+            underline_offset = 8
+            
+        c.setFont("Helvetica-Bold", name_font_size)
+        c.setFillColor(colors.HexColor("#1e3a8a"))
+        c.drawCentredString(center_x, 258, clean_name)
+        
+        # Underline for name scaled proportionally
+        name_str_w = c.stringWidth(clean_name, "Helvetica-Bold", name_font_size)
+        name_w = min(420, max(180, name_str_w + 24))
         c.setStrokeColor(colors.HexColor("#ea580c"))
         c.setLineWidth(1.5)
-        c.line((width - name_w) / 2.0, 252, (width + name_w) / 2.0, 252)
+        c.line((width - name_w) / 2.0, 258 - underline_offset, (width + name_w) / 2.0, 258 - underline_offset)
+
         
         # Elegant Team Representation
         team_clean = (team_name or "Participant Team").strip()
