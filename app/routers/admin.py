@@ -2205,9 +2205,66 @@ def dispatch_team_certificates_email(
             "message": f"Successfully emailed {len(attachments)} certificates to {team.leader_email}"
         }
     except Exception as e:
-        team.cert_status = "FAILED"
-        db.commit()
+@router.post("/certificates/send-custom")
+def dispatch_custom_certificate_email(
+    payload: dict = Body(...),
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    student_name = payload.get("student_name", "").strip()
+    student_email = payload.get("student_email", "").strip()
+    team_name = payload.get("team_name", "").strip()
+    college_name = payload.get("college_name", "").strip()
+    role = payload.get("role", "Member")
+
+    if not student_name or not student_email:
+        raise HTTPException(status_code=400, detail="Student name and student email are required.")
+
+    setting = db.query(Setting).filter(Setting.id == "registration").first()
+    smtp_host = getattr(setting, "smtp_host", "smtp.gmail.com") or "smtp.gmail.com"
+    smtp_port = getattr(setting, "smtp_port", 587) or 587
+    smtp_user = getattr(setting, "smtp_user", "") or ""
+    smtp_pass = getattr(setting, "smtp_pass", "") or ""
+    smtp_from_name = getattr(setting, "smtp_from_name", "SIH Organizing Committee") or "SIH Organizing Committee"
+
+    if not smtp_user or not smtp_pass:
+        raise HTTPException(status_code=400, detail="SMTP credentials are not configured. Please save your Gmail/SMTP details in Settings first.")
+
+    pdf_bytes = generate_single_certificate_bytes(
+        student_name=student_name,
+        team_name=team_name,
+        college_name=college_name,
+        role=role,
+        cert_type="Participation",
+        event_title=getattr(setting, "cert_event_title", "Smart India Hackathon 2026 (Internal Hackathon)"),
+        sign_1_title=getattr(setting, "cert_sign_1_title", "Convener, Innovation Cell"),
+        sign_1_name=getattr(setting, "cert_sign_1_name", "SIH SPOC / Coordinator"),
+        sign_2_title=getattr(setting, "cert_sign_2_title", "Head of Institution"),
+        sign_2_name=getattr(setting, "cert_sign_2_name", "Principal / Director"),
+        issue_date=getattr(setting, "cert_issue_date", "September 2026")
+    )
+    fn = f"Certificate_{student_name.replace(' ', '_')}.pdf"
+
+    try:
+        send_team_certificates_email(
+            smtp_host=smtp_host,
+            smtp_port=int(smtp_port),
+            smtp_user=smtp_user,
+            smtp_pass=smtp_pass,
+            from_name=smtp_from_name,
+            leader_email=student_email,
+            leader_name=student_name,
+            team_name=team_name,
+            certificate_attachments=[(fn, pdf_bytes)]
+        )
+        return {
+            "success": True,
+            "student_email": student_email,
+            "message": f"Successfully emailed certificate to {student_email}!"
+        }
+    except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to dispatch email: {str(e)}")
+
 
 
 
