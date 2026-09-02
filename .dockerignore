@@ -9,8 +9,4 @@ app/routers/__pycache__/
 *.pyd
 .git/
 .gitignore
-uploads/
-scratch/
 cloudflare_d1_export.json
-Dockerfile
-.dockerignore

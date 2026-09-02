@@ -4,7 +4,7 @@ FROM python:3.11-slim
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PORT=8000
+    PORT=8080
 
 # Set working directory
 WORKDIR /app
@@ -23,8 +23,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy backend code
 COPY . .
 
-# Expose port (Render will bind to $PORT dynamically)
-EXPOSE 8000
+# Expose port (Cloud Run defaults to 8080)
+EXPOSE 8080
 
-# Run FastAPI app with Uvicorn
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Run FastAPI app with Uvicorn (exec ensures process replaces shell for signal handling and Cloud Run $PORT)
+CMD exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8080}

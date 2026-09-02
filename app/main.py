@@ -126,10 +126,21 @@ def startup_event():
     db = SessionLocal()
     try:
         seed_database(db)
-        # 3. Auto-pull all records from Cloudflare D1 Cloud Database into local SQLite
-        pull_from_d1_to_sqlite(db)
     finally:
         db.close()
+
+    # 3. Auto-pull all records from Cloudflare D1 Cloud Database in background thread so server starts listening instantly
+    import threading
+    def _background_d1_pull():
+        try:
+            sync_db = SessionLocal()
+            pull_from_d1_to_sqlite(sync_db)
+            sync_db.close()
+        except Exception as e:
+            print("[D1 Sync] Background startup pull notice:", e)
+
+    t = threading.Thread(target=_background_d1_pull, daemon=True)
+    t.start()
 
 @app.get("/")
 def root():

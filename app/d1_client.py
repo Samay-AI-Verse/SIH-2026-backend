@@ -34,7 +34,7 @@ class CloudflareD1Client:
         req = urllib.request.Request(url, data=data, headers=headers, method="POST")
 
         try:
-            with urllib.request.urlopen(req) as resp:
+            with urllib.request.urlopen(req, timeout=10) as resp:
                 result = json.loads(resp.read().decode("utf-8"))
                 if result.get("success"):
                     return result.get("result", [{}])[0]

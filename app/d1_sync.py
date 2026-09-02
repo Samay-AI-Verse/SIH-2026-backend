@@ -159,9 +159,13 @@ def delete_payment_from_d1(payment_id: str):
 def delete_expense_from_d1(expense_id: str):
     _exec_d1_sync("DELETE FROM expenses WHERE id = ?;", [str(expense_id)])
 
+_D1_HOOKS_ENABLED = True
+
 def register_d1_hooks(SessionClass):
     @event.listens_for(SessionClass, "after_flush")
     def after_flush(session, flush_context):
+        if not _D1_HOOKS_ENABLED:
+            return
         for obj in session.new.union(session.dirty):
             obj_type = type(obj).__name__
             if obj_type == "Team":
@@ -210,10 +214,13 @@ def sync_full_database_to_d1(db: Session):
 
 
 def pull_from_d1_to_sqlite(db: Session):
+    global _D1_HOOKS_ENABLED
     if not d1_client.is_configured():
         print("[D1 Sync] Cloudflare D1 credentials not configured. Skipping D1 startup pull.")
         return
 
+    # Critical: Disable D1 after_flush hooks during pull to prevent circular sync of hundreds of records
+    _D1_HOOKS_ENABLED = False
     print("[D1 Sync] Connecting to Cloudflare D1 Cloud Database to pull data...")
     try:
         from .models import Team, Member, Payment, Expense, Problem
@@ -281,10 +288,10 @@ def pull_from_d1_to_sqlite(db: Session):
                 existing.payment_status = str(row.get("payment_status", existing.payment_status))
                 existing.selected_problem_id = row.get("selected_problem_id", existing.selected_problem_id)
                 existing.selected_problem_title = row.get("selected_problem_title", existing.selected_problem_title)
-            try:
-                db.commit()
-            except Exception:
-                db.rollback()
+        try:
+            db.commit()
+        except Exception:
+            db.rollback()
 
         # 2. Fetch Members from D1
         members_rows = _extract_rows(d1_client.query("SELECT * FROM members;"))
@@ -308,23 +315,26 @@ def pull_from_d1_to_sqlite(db: Session):
                     created_at=str(row.get("created_at", ""))
                 )
                 db.add(new_member)
-            try:
-                db.commit()
-            except Exception:
-                db.rollback()
+        try:
+            db.commit()
+        except Exception:
+            db.rollback()
 
         # 3. Fetch Payments from D1
         payments_rows = _extract_rows(d1_client.query("SELECT * FROM payments;"))
         for row in payments_rows:
             payment_id = str(row["id"])
-            existing_p = db.query(Payment).filter(Payment.id == payment_id).first()
+            order_id = str(row.get("order_id", f"ORD-{payment_id[:8]}"))
+            existing_p = db.query(Payment).filter(
+                (Payment.id == payment_id) | (Payment.order_id == order_id)
+            ).first()
             if not existing_p:
                 new_payment = Payment(
                     id=payment_id,
                     team_id=str(row.get("team_id", "")),
                     registration_id=str(row.get("registration_id", "")),
                     team_name=str(row.get("team_name", "")),
-                    order_id=str(row.get("order_id", f"ORD-{payment_id[:8]}")),
+                    order_id=order_id,
                     transaction_id=row.get("transaction_id"),
                     proof_key=row.get("proof_key"),
                     proof_url=row.get("proof_url"),
@@ -339,10 +349,10 @@ def pull_from_d1_to_sqlite(db: Session):
                     updated_at=str(row.get("updated_at", ""))
                 )
                 db.add(new_payment)
-            try:
-                db.commit()
-            except Exception:
-                db.rollback()
+        try:
+            db.commit()
+        except Exception:
+            db.rollback()
 
         # 4. Fetch Expenses from D1
         expenses_rows = _extract_rows(d1_client.query("SELECT * FROM expenses;"))
@@ -357,14 +367,13 @@ def pull_from_d1_to_sqlite(db: Session):
                     amount=float(row.get("amount", 0.0)),
                     paid_to=str(row.get("paid_to", "")),
                     notes=str(row.get("notes", "")),
-                    date=str(row.get("date", "")),
                     created_at=str(row.get("created_at", ""))
                 )
                 db.add(new_expense)
-            try:
-                db.commit()
-            except Exception:
-                db.rollback()
+        try:
+            db.commit()
+        except Exception:
+            db.rollback()
 
         # Purge any remaining orphan members or payments in local SQLite
         all_local_team_ids = {t.id for t in db.query(Team).all()}.union({t.registration_id for t in db.query(Team).all()})
@@ -375,5 +384,7 @@ def pull_from_d1_to_sqlite(db: Session):
         print(f"[D1 Sync] Startup Pull Complete! Local DB has {db.query(Team).count()} teams, {db.query(Member).count()} members, {db.query(Payment).count()} payments.")
     except Exception as e:
         print("[D1 Sync] Pull Notice:", e)
+    finally:
+        _D1_HOOKS_ENABLED = True
 
 

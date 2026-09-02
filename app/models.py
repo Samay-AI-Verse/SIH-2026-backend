@@ -152,7 +152,7 @@ class Payment(Base):
     registration_id = Column(String, nullable=False, index=True)
     team_name = Column(String, nullable=False)
     order_id = Column(String, unique=True, index=True, nullable=False)
-    transaction_id = Column(String, unique=True, index=True, nullable=True) # UTR number
+    transaction_id = Column(String, index=True, nullable=True) # UTR number
     proof_key = Column(String, nullable=True) # Cloudflare R2 object key
     proof_url = Column(String, nullable=True) # Direct view URL / Signed download
     payment_mode = Column(String, default="ONLINE", nullable=True) # ONLINE / OFFLINE_CASH
