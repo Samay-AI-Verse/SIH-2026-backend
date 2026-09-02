@@ -38,6 +38,17 @@ class Setting(Base):
     timeline_title = Column(String, default="Important Dates & Timeline")
     timeline_subtitle = Column(String, default="Key dates and 2-day schedule for Smart India Hackathon 2026.")
     timeline_events = Column(JSON, default=list)
+    cert_event_title = Column(String, default="Smart India Hackathon 2026 (Internal Hackathon)")
+    cert_issue_date = Column(String, default="March 2026")
+    cert_sign_1_name = Column(String, default="SIH SPOC / Coordinator")
+    cert_sign_1_title = Column(String, default="Convener, Innovation Cell")
+    cert_sign_2_name = Column(String, default="Principal / Director")
+    cert_sign_2_title = Column(String, default="Head of Institution")
+    smtp_host = Column(String, default="smtp.gmail.com")
+    smtp_port = Column(Integer, default=587)
+    smtp_user = Column(String, default="")
+    smtp_pass = Column(String, default="")
+    smtp_from_name = Column(String, default="SIH Organizing Committee")
     updated_at = Column(String, default=utc_now, onupdate=utc_now)
 
 class Problem(Base):
@@ -102,6 +113,8 @@ class Team(Base):
     checkin_notes = Column(Text, default="")
     present_members_count = Column(Integer, default=0)
     present_member_ids = Column(Text, default="[]") # JSON list of member IDs who checked in
+    cert_status = Column(String, default="PENDING") # PENDING / SENT / FAILED
+    cert_sent_at = Column(String, nullable=True)
 
     registered_at = Column(String, default=utc_now)
     updated_at = Column(String, default=utc_now, onupdate=utc_now)

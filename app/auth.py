@@ -36,17 +36,20 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 
 def get_current_admin(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
+    token: Optional[str] = None,
     db: Session = Depends(get_db)
 ):
-    if not credentials:
+    raw_token = credentials.credentials if credentials else token
+    if not raw_token:
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Authentication credentials were not provided",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    token = credentials.credentials
+
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(raw_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         email: str = payload.get("sub")
         if email is None:
             raise HTTPException(status_code=401, detail="Invalid auth token")

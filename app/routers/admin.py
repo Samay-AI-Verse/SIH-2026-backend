@@ -1977,6 +1977,239 @@ def admin_register_team(
         "message": "Team created and approved directly by Admin."
     }
 
+# =========================================================================
+# CERTIFICATE HUB & EMAIL DISPATCH ENDPOINTS
+# =========================================================================
+
+from fastapi.responses import Response
+from ..certificate_service import generate_single_certificate_bytes, send_team_certificates_email
+
+@router.get("/certificates/config")
+def get_certificate_config(
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    setting = db.query(Setting).filter(Setting.id == "registration").first()
+    return {
+        "cert_event_title": getattr(setting, "cert_event_title", "Smart India Hackathon 2026 (Internal Hackathon)"),
+        "cert_issue_date": getattr(setting, "cert_issue_date", "March 2026"),
+        "cert_sign_1_name": getattr(setting, "cert_sign_1_name", "SIH SPOC / Coordinator"),
+        "cert_sign_1_title": getattr(setting, "cert_sign_1_title", "Convener, Innovation Cell"),
+        "cert_sign_2_name": getattr(setting, "cert_sign_2_name", "Principal / Director"),
+        "cert_sign_2_title": getattr(setting, "cert_sign_2_title", "Head of Institution"),
+        "smtp_host": getattr(setting, "smtp_host", "smtp.gmail.com") or "smtp.gmail.com",
+        "smtp_port": getattr(setting, "smtp_port", 587) or 587,
+        "smtp_user": getattr(setting, "smtp_user", "") or "",
+        "smtp_from_name": getattr(setting, "smtp_from_name", "SIH Organizing Committee") or "SIH Organizing Committee",
+        "is_smtp_configured": bool(getattr(setting, "smtp_user", "") and getattr(setting, "smtp_pass", ""))
+    }
+
+@router.post("/certificates/config")
+def update_certificate_config(
+    payload: dict,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    setting = db.query(Setting).filter(Setting.id == "registration").first()
+    if not setting:
+        setting = Setting(id="registration")
+        db.add(setting)
+
+    if "cert_event_title" in payload:
+        setting.cert_event_title = payload["cert_event_title"]
+    if "cert_issue_date" in payload:
+        setting.cert_issue_date = payload["cert_issue_date"]
+    if "cert_sign_1_name" in payload:
+        setting.cert_sign_1_name = payload["cert_sign_1_name"]
+    if "cert_sign_1_title" in payload:
+        setting.cert_sign_1_title = payload["cert_sign_1_title"]
+    if "cert_sign_2_name" in payload:
+        setting.cert_sign_2_name = payload["cert_sign_2_name"]
+    if "cert_sign_2_title" in payload:
+        setting.cert_sign_2_title = payload["cert_sign_2_title"]
+
+    if "smtp_host" in payload:
+        setting.smtp_host = payload["smtp_host"]
+    if "smtp_port" in payload:
+        setting.smtp_port = int(payload["smtp_port"])
+    if "smtp_user" in payload:
+        setting.smtp_user = payload["smtp_user"].strip()
+    if "smtp_pass" in payload and payload["smtp_pass"].strip():
+        setting.smtp_pass = payload["smtp_pass"].strip()
+    if "smtp_from_name" in payload:
+        setting.smtp_from_name = payload["smtp_from_name"]
+
+    db.commit()
+    return {"success": True, "message": "Certificate and SMTP settings saved successfully."}
+
+@router.post("/certificates/test-smtp")
+def test_smtp_connection(
+    payload: dict,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    setting = db.query(Setting).filter(Setting.id == "registration").first()
+    host = payload.get("smtp_host") or getattr(setting, "smtp_host", "smtp.gmail.com")
+    port = int(payload.get("smtp_port") or getattr(setting, "smtp_port", 587))
+    user = payload.get("smtp_user") or getattr(setting, "smtp_user", "")
+    pwd = payload.get("smtp_pass") or getattr(setting, "smtp_pass", "")
+    target_email = payload.get("test_email") or current_admin.email or user
+
+    if not user or not pwd:
+        raise HTTPException(status_code=400, detail="SMTP Username and Password/App-Password are required.")
+
+    import smtplib
+    from email.mime.text import MIMEText
+    msg = MIMEText("This is a test verification email from your SIH 2026 Hackathon Portal.")
+    msg["Subject"] = "SIH 2026 - SMTP Configuration Test Successful"
+    msg["From"] = user
+    msg["To"] = target_email
+
+    try:
+        if port == 465:
+            server = smtplib.SMTP_SSL(host, port, timeout=15)
+        else:
+            server = smtplib.SMTP(host, port, timeout=15)
+            server.starttls()
+        server.login(user, pwd)
+        server.sendmail(user, [target_email], msg.as_string())
+        server.quit()
+        return {"success": True, "message": f"Test email successfully delivered to {target_email}!"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"SMTP Connection Failed: {str(e)}")
+
+@router.get("/certificates/preview")
+def preview_sample_certificate(
+    student_name: str = "Rahul Sharma",
+    team_name: str = "Code Mavericks",
+    college: str = "GTMC Engineering College",
+    role: str = "Leader",
+    cert_type: str = "Participation",
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    setting = db.query(Setting).filter(Setting.id == "registration").first()
+    pdf_bytes = generate_single_certificate_bytes(
+        student_name=student_name,
+        team_name=team_name,
+        college_name=college,
+        role=role,
+        cert_type=cert_type,
+        event_title=getattr(setting, "cert_event_title", "Smart India Hackathon 2026 (Internal Hackathon)"),
+        sign_1_title=getattr(setting, "cert_sign_1_title", "Convener, Innovation Cell"),
+        sign_1_name=getattr(setting, "cert_sign_1_name", "SIH SPOC / Coordinator"),
+        sign_2_title=getattr(setting, "cert_sign_2_title", "Head of Institution"),
+        sign_2_name=getattr(setting, "cert_sign_2_name", "Principal / Director"),
+        issue_date=getattr(setting, "cert_issue_date", "March 2026")
+    )
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'inline; filename="Certificate_{student_name.replace(" ", "_")}.pdf"'}
+    )
+
+@router.get("/certificates/member/{member_id}")
+def download_member_certificate(
+    member_id: str,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    member = db.query(Member).filter(Member.id == member_id).first()
+    if not member:
+        raise HTTPException(status_code=404, detail="Member not found")
+    team = member.team
+    setting = db.query(Setting).filter(Setting.id == "registration").first()
+
+    role = "Leader" if member.is_leader else "Member"
+    pdf_bytes = generate_single_certificate_bytes(
+        student_name=member.full_name,
+        team_name=team.team_name if team else "",
+        college_name=member.college or (team.college if team else ""),
+        role=role,
+        cert_type="Participation",
+        event_title=getattr(setting, "cert_event_title", "Smart India Hackathon 2026 (Internal Hackathon)"),
+        sign_1_title=getattr(setting, "cert_sign_1_title", "Convener, Innovation Cell"),
+        sign_1_name=getattr(setting, "cert_sign_1_name", "SIH SPOC / Coordinator"),
+        sign_2_title=getattr(setting, "cert_sign_2_title", "Head of Institution"),
+        sign_2_name=getattr(setting, "cert_sign_2_name", "Principal / Director"),
+        issue_date=getattr(setting, "cert_issue_date", "March 2026")
+    )
+    filename = f"Certificate_{member.full_name.replace(' ', '_')}_{team.registration_id if team else 'SIH'}.pdf"
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )
+
+@router.post("/certificates/send-team/{team_id}")
+def dispatch_team_certificates_email(
+    team_id: str,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    team = db.query(Team).filter(Team.id == team_id).first()
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    setting = db.query(Setting).filter(Setting.id == "registration").first()
+    smtp_host = getattr(setting, "smtp_host", "smtp.gmail.com") or "smtp.gmail.com"
+    smtp_port = getattr(setting, "smtp_port", 587) or 587
+    smtp_user = getattr(setting, "smtp_user", "") or ""
+    smtp_pass = getattr(setting, "smtp_pass", "") or ""
+    smtp_from_name = getattr(setting, "smtp_from_name", "SIH Organizing Committee") or "SIH Organizing Committee"
+
+    if not smtp_user or not smtp_pass:
+        raise HTTPException(status_code=400, detail="SMTP credentials are not configured. Please save your Gmail/SMTP details first.")
+
+    # Generate certificates for all members
+    attachments = []
+    for m in team.members:
+        role = "Leader" if m.is_leader else "Member"
+        pdf_bytes = generate_single_certificate_bytes(
+            student_name=m.full_name,
+            team_name=team.team_name,
+            college_name=m.college or team.college,
+            role=role,
+            cert_type="Participation",
+            event_title=getattr(setting, "cert_event_title", "Smart India Hackathon 2026 (Internal Hackathon)"),
+            sign_1_title=getattr(setting, "cert_sign_1_title", "Convener, Innovation Cell"),
+            sign_1_name=getattr(setting, "cert_sign_1_name", "SIH SPOC / Coordinator"),
+            sign_2_title=getattr(setting, "cert_sign_2_title", "Head of Institution"),
+            sign_2_name=getattr(setting, "cert_sign_2_name", "Principal / Director"),
+            issue_date=getattr(setting, "cert_issue_date", "March 2026")
+        )
+        fn = f"Certificate_{m.full_name.replace(' ', '_')}_{team.registration_id}.pdf"
+        attachments.append((fn, pdf_bytes))
+
+    try:
+        send_team_certificates_email(
+            smtp_host=smtp_host,
+            smtp_port=int(smtp_port),
+            smtp_user=smtp_user,
+            smtp_pass=smtp_pass,
+            from_name=smtp_from_name,
+            leader_email=team.leader_email,
+            leader_name=team.leader_name,
+            team_name=team.team_name,
+            certificate_attachments=attachments
+        )
+        team.cert_status = "SENT"
+        team.cert_sent_at = utc_now()
+        db.commit()
+        return {
+            "success": True,
+            "team_id": team.id,
+            "team_name": team.team_name,
+            "leader_email": team.leader_email,
+            "certificates_count": len(attachments),
+            "message": f"Successfully emailed {len(attachments)} certificates to {team.leader_email}"
+        }
+    except Exception as e:
+        team.cert_status = "FAILED"
+        db.commit()
+        raise HTTPException(status_code=500, detail=f"Failed to dispatch email: {str(e)}")
+
+
 
 
 

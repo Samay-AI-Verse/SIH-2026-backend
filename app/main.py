@@ -65,6 +65,8 @@ def run_migrations():
             ("checkin_notes", "TEXT DEFAULT ''"),
             ("present_members_count", "INTEGER DEFAULT 0"),
             ("present_member_ids", "TEXT DEFAULT '[]'"),
+            ("cert_status", "TEXT DEFAULT 'PENDING'"),
+            ("cert_sent_at", "TEXT"),
         ]
         for col_name, col_type in team_columns:
             try:
@@ -92,6 +94,17 @@ def run_migrations():
             ("timeline_title", "TEXT DEFAULT 'Important Dates & Timeline'"),
             ("timeline_subtitle", "TEXT DEFAULT 'Key dates and 2-day schedule for Smart India Hackathon 2026.'"),
             ("timeline_events", "TEXT DEFAULT '[]'"),
+            ("cert_event_title", "TEXT DEFAULT 'Smart India Hackathon 2026 (Internal Hackathon)'"),
+            ("cert_issue_date", "TEXT DEFAULT 'March 2026'"),
+            ("cert_sign_1_name", "TEXT DEFAULT 'SIH SPOC / Coordinator'"),
+            ("cert_sign_1_title", "TEXT DEFAULT 'Convener, Innovation Cell'"),
+            ("cert_sign_2_name", "TEXT DEFAULT 'Principal / Director'"),
+            ("cert_sign_2_title", "TEXT DEFAULT 'Head of Institution'"),
+            ("smtp_host", "TEXT DEFAULT 'smtp.gmail.com'"),
+            ("smtp_port", "INTEGER DEFAULT 587"),
+            ("smtp_user", "TEXT DEFAULT ''"),
+            ("smtp_pass", "TEXT DEFAULT ''"),
+            ("smtp_from_name", "TEXT DEFAULT 'SIH Organizing Committee'"),
         ]
         for col_name, col_type in setting_columns:
             try:
@@ -99,6 +112,7 @@ def run_migrations():
                 conn.commit()
             except Exception:
                 pass # Column already exists
+
 
 @app.on_event("startup")
 def startup_event():
