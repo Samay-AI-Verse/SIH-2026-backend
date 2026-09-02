@@ -68,8 +68,20 @@ def seed_database(db: Session):
             is_active=True,
             min_members=settings.REQUIRED_MEMBERS_COUNT,
             max_members=settings.REQUIRED_MEMBERS_COUNT,
-            female_required=settings.FEMALE_REQUIRED
+            female_required=settings.FEMALE_REQUIRED,
+            smtp_host="smtp.gmail.com",
+            smtp_port=587,
+            smtp_user="samaypowade1@gmail.com",
+            smtp_pass="jrxhqhxxxyjkutda",
+            smtp_from_name="SIH 2026 Organizing Committee"
         ))
+        db.commit()
+    else:
+        existing_setting.smtp_host = getattr(existing_setting, "smtp_host", None) or "smtp.gmail.com"
+        existing_setting.smtp_port = getattr(existing_setting, "smtp_port", None) or 587
+        existing_setting.smtp_user = (getattr(existing_setting, "smtp_user", "") or "").strip() or "samaypowade1@gmail.com"
+        existing_setting.smtp_pass = (getattr(existing_setting, "smtp_pass", "") or "").strip() or "jrxhqhxxxyjkutda"
+        existing_setting.smtp_from_name = getattr(existing_setting, "smtp_from_name", None) or "SIH 2026 Organizing Committee"
         db.commit()
 
     # 2. Seed Default Master Admins

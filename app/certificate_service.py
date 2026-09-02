@@ -87,7 +87,9 @@ def draw_luxury_border(c, width, height):
     c.restoreState()
 
 
-TEMPLATE_PATH = os.path.join(BASE_DIR, "sih_spiderman_certificate_2026.png")
+TEMPLATE_PATH = os.path.join(BASE_DIR, "sih_spiderman_certificate_2026_opt.jpg")
+if not os.path.exists(TEMPLATE_PATH):
+    TEMPLATE_PATH = os.path.join(BASE_DIR, "sih_spiderman_certificate_2026.png")
 if not os.path.exists(TEMPLATE_PATH):
     FALLBACK = os.path.join(BASE_DIR, "sih_official_certificate_template.png")
     if os.path.exists(FALLBACK):
@@ -475,9 +477,9 @@ def send_team_certificates_email(
     # Connect & Send
     use_ssl = (smtp_port == 465)
     if use_ssl:
-        server = smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=30)
+        server = smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=120)
     else:
-        server = smtplib.SMTP(smtp_host, smtp_port, timeout=30)
+        server = smtplib.SMTP(smtp_host, smtp_port, timeout=120)
         server.starttls()
         
     try:

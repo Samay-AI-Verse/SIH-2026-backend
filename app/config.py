@@ -72,6 +72,13 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: str = os.getenv("GOOGLE_CLIENT_SECRET", "")
     GOOGLE_REDIRECT_URI: str = os.getenv("GOOGLE_REDIRECT_URI", "")
 
+    # Default Gmail SMTP Credentials
+    SMTP_HOST: str = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    SMTP_PORT: int = int(os.getenv("SMTP_PORT", 587))
+    SMTP_USER: str = os.getenv("SMTP_USER", "samaypowade1@gmail.com")
+    SMTP_PASS: str = os.getenv("SMTP_PASS", "jrxhqhxxxyjkutda")
+    SMTP_FROM_NAME: str = os.getenv("SMTP_FROM_NAME", "SIH 2026 Organizing Committee")
+
     class Config:
         env_file = ".env"
         extra = "ignore"

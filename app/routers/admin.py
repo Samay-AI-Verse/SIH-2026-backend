@@ -1989,12 +1989,28 @@ from ..certificate_service import (
     generate_team_certificates_zip_bytes
 )
 
+DEFAULT_SMTP_HOST = "smtp.gmail.com"
+DEFAULT_SMTP_PORT = 587
+DEFAULT_SMTP_USER = "samaypowade1@gmail.com"
+DEFAULT_SMTP_PASS = "jrxhqhxxxyjkutda"
+DEFAULT_SMTP_FROM_NAME = "SIH 2026 Organizing Committee"
+
+def get_effective_smtp_credentials(setting=None):
+    """Return configured SMTP credentials with default fallback to Samay's verified Gmail account."""
+    host = getattr(setting, "smtp_host", None) or os.getenv("SMTP_HOST") or DEFAULT_SMTP_HOST
+    port = getattr(setting, "smtp_port", None) or int(os.getenv("SMTP_PORT", DEFAULT_SMTP_PORT))
+    user = (getattr(setting, "smtp_user", "") or "").strip() or (os.getenv("SMTP_USER", "") or "").strip() or DEFAULT_SMTP_USER
+    pwd = (getattr(setting, "smtp_pass", "") or "").strip() or (os.getenv("SMTP_PASS", "") or "").strip() or DEFAULT_SMTP_PASS
+    from_name = (getattr(setting, "smtp_from_name", "") or "").strip() or (os.getenv("SMTP_FROM_NAME", "") or "").strip() or DEFAULT_SMTP_FROM_NAME
+    return host, int(port), user, pwd, from_name
+
 @router.get("/certificates/config")
 def get_certificate_config(
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
 ):
     setting = db.query(Setting).filter(Setting.id == "registration").first()
+    smtp_host, smtp_port, smtp_user, smtp_pass, smtp_from_name = get_effective_smtp_credentials(setting)
     return {
         "cert_event_title": getattr(setting, "cert_event_title", "Smart India Hackathon 2026 (Internal Hackathon)"),
         "cert_issue_date": getattr(setting, "cert_issue_date", "March 2026"),
@@ -2002,14 +2018,11 @@ def get_certificate_config(
         "cert_sign_1_title": getattr(setting, "cert_sign_1_title", "Convener, Innovation Cell"),
         "cert_sign_2_name": getattr(setting, "cert_sign_2_name", "Principal / Director"),
         "cert_sign_2_title": getattr(setting, "cert_sign_2_title", "Head of Institution"),
-        "smtp_host": getattr(setting, "smtp_host", None) or os.getenv("SMTP_HOST", "smtp.gmail.com") or "smtp.gmail.com",
-        "smtp_port": getattr(setting, "smtp_port", None) or int(os.getenv("SMTP_PORT", 587)),
-        "smtp_user": (getattr(setting, "smtp_user", "") or "").strip() or os.getenv("SMTP_USER", "").strip(),
-        "smtp_from_name": getattr(setting, "smtp_from_name", "") or os.getenv("SMTP_FROM_NAME", "SIH Organizing Committee") or "SIH Organizing Committee",
-        "is_smtp_configured": bool(
-            (getattr(setting, "smtp_user", "") and getattr(setting, "smtp_pass", "")) or
-            (os.getenv("SMTP_USER") and os.getenv("SMTP_PASS"))
-        )
+        "smtp_host": smtp_host,
+        "smtp_port": smtp_port,
+        "smtp_user": smtp_user,
+        "smtp_from_name": smtp_from_name,
+        "is_smtp_configured": True
     }
 
 @router.post("/certificates/config")
@@ -2057,27 +2070,26 @@ def test_smtp_connection(
     current_admin: Admin = Depends(get_current_admin)
 ):
     setting = db.query(Setting).filter(Setting.id == "registration").first()
-    host = payload.get("smtp_host") or getattr(setting, "smtp_host", "smtp.gmail.com")
-    port = int(payload.get("smtp_port") or getattr(setting, "smtp_port", 587))
-    user = payload.get("smtp_user") or getattr(setting, "smtp_user", "")
-    pwd = payload.get("smtp_pass") or getattr(setting, "smtp_pass", "")
-    target_email = payload.get("test_email") or current_admin.email or user
+    def_host, def_port, def_user, def_pwd, def_from = get_effective_smtp_credentials(setting)
 
-    if not user or not pwd:
-        raise HTTPException(status_code=400, detail="SMTP Username and Password/App-Password are required.")
+    host = (payload.get("smtp_host") or def_host).strip()
+    port = int(payload.get("smtp_port") or def_port)
+    user = (payload.get("smtp_user") or def_user).strip()
+    pwd = (payload.get("smtp_pass") or def_pwd).strip()
+    target_email = (payload.get("test_email") or current_admin.email or user).strip()
 
     import smtplib
     from email.mime.text import MIMEText
     msg = MIMEText("This is a test verification email from your SIH 2026 Hackathon Portal.")
     msg["Subject"] = "SIH 2026 - SMTP Configuration Test Successful"
-    msg["From"] = user
+    msg["From"] = f"{def_from} <{user}>"
     msg["To"] = target_email
 
     try:
         if port == 465:
-            server = smtplib.SMTP_SSL(host, port, timeout=15)
+            server = smtplib.SMTP_SSL(host, port, timeout=30)
         else:
-            server = smtplib.SMTP(host, port, timeout=15)
+            server = smtplib.SMTP(host, port, timeout=30)
             server.starttls()
         server.login(user, pwd)
         server.sendmail(user, [target_email], msg.as_string())
@@ -2228,17 +2240,7 @@ def dispatch_team_certificates_email(
                 cc_list.append(mem_email)
 
     setting = db.query(Setting).filter(Setting.id == "registration").first()
-    smtp_host = getattr(setting, "smtp_host", None) or os.getenv("SMTP_HOST", "smtp.gmail.com") or "smtp.gmail.com"
-    smtp_port = getattr(setting, "smtp_port", None) or int(os.getenv("SMTP_PORT", 587))
-    smtp_user = (getattr(setting, "smtp_user", "") or "").strip() or os.getenv("SMTP_USER", "").strip()
-    smtp_pass = (getattr(setting, "smtp_pass", "") or "").strip() or os.getenv("SMTP_PASS", "").strip()
-    smtp_from_name = getattr(setting, "smtp_from_name", "") or os.getenv("SMTP_FROM_NAME", "SIH Organizing Committee") or "SIH Organizing Committee"
-
-    if not smtp_user or not smtp_pass:
-        raise HTTPException(
-            status_code=400,
-            detail="SMTP credentials are not configured. Please click 'SMTP & Signatures' at the top to save your Gmail address and 16-character App Password."
-        )
+    smtp_host, smtp_port, smtp_user, smtp_pass, smtp_from_name = get_effective_smtp_credentials(setting)
 
     # Generate certificates for all members
     attachments = []
@@ -2307,17 +2309,7 @@ def dispatch_custom_certificate_email(
         raise HTTPException(status_code=400, detail="Student name and student email are required.")
 
     setting = db.query(Setting).filter(Setting.id == "registration").first()
-    smtp_host = getattr(setting, "smtp_host", None) or os.getenv("SMTP_HOST", "smtp.gmail.com") or "smtp.gmail.com"
-    smtp_port = getattr(setting, "smtp_port", None) or int(os.getenv("SMTP_PORT", 587))
-    smtp_user = (getattr(setting, "smtp_user", "") or "").strip() or os.getenv("SMTP_USER", "").strip()
-    smtp_pass = (getattr(setting, "smtp_pass", "") or "").strip() or os.getenv("SMTP_PASS", "").strip()
-    smtp_from_name = getattr(setting, "smtp_from_name", "") or os.getenv("SMTP_FROM_NAME", "SIH Organizing Committee") or "SIH Organizing Committee"
-
-    if not smtp_user or not smtp_pass:
-        raise HTTPException(
-            status_code=400,
-            detail="SMTP credentials are not configured. Please click 'SMTP & Signatures' at the top to save your Gmail address and 16-character App Password."
-        )
+    smtp_host, smtp_port, smtp_user, smtp_pass, smtp_from_name = get_effective_smtp_credentials(setting)
 
     event_title = payload.get("event_title") or getattr(setting, "cert_event_title", "Smart India Hackathon 2026 (Internal Hackathon)")
     sign_1_title = payload.get("sign_1_title") or getattr(setting, "cert_sign_1_title", "Convener, Innovation Cell")
