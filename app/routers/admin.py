@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import Body, Query, APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -2291,7 +2292,6 @@ def dispatch_team_certificates_email(
 
 @router.post("/certificates/send-custom")
 def dispatch_custom_certificate_email(
-
     payload: dict = Body(...),
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
@@ -2300,7 +2300,8 @@ def dispatch_custom_certificate_email(
     student_email = payload.get("student_email", "").strip()
     team_name = payload.get("team_name", "").strip()
     college_name = payload.get("college_name", "").strip()
-    role = payload.get("role", "Member")
+    role = payload.get("role", "Participant")
+    cert_type = payload.get("cert_type") or payload.get("certType") or "Participation"
 
     if not student_name or not student_email:
         raise HTTPException(status_code=400, detail="Student name and student email are required.")
@@ -2318,20 +2319,28 @@ def dispatch_custom_certificate_email(
             detail="SMTP credentials are not configured. Please click 'SMTP & Signatures' at the top to save your Gmail address and 16-character App Password."
         )
 
+    event_title = payload.get("event_title") or getattr(setting, "cert_event_title", "Smart India Hackathon 2026 (Internal Hackathon)")
+    sign_1_title = payload.get("sign_1_title") or getattr(setting, "cert_sign_1_title", "Convener, Innovation Cell")
+    sign_1_name = payload.get("sign_1_name") or getattr(setting, "cert_sign_1_name", "SIH SPOC / Coordinator")
+    sign_2_title = payload.get("sign_2_title") or getattr(setting, "cert_sign_2_title", "Head of Institution")
+    sign_2_name = payload.get("sign_2_name") or getattr(setting, "cert_sign_2_name", "Principal / Director")
+    issue_date = payload.get("issue_date") or getattr(setting, "cert_issue_date", "September 2026")
+
     pdf_bytes = generate_single_certificate_bytes(
         student_name=student_name,
         team_name=team_name,
         college_name=college_name,
         role=role,
-        cert_type="Participation",
-        event_title=getattr(setting, "cert_event_title", "Smart India Hackathon 2026 (Internal Hackathon)"),
-        sign_1_title=getattr(setting, "cert_sign_1_title", "Convener, Innovation Cell"),
-        sign_1_name=getattr(setting, "cert_sign_1_name", "SIH SPOC / Coordinator"),
-        sign_2_title=getattr(setting, "cert_sign_2_title", "Head of Institution"),
-        sign_2_name=getattr(setting, "cert_sign_2_name", "Principal / Director"),
-        issue_date=getattr(setting, "cert_issue_date", "September 2026")
+        cert_type=cert_type,
+        event_title=event_title,
+        sign_1_title=sign_1_title,
+        sign_1_name=sign_1_name,
+        sign_2_title=sign_2_title,
+        sign_2_name=sign_2_name,
+        issue_date=issue_date
     )
-    fn = f"Certificate_{student_name.replace(' ', '_')}.pdf"
+    clean_name = "".join(c for c in student_name if c.isalnum() or c in (" ", "_", "-")).strip().replace(" ", "_")
+    fn = f"Certificate_{clean_name or 'Participant'}.pdf"
 
     try:
         send_team_certificates_email(
@@ -2342,7 +2351,7 @@ def dispatch_custom_certificate_email(
             from_name=smtp_from_name,
             leader_email=student_email,
             leader_name=student_name,
-            team_name=team_name,
+            team_name=team_name or "Individual Participant",
             certificate_attachments=[(fn, pdf_bytes)]
         )
         return {

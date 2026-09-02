@@ -188,11 +188,24 @@ def generate_single_certificate_bytes(
         c.circle(start_team_x - 14, 230, 2, fill=1, stroke=0)
         c.circle(start_team_x + total_team_w + 14, 230, 2, fill=1, stroke=0)
         
-        # Description
+        # Dynamic Description based on cert_type
         c.setFont("Helvetica", 10)
         c.setFillColor(colors.HexColor("#64748b"))
-        c.drawCentredString(center_x, 198, "for active innovation, technical excellence, and committed participation")
-        c.drawCentredString(center_x, 183, "in the Smart India Hackathon 2026 Internal College Round.")
+        cert_type_upper = (cert_type or "Participation").upper()
+        if "WINNER" in cert_type_upper or "1ST" in cert_type_upper:
+            desc_line1 = "awarded Winner (1st Place) for outstanding innovation and technical distinction"
+        elif "RUNNER" in cert_type_upper or "2ND" in cert_type_upper:
+            desc_line1 = "awarded Runner-Up for exemplary technical creativity and problem solving"
+        elif "MERIT" in cert_type_upper or "EXCELLENCE" in cert_type_upper:
+            desc_line1 = "for exceptional merit, innovation, and technical excellence"
+        elif "APPRECIATION" in cert_type_upper:
+            desc_line1 = "in sincere appreciation for valuable contributions, dedication, and service"
+        else:
+            desc_line1 = "for active innovation, technical excellence, and committed participation"
+            
+        c.drawCentredString(center_x, 198, desc_line1)
+        clean_event = (event_title or "Smart India Hackathon 2026 Internal College Round").strip()
+        c.drawCentredString(center_x, 183, f"in the {clean_event}.")
 
 
         
