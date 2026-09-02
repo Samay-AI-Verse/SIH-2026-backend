@@ -87,6 +87,15 @@ def draw_luxury_border(c, width, height):
     c.restoreState()
 
 
+TEMPLATE_PATH = os.path.join(BASE_DIR, "sih_official_certificate_template.png")
+if not os.path.exists(TEMPLATE_PATH):
+    PARENT_DIR = os.path.dirname(BASE_DIR)
+    CANDIDATE = os.path.join(PARENT_DIR, "2nd - 3rd.png")
+    if os.path.exists(CANDIDATE):
+        TEMPLATE_PATH = CANDIDATE
+    else:
+        TEMPLATE_PATH = None
+
 def generate_single_certificate_bytes(
     student_name: str,
     team_name: str,
@@ -98,7 +107,7 @@ def generate_single_certificate_bytes(
     sign_1_name: str = "SIH Coordinator",
     sign_2_title: str = "Head of Institution",
     sign_2_name: str = "Principal / Director",
-    issue_date: str = "March 2026"
+    issue_date: str = "September 2026"
 ) -> bytes:
     """Generate a high-resolution, landscape A4 PDF certificate for a student."""
     buffer = io.BytesIO()
@@ -107,11 +116,62 @@ def generate_single_certificate_bytes(
     c = canvas.Canvas(buffer, pagesize=landscape(A4))
     width, height = landscape(A4)
     
-    # 1. Background and Luxury Border
+    # Check if user's actual official SIH template image exists
+    if TEMPLATE_PATH and os.path.exists(TEMPLATE_PATH):
+        # Draw full background template perfectly scaled to A4 Landscape
+        c.drawImage(TEMPLATE_PATH, 0, 0, width=width, height=height)
+        
+        # Center Coordinates for Dynamic Text Overlay
+        center_x = width / 2.0
+        
+        # "This is proudly presented to"
+        c.setFont("Helvetica-Oblique", 13)
+        c.setFillColor(colors.HexColor("#475569"))
+        c.drawCentredString(center_x, 335, "This is proudly presented to")
+        
+        # Participant Full Name (Large, crisp and bold)
+        c.setFont("Helvetica-Bold", 26)
+        c.setFillColor(colors.HexColor("#1e3a8a"))
+        clean_name = (student_name or "Participant Name").upper()
+        c.drawCentredString(center_x, 295, clean_name)
+        
+        # Underline for name
+        name_w = min(420, max(240, c.stringWidth(clean_name, "Helvetica-Bold", 26) + 30))
+        c.setStrokeColor(colors.HexColor("#d97706"))
+        c.setLineWidth(1.5)
+        c.line((width - name_w) / 2.0, 287, (width + name_w) / 2.0, 287)
+        
+        # Team & Role line
+        role_label = "as Team Leader" if role.lower() == "leader" else "as Active Team Member"
+        team_clean = (team_name or "Participant Team").strip()
+        c.setFont("Helvetica-Bold", 13)
+        c.setFillColor(colors.HexColor("#0f172a"))
+        c.drawCentredString(center_x, 260, f"of Team  \"{team_clean}\"  {role_label}")
+        
+        # College / Institution
+        if college_name and college_name.strip():
+            c.setFont("Helvetica", 11)
+            c.setFillColor(colors.HexColor("#334155"))
+            c.drawCentredString(center_x, 240, f"representing {college_name.strip()}")
+            desc_y = 212
+        else:
+            desc_y = 230
+            
+        # Description
+        c.setFont("Helvetica", 10.5)
+        c.setFillColor(colors.HexColor("#475569"))
+        c.drawCentredString(center_x, desc_y, "for active innovation, technical excellence, and committed participation")
+        c.drawCentredString(center_x, desc_y - 16, "in the Smart India Hackathon 2026 Internal College Round.")
+        
+        c.showPage()
+        c.save()
+        buffer.seek(0)
+        return buffer.getvalue()
+
+    # Fallback to luxury canvas border if template image is missing
     draw_luxury_border(c, width, height)
-    
-    # 2. Header / Logo
     top_y = height - 60
+
     if LOGO_PATH and os.path.exists(LOGO_PATH):
         try:
             logo_w = 110
