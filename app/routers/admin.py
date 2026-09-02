@@ -1,5 +1,4 @@
-from fastapi import Body
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import Body, Query, APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import Optional, List
@@ -1983,7 +1982,11 @@ def admin_register_team(
 # =========================================================================
 
 from fastapi.responses import Response
-from ..certificate_service import generate_single_certificate_bytes, send_team_certificates_email
+from ..certificate_service import (
+    generate_single_certificate_bytes,
+    send_team_certificates_email,
+    generate_team_certificates_zip_bytes
+)
 
 @router.get("/certificates/config")
 def get_certificate_config(
@@ -2142,8 +2145,8 @@ def download_member_certificate(
         headers={"Content-Disposition": f'attachment; filename="{filename}"'}
     )
 
-@router.post("/certificates/send-team/{team_id}")
-def dispatch_team_certificates_email(
+@router.get("/certificates/team/{team_id}/zip")
+def download_team_certificates_zip(
     team_id: str,
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
@@ -2151,6 +2154,74 @@ def dispatch_team_certificates_email(
     team = db.query(Team).filter(Team.id == team_id).first()
     if not team:
         raise HTTPException(status_code=404, detail="Team not found")
+    if not team.members:
+        raise HTTPException(status_code=400, detail="Team has no registered members to generate certificates for.")
+
+    setting = db.query(Setting).filter(Setting.id == "registration").first()
+    zip_bytes = generate_team_certificates_zip_bytes(team, setting)
+    clean_team_name = "".join(c for c in team.team_name if c.isalnum() or c in (" ", "_", "-")).strip().replace(" ", "_")
+    reg_suffix = team.registration_id or "SIH"
+    filename = f"Team_Certificates_{clean_team_name}_{reg_suffix}.zip"
+    return Response(
+        content=zip_bytes,
+        media_type="application/zip",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )
+
+@router.get("/certificates/download-custom")
+def download_admin_custom_certificate(
+    student_name: str = Query(..., description="Student Name"),
+    team_name: str = Query("", description="Team Name"),
+    college_name: str = Query("", description="College"),
+    role: str = Query("Participant", description="Role"),
+    cert_type: str = Query("Participation", description="Type"),
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    setting = db.query(Setting).filter(Setting.id == "registration").first()
+    pdf_bytes = generate_single_certificate_bytes(
+        student_name=student_name,
+        team_name=team_name,
+        college_name=college_name,
+        role=role,
+        cert_type=cert_type,
+        event_title=getattr(setting, "cert_event_title", "Smart India Hackathon 2026 (Internal Hackathon)"),
+        sign_1_title=getattr(setting, "cert_sign_1_title", "Convener, Innovation Cell"),
+        sign_1_name=getattr(setting, "cert_sign_1_name", "SIH SPOC / Coordinator"),
+        sign_2_title=getattr(setting, "cert_sign_2_title", "Head of Institution"),
+        sign_2_name=getattr(setting, "cert_sign_2_name", "Principal / Director"),
+        issue_date=getattr(setting, "cert_issue_date", "September 2026")
+    )
+    clean_name = "".join(c for c in student_name if c.isalnum() or c in (" ", "_", "-")).strip().replace(" ", "_")
+    filename = f"Certificate_{clean_name}.pdf"
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )
+
+@router.post("/certificates/send-team/{team_id}")
+def dispatch_team_certificates_email(
+    team_id: str,
+    payload: dict = Body(default={}),
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    team = db.query(Team).filter(Team.id == team_id).first()
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    target_email = ((payload or {}).get("target_email") or "").strip() or (team.leader_email or "").strip()
+    if not target_email:
+        raise HTTPException(status_code=400, detail="No recipient email found for this team. Please specify a recipient email.")
+
+    cc_members = bool((payload or {}).get("cc_members", False))
+    cc_list = []
+    if cc_members:
+        for m in team.members:
+            mem_email = (m.email or "").strip()
+            if mem_email and mem_email != target_email and mem_email not in cc_list:
+                cc_list.append(mem_email)
 
     setting = db.query(Setting).filter(Setting.id == "registration").first()
     smtp_host = getattr(setting, "smtp_host", "smtp.gmail.com") or "smtp.gmail.com"
@@ -2189,10 +2260,11 @@ def dispatch_team_certificates_email(
             smtp_user=smtp_user,
             smtp_pass=smtp_pass,
             from_name=smtp_from_name,
-            leader_email=team.leader_email,
-            leader_name=team.leader_name,
+            leader_email=target_email,
+            leader_name=team.leader_name or "Team Leader",
             team_name=team.team_name,
-            certificate_attachments=attachments
+            certificate_attachments=attachments,
+            cc_emails=cc_list
         )
         team.cert_status = "SENT"
         team.cert_sent_at = utc_now()
@@ -2201,9 +2273,10 @@ def dispatch_team_certificates_email(
             "success": True,
             "team_id": team.id,
             "team_name": team.team_name,
-            "leader_email": team.leader_email,
+            "leader_email": target_email,
+            "cc_recipients": cc_list,
             "certificates_count": len(attachments),
-            "message": f"Successfully emailed {len(attachments)} certificates to {team.leader_email}"
+            "message": f"Successfully emailed {len(attachments)} certificates to {target_email}" + (f" (CC'd {len(cc_list)} members)" if cc_list else "")
         }
     except Exception as e:
         team.cert_status = "FAILED"

@@ -8,7 +8,7 @@ from .config import settings
 from .database import engine, Base, SessionLocal
 from .seed_data import seed_database
 from .d1_sync import pull_from_d1_to_sqlite
-from .routers import auth, teams, dashboard, problems, payments, admin, live
+from .routers import auth, teams, dashboard, problems, payments, admin, live, certificates
 
 # Initialize FastAPI App
 app = FastAPI(
@@ -46,6 +46,7 @@ app.include_router(dashboard.router)
 app.include_router(problems.router)
 app.include_router(payments.router)
 app.include_router(admin.router)
+app.include_router(certificates.router)
 app.include_router(live.router)
 
 def run_migrations():

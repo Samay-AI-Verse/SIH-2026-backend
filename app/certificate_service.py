@@ -336,7 +336,8 @@ def send_team_certificates_email(
     leader_email: str,
     leader_name: str,
     team_name: str,
-    certificate_attachments: list  # list of tuples: (filename, bytes_data)
+    certificate_attachments: list,  # list of tuples: (filename, bytes_data)
+    cc_emails: list = None
 ):
     """
     Send an email via SMTP (Gmail, etc.) with all team certificates (or single member certificate) attached.
@@ -348,6 +349,10 @@ def send_team_certificates_email(
     sender_display = f"{from_name} <{smtp_user}>" if from_name else smtp_user
     msg["From"] = sender_display
     msg["To"] = leader_email
+    if cc_emails:
+        valid_ccs = [c.strip() for c in cc_emails if c and c.strip() and c.strip() != leader_email]
+        if valid_ccs:
+            msg["Cc"] = ", ".join(valid_ccs)
     
     members_count = len(certificate_attachments)
     is_single = (members_count == 1)
@@ -464,7 +469,41 @@ def send_team_certificates_email(
         
     try:
         server.login(smtp_user, smtp_pass)
-        server.sendmail(smtp_user, [leader_email], msg.as_string())
+        recipients = [leader_email]
+        if cc_emails:
+            for em in cc_emails:
+                cleaned = (em or "").strip()
+                if cleaned and cleaned not in recipients:
+                    recipients.append(cleaned)
+        server.sendmail(smtp_user, recipients, msg.as_string())
     finally:
         server.quit()
+
+
+def generate_team_certificates_zip_bytes(team, setting=None) -> bytes:
+    """Generate an in-memory ZIP archive containing PDF certificates for all team members."""
+    import zipfile
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+        members = team.members if hasattr(team, "members") and team.members else []
+        for idx, m in enumerate(members):
+            role = "Leader" if getattr(m, "is_leader", False) or idx == 0 else "Member"
+            pdf_bytes = generate_single_certificate_bytes(
+                student_name=m.full_name,
+                team_name=team.team_name or "",
+                college_name=m.college or team.college or "",
+                role=role,
+                cert_type="Participation",
+                event_title=getattr(setting, "cert_event_title", "Smart India Hackathon 2026 (Internal Hackathon)") if setting else "Smart India Hackathon 2026 (Internal Hackathon)",
+                sign_1_title=getattr(setting, "cert_sign_1_title", "Convener, Innovation Cell") if setting else "Convener, Innovation Cell",
+                sign_1_name=getattr(setting, "cert_sign_1_name", "SIH SPOC / Coordinator") if setting else "SIH SPOC / Coordinator",
+                sign_2_title=getattr(setting, "cert_sign_2_title", "Head of Institution") if setting else "Head of Institution",
+                sign_2_name=getattr(setting, "cert_sign_2_name", "Principal / Director") if setting else "Principal / Director",
+                issue_date=getattr(setting, "cert_issue_date", "September 2026") if setting else "September 2026"
+            )
+            safe_name = "".join(c for c in (m.full_name or f"Member_{idx+1}") if c.isalnum() or c in (" ", "_", "-")).strip().replace(" ", "_")
+            filename = f"Certificate_{safe_name}_{team.registration_id or 'SIH'}.pdf"
+            zf.writestr(filename, pdf_bytes)
+            
+    return zip_buffer.getvalue()
 
