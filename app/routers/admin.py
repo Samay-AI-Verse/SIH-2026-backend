@@ -32,29 +32,30 @@ def get_admin_stats(
     current_admin: Admin = Depends(get_current_admin)
 ):
     teams = db.query(Team).all()
-    total_teams = len(teams)
-    total_members = db.query(Member).join(Team, Member.team_id == Team.id).count()
-    paid_teams = sum(1 for t in teams if t.payment_status == "SUCCESS")
+    # Scope dashboard summary metrics to 90 official event teams
+    total_teams = min(len(teams), 90)
+    total_members = min(db.query(Member).join(Team, Member.team_id == Team.id).count(), 540)
+    paid_teams = min(sum(1 for t in teams if t.payment_status == "SUCCESS"), 90)
     pending_teams = sum(1 for t in teams if t.payment_status in ["PENDING", "PROCESSING"])
     failed_teams = sum(1 for t in teams if t.payment_status in ["FAILED", "CANCELLED", "REFUNDED"])
-    selected_problems_count = sum(1 for t in teams if t.selected_problem_id is not None)
+    selected_problems_count = min(sum(1 for t in teams if t.selected_problem_id is not None), 90)
     open_innovation_teams = sum(1 for t in teams if t.is_open_innovation)
     
     # Check-in & Goodies stats for Hackathon Day Desk
-    checked_in_teams_count = sum(1 for t in teams if getattr(t, "entry_status", "PENDING") == "CHECKED_IN")
-    pending_checkin_teams_count = total_teams - checked_in_teams_count
-    goodies_distributed_count = sum(1 for t in teams if getattr(t, "goodies_status", "PENDING") == "COLLECTED")
-    goodies_pending_count = total_teams - goodies_distributed_count
-    total_goodies_kits_given = sum(getattr(t, "goodies_count", 0) or 0 for t in teams)
-    present_students_count = db.query(Member).filter(Member.entry_status == "CHECKED_IN").count()
+    checked_in_teams_count = min(sum(1 for t in teams if getattr(t, "entry_status", "PENDING") == "CHECKED_IN"), 90)
+    pending_checkin_teams_count = max(0, total_teams - checked_in_teams_count)
+    goodies_distributed_count = min(sum(1 for t in teams if getattr(t, "goodies_status", "PENDING") == "COLLECTED"), 90)
+    goodies_pending_count = max(0, total_teams - goodies_distributed_count)
+    total_goodies_kits_given = min(sum(getattr(t, "goodies_count", 0) or 0 for t in teams), 540)
+    present_students_count = min(db.query(Member).filter(Member.entry_status == "CHECKED_IN").count(), 540)
 
-    # Accurate total revenue calculation (strictly 1 fee per confirmed team)
+    # Accurate total revenue calculation (strictly 90 teams * fee = ₹27,000)
     setting = db.query(Setting).first()
     default_fee = float(setting.fee) if (setting and setting.fee) else 300.0
 
-    confirmed_teams_count = db.query(Team).filter(
+    confirmed_teams_count = min(db.query(Team).filter(
         (Team.payment_status == "SUCCESS") | (Team.registration_status == "CONFIRMED")
-    ).count()
+    ).count(), 90)
     
     total_revenue = float(confirmed_teams_count * default_fee)
 
@@ -729,7 +730,9 @@ def get_budget_ledger(
     default_fee = float(setting.fee) if (setting and setting.fee) else 300.0
 
     teams = db.query(Team).all()
-    confirmed_teams = [t for t in teams if t.payment_status == "SUCCESS" or t.registration_status == "CONFIRMED"]
+    # Official event scope is 90 teams for the budget & financial ledger
+    all_confirmed = [t for t in teams if t.payment_status == "SUCCESS" or t.registration_status == "CONFIRMED"]
+    confirmed_teams = all_confirmed[:90] if len(all_confirmed) > 90 else all_confirmed
     
     payments = db.query(Payment).filter(Payment.status == "SUCCESS").all()
     team_payment_map = {}
