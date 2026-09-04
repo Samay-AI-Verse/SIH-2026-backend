@@ -184,6 +184,7 @@ def download_team_certificates_zip_public(
 
 
 @router.get("/custom-download")
+@router.get("/download-custom")
 def download_custom_certificate(
     student_name: str = Query(..., description="Student/Participant full name"),
     team_name: str = Query("", description="Team Name"),
